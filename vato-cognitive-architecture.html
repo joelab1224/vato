@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VATO - Arquitectura Cognitiva de Organismos Autónomos Pensantes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Barlow', sans-serif;
+            background: #0a0f1c;
+            min-height: 100vh;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a1f2e 0%, #2563eb 100%);
+            padding: 3rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-logos {
+            position: absolute;
+            top: 1rem;
+            right: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            z-index: 10;
+        }
+        
+        .company-logo {
+            height: 48px;
+            width: auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .company-logo:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logo-divider {
+            width: 2px;
+            height: 32px;
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.3), transparent);
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'%3E%3Cpath d='m0 40l40-40h-40v40zm40-40v40h-40l40-40z'/%3E%3C/g%3E%3C/svg%3E");
+            animation: patternMove 20s linear infinite;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header h1 {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #94a3b8);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header .subtitle {
+            font-size: 1.5rem;
+            color: #cbd5e1;
+            font-weight: 400;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        .project-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            background: rgba(255,255,255,0.1);
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            font-weight: 500;
+        }
+        
+        /* Navigation */
+        .nav-tabs {
+            background: rgba(15, 23, 41, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 0;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+        }
+        
+        .nav-tab {
+            padding: 1rem 2rem;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-family: 'Barlow', sans-serif;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            border-radius: 8px;
+        }
+        
+        .nav-tab:hover {
+            color: #e2e8f0;
+            background: rgba(37, 99, 235, 0.1);
+        }
+        
+        .nav-tab.active {
+            color: #ffffff;
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+        }
+        
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid #2563eb;
+        }
+        
+        /* Content Sections */
+        .content {
+            padding: 4rem 0;
+            min-height: 600px;
+        }
+        
+        .content-section {
+            display: none;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+        
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Cards and Grids */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 41, 0.9));
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(37, 99, 235, 0.5);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.1);
+        }
+        
+        .feature-card:hover::before {
+            left: 100%;
+        }
+        
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+        
+        .feature-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-description {
+            color: #cbd5e1;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+        
+        /* Architecture Diagram */
+        .architecture-diagram {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+        
+        .layer {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.2), rgba(30, 64, 175, 0.1));
+            border: 2px solid rgba(37, 99, 235, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .layer:hover {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.3), rgba(30, 64, 175, 0.2));
+            border-color: rgba(37, 99, 235, 0.6);
+            transform: scale(1.02);
+        }
+        
+        .layer-number {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #2563eb;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .layer-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+        
+        .layer-subtitle {
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+        
+        .flow-arrow {
+            text-align: center;
+            color: #2563eb;
+            font-size: 2rem;
+            margin: 0.5rem 0;
+        }
+        
+        /* Technical Specs */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .tech-section {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .tech-section h3 {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 1.25rem;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #2563eb;
+        }
+        
+        .tech-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tech-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: #cbd5e1;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        
+        .tech-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #2563eb;
+            font-weight: bold;
+        }
+        
+        .tech-list li:last-child {
+            border-bottom: none;
+        }
+        
+        /* Implementation Timeline */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #2563eb, transparent);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            display: flex;
+            margin: 3rem 0;
+            position: relative;
+        }
+        
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        
+        .timeline-content {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            width: calc(50% - 2rem);
+            backdrop-filter: blur(10px);
+        }
+        
+        .timeline-marker {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: #2563eb;
+            border: 4px solid #0a0f1c;
+            border-radius: 50%;
+        }
+        
+        .phase-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 1.25rem;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+        
+        .phase-duration {
+            color: #2563eb;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        /* Competitive Analysis */
+        .comparison-table {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+        
+        .table-header {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .table-row {
+            display: grid;
+            grid-template-columns: 2fr repeat(4, 1fr);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .table-cell {
+            padding: 1rem;
+            border-right: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+        
+        .table-cell:first-child {
+            text-align: left;
+            font-weight: 500;
+        }
+        
+        .advantage {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        /* Call to Action */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.2), rgba(30, 64, 175, 0.1));
+            border: 1px solid rgba(37, 99, 235, 0.3);
+            border-radius: 20px;
+            padding: 4rem;
+            text-align: center;
+            margin: 4rem 0;
+        }
+        
+        .cta-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 2.5rem;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-description {
+            font-size: 1.25rem;
+            color: #cbd5e1;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            background: rgba(255,255,255,0.1);
+            height: 4px;
+            border-radius: 2px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #2563eb, #1e40af);
+            border-radius: 2px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes patternMove {
+            0% { transform: translateX(-40px); }
+            100% { transform: translateX(40px); }
+        }
+        
+        .animate-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .header .subtitle {
+                font-size: 1.25rem;
+            }
+            
+            .nav-container {
+                flex-wrap: wrap;
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+            
+            .nav-tab {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.9rem;
+                white-space: nowrap;
+            }
+            
+            .feature-grid, .tech-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline::before {
+                left: 2rem;
+            }
+            
+            .timeline-item {
+                flex-direction: column !important;
+            }
+            
+            .timeline-content {
+                width: calc(100% - 4rem);
+                margin-left: 4rem;
+            }
+            
+            .timeline-marker {
+                left: 2rem;
+                transform: translate(-50%, -50%);
+            }
+            
+            .table-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-cell {
+                border-right: none;
+                border-bottom: 1px solid rgba(255,255,255,0.05);
+                text-align: left;
+            }
+            
+            .project-meta {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .header-logos {
+                position: static;
+                justify-content: center;
+                margin-bottom: 1rem;
+            }
+            
+            .company-logo {
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-logos">
+            <img src="logo_cody.png" alt="Cody Logo" class="company-logo">
+            <div class="logo-divider"></div>
+            <img src="logo_eugenia.png" alt="Eugenia Logo" class="company-logo">
+        </div>
+        <div class="header-content">
+            <div class="container">
+                <h1>VATO</h1>
+                <p class="subtitle">Arquitectura Cognitiva de Organismos Autónomos Pensantes</p>
+                <div class="project-meta">
+                    <div class="meta-item">Sistema de IA Avanzada</div>
+                    <div class="meta-item">Memoria Persistente</div>
+                    <div class="meta-item">Multi-Agente</div>
+                    <div class="meta-item">Interfaz Adaptativa</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav-tabs">
+        <div class="container">
+            <div class="nav-container">
+                <button class="nav-tab active" data-section="overview">Visión General</button>
+                <button class="nav-tab" data-section="architecture">Arquitectura</button>
+                <button class="nav-tab" data-section="features">Características</button>
+                <button class="nav-tab" data-section="technology">Tecnología</button>
+                <button class="nav-tab" data-section="advantages">Ventajas</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Progress Bar -->
+    <div class="container">
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <main class="content">
+        <div class="container">
+            <!-- Overview Section -->
+            <section id="overview" class="content-section active">
+                <div class="section-header">
+                    <h2 class="section-title">Revolucionando la Interacción con IA</h2>
+                    <p class="section-subtitle">Un sistema de inteligencia artificial que trasciende las limitaciones actuales, creando una experiencia verdaderamente inteligente y contextual</p>
+                </div>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🧠</div>
+                        <h3 class="feature-title">Memoria Persistente</h3>
+                        <p class="feature-description">Sistema avanzado de memoria que mantiene contexto de conversaciones pasadas, permitiendo continuidad sin empezar de cero. Combina almacenamiento vectorial, grafo de conocimiento y memoria de trabajo.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">⚙️</div>
+                        <h3 class="feature-title">Orquestación Multi-Agente</h3>
+                        <p class="feature-description">Coordina múltiples agentes especializados que trabajan en conjunto: búsqueda web, análisis de documentos, generación creativa y razonamiento analítico.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">📄</div>
+                        <h3 class="feature-title">Integración Documental</h3>
+                        <p class="feature-description">Procesa e indexa documentos personales en múltiples formatos (PDF, audio, imágenes) para proporcionar respuestas basadas en información real del usuario.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">💬</div>
+                        <h3 class="feature-title">Interfaz Natural</h3>
+                        <p class="feature-description">Experiencia conversacional simple que oculta la complejidad técnica. Soporte para texto y voz con adaptación contextual automática.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🔗</div>
+                        <h3 class="feature-title">Trazabilidad Completa</h3>
+                        <p class="feature-description">Cada respuesta incluye citas verificables a sus fuentes originales, distinguiendo entre diferentes tipos de información para mayor confianza.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🎭</div>
+                        <h3 class="feature-title">Modos Adaptativos</h3>
+                        <p class="feature-description">Ajusta automáticamente su personalidad y estilo según el contexto: investigación, creatividad, análisis, soporte emocional o planificación.</p>
+                    </div>
+                </div>
+
+                <div class="cta-section">
+                    <h3 class="cta-title">El Futuro de la Asistencia Inteligente</h3>
+                    <p class="cta-description">VATO representa una evolución significativa hacia asistentes verdaderamente inteligentes que comprenden, recuerdan y evolucionan con el usuario.</p>
+                </div>
+            </section>
+
+            <!-- Architecture Section -->
+            <section id="architecture" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Arquitectura del Sistema</h2>
+                    <p class="section-subtitle">Cinco capas interconectadas que crean una inteligencia cognitiva completa</p>
+                </div>
+
+                <div class="architecture-diagram">
+                    <div class="layer">
+                        <div class="layer-number">5</div>
+                        <div class="layer-title">Capa de Metacognición</div>
+                        <div class="layer-subtitle">Autoconciencia, control ejecutivo y aprendizaje sobre el propio pensamiento</div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="layer">
+                        <div class="layer-number">4</div>
+                        <div class="layer-title">Capa de Cognición Superior</div>
+                        <div class="layer-subtitle">Razonamiento, planificación, resolución de problemas y creatividad</div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="layer">
+                        <div class="layer-number">3</div>
+                        <div class="layer-title">Capa de Memoria Cognitiva</div>
+                        <div class="layer-subtitle">Memoria de trabajo, episódica, semántica y procedimental</div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="layer">
+                        <div class="layer-number">2</div>
+                        <div class="layer-title">Capa de Procesamiento</div>
+                        <div class="layer-subtitle">Atención selectiva, filtrado de relevancia e integración multimodal</div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="layer">
+                        <div class="layer-number">1</div>
+                        <div class="layer-title">Capa Perceptual</div>
+                        <div class="layer-subtitle">Procesamiento de lenguaje natural, entrada multimodal y reconocimiento de patrones</div>
+                    </div>
+                </div>
+
+                <div class="feature-grid" style="margin-top: 4rem;">
+                    <div class="feature-card">
+                        <div class="feature-icon">🔄</div>
+                        <h3 class="feature-title">Flujos Bidireccionales</h3>
+                        <p class="feature-description">La información fluye tanto de abajo hacia arriba (datos sensoriales → razonamiento) como de arriba hacia abajo (control ejecutivo → percepción).</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3 class="feature-title">Propiedades Emergentes</h3>
+                        <p class="feature-description">La interacción entre capas produce capacidades que van más allá de la suma de partes individuales: coherencia, adaptabilidad y creatividad.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section id="features" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Características Diferenciadoras</h2>
+                    <p class="section-subtitle">Capacidades únicas que distinguen a VATO de otros sistemas de IA</p>
+                </div>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🧩</div>
+                        <h3 class="feature-title">Motor de Memoria Persistente</h3>
+                        <p class="feature-description">
+                            <strong>Vector Database:</strong> Almacenamiento de embeddings para búsqueda semántica<br>
+                            <strong>Graph Database:</strong> Relaciones contextuales y evolución de ideas<br>
+                            <strong>Working Memory:</strong> Buffer circular con consolidación automática
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <h3 class="feature-title">Orquestador Multi-Agente</h3>
+                        <p class="feature-description">
+                            <strong>Search Agent:</strong> Búsqueda en web y fuentes externas<br>
+                            <strong>RAG Agent:</strong> Consulta de documentos personales<br>
+                            <strong>Creative Agent:</strong> Generación de contenido creativo<br>
+                            <strong>Analytical Agent:</strong> Razonamiento lógico estructurado
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">📚</div>
+                        <h3 class="feature-title">Sistema de Gestión Documental</h3>
+                        <p class="feature-description">
+                            <strong>Procesamiento Multi-formato:</strong> PDF, audio, imágenes, texto<br>
+                            <strong>Chunking Inteligente:</strong> Segmentación semántica preservando contexto<br>
+                            <strong>Búsqueda Híbrida:</strong> Combina similitud vectorial y keywords
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🎨</div>
+                        <h3 class="feature-title">Sistema de Modos y Personalidades</h3>
+                        <p class="feature-description">
+                            <strong>Detección Automática:</strong> Identifica el modo apropiado por contexto<br>
+                            <strong>Adaptación Dinámica:</strong> Ajusta tono, estructura y temperatura<br>
+                            <strong>Control Usuario:</strong> Override manual y personalización
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🔗</div>
+                        <h3 class="feature-title">Sistema de Citación Avanzado</h3>
+                        <p class="feature-description">
+                            <strong>Citas Inline:</strong> Referencias numeradas dentro del texto<br>
+                            <strong>Preview Fuentes:</strong> Vista previa al hacer hover<br>
+                            <strong>Niveles Confianza:</strong> Clasificación por credibilidad de fuente
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🔧</div>
+                        <h3 class="feature-title">Arquitectura Modular</h3>
+                        <p class="feature-description">
+                            <strong>Plugin System:</strong> Componentes intercambiables<br>
+                            <strong>Hot Reloading:</strong> Actualizaciones sin downtime<br>
+                            <strong>Extensibilidad:</strong> Fácil integración de nuevas capacidades
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Technology Section -->
+            <section id="technology" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Stack Tecnológico</h2>
+                    <p class="section-subtitle">Tecnologías de vanguardia para máximo rendimiento y escalabilidad</p>
+                </div>
+
+                <div class="tech-grid">
+                    <div class="tech-section">
+                        <h3>Backend Core</h3>
+                        <ul class="tech-list">
+                            <li>Python 3.11+ con FastAPI</li>
+                            <li>AsyncIO para concurrencia</li>
+                            <li>WebSockets para streaming</li>
+                            <li>Celery + Redis para tareas</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-section">
+                        <h3>Bases de Datos</h3>
+                        <ul class="tech-list">
+                            <li>Qdrant (Vector Database)</li>
+                            <li>Neo4j (Graph Database)</li>
+                            <li>PostgreSQL (Metadata)</li>
+                            <li>Redis (Cache y Sessions)</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-section">
+                        <h3>IA y ML</h3>
+                        <ul class="tech-list">
+                            <li>OpenAI GPT-4 Turbo</li>
+                            <li>Anthropic Claude 3</li>
+                            <li>Whisper (Transcripción)</li>
+                            <li>CLIP (Embeddings visuales)</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-section">
+                        <h3>Procesamiento Documentos</h3>
+                        <ul class="tech-list">
+                            <li>PyPDF2 y pdfplumber</li>
+                            <li>Tesseract OCR</li>
+                            <li>Pyannote (Diarización)</li>
+                            <li>GPT-4V (Análisis visual)</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-section">
+                        <h3>Frontend</h3>
+                        <ul class="tech-list">
+                            <li>React 18 con TypeScript</li>
+                            <li>Tailwind CSS + Shadcn/ui</li>
+                            <li>Socket.io para tiempo real</li>
+                            <li>Zustand para estado global</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-section">
+                        <h3>DevOps y Deployment</h3>
+                        <ul class="tech-list">
+                            <li>Docker + Kubernetes</li>
+                            <li>GitHub Actions CI/CD</li>
+                            <li>Prometheus + Grafana</li>
+                            <li>ELK Stack para logging</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Advantages Section -->
+            <section id="advantages" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Ventajas Competitivas</h2>
+                    <p class="section-subtitle">Comparación con soluciones existentes en el mercado</p>
+                </div>
+
+                <div class="comparison-table">
+                    <div class="table-header">
+                        <div class="table-row">
+                            <div class="table-cell"><strong>Característica</strong></div>
+                            <div class="table-cell"><strong>ChatGPT</strong></div>
+                            <div class="table-cell"><strong>Claude</strong></div>
+                            <div class="table-cell"><strong>Perplexity</strong></div>
+                            <div class="table-cell"><strong>VATO</strong></div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-row">
+                        <div class="table-cell">Memoria Persistente</div>
+                        <div class="table-cell">Limitada</div>
+                        <div class="table-cell">Buena</div>
+                        <div class="table-cell">Básica</div>
+                        <div class="table-cell"><span class="advantage">Avanzada</span></div>
+                    </div>
+                    
+                    <div class="table-row">
+                        <div class="table-cell">Sistema de Citas</div>
+                        <div class="table-cell">Básico</div>
+                        <div class="table-cell">Medio</div>
+                        <div class="table-cell">Excelente</div>
+                        <div class="table-cell"><span class="advantage">Superior</span></div>
+                    </div>
+                    
+                    <div class="table-row">
+                        <div class="table-cell">Integración Documentos</div>
+                        <div class="table-cell">Media</div>
+                        <div class="table-cell">Buena</div>
+                        <div class="table-cell">Básica</div>
+                        <div class="table-cell"><span class="advantage">Completa</span></div>
+                    </div>
+                    
+                    <div class="table-row">
+                        <div class="table-cell">Multi-Agente</div>
+                        <div class="table-cell">No</div>
+                        <div class="table-cell">No</div>
+                        <div class="table-cell">No</div>
+                        <div class="table-cell"><span class="advantage">Sí</span></div>
+                    </div>
+                    
+                    <div class="table-row">
+                        <div class="table-cell">Modos Adaptativos</div>
+                        <div class="table-cell">No</div>
+                        <div class="table-cell">Limitado</div>
+                        <div class="table-cell">No</div>
+                        <div class="table-cell"><span class="advantage">Completo</span></div>
+                    </div>
+                </div>
+
+                <div class="feature-grid" style="margin-top: 3rem;">
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3 class="feature-title">Diferenciación Clave</h3>
+                        <p class="feature-description">VATO es el único sistema que combina memoria persistente transparente, orquestación multi-agente visible, integración documental profunda y adaptación contextual inteligente en una sola plataforma.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">📈</div>
+                        <h3 class="feature-title">Propuesta de Valor</h3>
+                        <p class="feature-description">Transforma la interacción con IA de un paradigma de "pregunta-respuesta" hacia un verdadero asistente inteligente que comprende, recuerda, aprende y evoluciona con el usuario.</p>
+                    </div>
+                </div>
+
+                <div class="cta-section">
+                    <h3 class="cta-title">Revolucionando la Asistencia Inteligente</h3>
+                    <p class="cta-description">VATO representa el futuro de la interacción humano-IA: contextual, inteligente, confiable y verdaderamente útil.</p>
+                    <button class="cta-button" onclick="scrollToTop()">
+                        Explorar Proyecto Completo
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m5 12 7-7 7 7"/>
+                            <path d="M12 19V5"/>
+                        </svg>
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer style="background: rgba(15, 23, 41, 0.95); border-top: 1px solid rgba(255,255,255,0.1); padding: 2rem 0; text-align: center; color: #94a3b8;">
+        <div class="container">
+            <p style="margin: 0; font-size: 0.9rem;">Proyecto desarrollado en colaboración entre <strong style="color: #e2e8f0;">Cody</strong> y <strong style="color: #e2e8f0;">Eugenia</strong></p>
+            <p style="margin: 0.5rem 0 0 0; font-size: 0.8rem; opacity: 0.7;">Revolucionando la interacción humano-IA a través de arquitecturas cognitivas avanzadas</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation functionality
+        const navTabs = document.querySelectorAll('.nav-tab');
+        const contentSections = document.querySelectorAll('.content-section');
+        const progressBar = document.getElementById('progressBar');
+        
+        let currentSection = 0;
+        const totalSections = navTabs.length;
+
+        function updateProgress() {
+            const progress = ((currentSection + 1) / totalSections) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function showSection(sectionId) {
+            // Hide all sections
+            contentSections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show target section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                targetSection.classList.add('animate-in');
+            }
+            
+            // Update nav tabs
+            navTabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Find and activate current tab
+            const activeTab = document.querySelector(`[data-section="${sectionId}"]`);
+            if (activeTab) {
+                activeTab.classList.add('active');
+                currentSection = Array.from(navTabs).indexOf(activeTab);
+                updateProgress();
+            }
+        }
+
+        // Add click listeners to nav tabs
+        navTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const sectionId = tab.getAttribute('data-section');
+                showSection(sectionId);
+            });
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' && currentSection < totalSections - 1) {
+                const nextSection = navTabs[currentSection + 1].getAttribute('data-section');
+                showSection(nextSection);
+            } else if (e.key === 'ArrowLeft' && currentSection > 0) {
+                const prevSection = navTabs[currentSection - 1].getAttribute('data-section');
+                showSection(prevSection);
+            }
+        });
+
+        // Scroll to top function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Initialize progress
+        updateProgress();
+
+        // Add intersection observer for automatic section detection
+        const observerOptions = {
+            root: null,
+            rootMargin: '-50% 0px -50% 0px',
+            threshold: 0
+        };
+
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && entry.target.classList.contains('active')) {
+                    const sectionId = entry.target.id;
+                    const tabIndex = Array.from(navTabs).findIndex(tab => 
+                        tab.getAttribute('data-section') === sectionId
+                    );
+                    if (tabIndex !== -1) {
+                        currentSection = tabIndex;
+                        updateProgress();
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Observe all content sections
+        contentSections.forEach(section => {
+            sectionObserver.observe(section);
+        });
+
+        // Animate layers on hover
+        document.querySelectorAll('.layer').forEach(layer => {
+            layer.addEventListener('mouseenter', () => {
+                layer.style.transform = 'scale(1.02) translateX(10px)';
+            });
+            
+            layer.addEventListener('mouseleave', () => {
+                layer.style.transform = 'scale(1) translateX(0)';
+            });
+        });
+
+        // Add subtle parallax effect to header
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const header = document.querySelector('.header');
+            if (header) {
+                header.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+    </script>
+</body>
+</html>
