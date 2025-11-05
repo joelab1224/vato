@@ -111,8 +111,8 @@ export const themes: Record<ThemeId, Theme> = {
       success: '#14B8A6',
     },
     typography: {
-      fontFamily: 'Circular, Avenir, system-ui, sans-serif',
-      codeFontFamily: 'Source Code Pro, monospace',
+      fontFamily: 'Inter, system-ui, sans-serif',
+      codeFontFamily: 'SF Mono, Monaco, monospace',
       sizes: {
         xs: '0.8125rem',
         sm: '0.9375rem',
@@ -156,8 +156,8 @@ export const themes: Record<ThemeId, Theme> = {
       success: '#34D399',
     },
     typography: {
-      fontFamily: 'JetBrains Mono, IBM Plex Sans, monospace',
-      codeFontFamily: 'JetBrains Mono, monospace',
+      fontFamily: 'Inter, system-ui, sans-serif',
+      codeFontFamily: 'SF Mono, Monaco, monospace',
       sizes: {
         xs: '0.75rem',
         sm: '0.875rem',

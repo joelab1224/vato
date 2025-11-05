@@ -4,7 +4,7 @@ import * as React from 'react'
 import { useTheme } from '@/contexts/theme-context'
 import { Message } from '@/components/ui/message'
 import { ChatInput } from '@/components/ui/input'
-import { ThemeSwitcher } from '@/components/ui/theme-switcher'
+import { ModeSwitcher } from '@/components/ui/mode-switcher'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, FileText, Search, Brain } from 'lucide-react'
 import { AnimatedBackground } from '@/components/ui/animated-backgrounds'
@@ -145,47 +145,13 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
       <AnimatedBackground />
       {/* Header */}
       <header 
-        className="flex items-center justify-between p-4 border-b"
+        className="flex items-center justify-center p-3 sm:p-4 border-b"
         style={{ 
           backgroundColor: currentTheme.colors.surface,
           borderBottomColor: currentTheme.colors.border,
         }}
       >
-        <div className="flex items-center gap-3">
-          <div 
-            className="flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium"
-            style={{ 
-              backgroundColor: currentTheme.colors.primary + '15',
-              color: currentTheme.colors.primary,
-            }}
-          >
-            <Brain className="w-4 h-4" />
-            VATO Assistant
-          </div>
-          
-          <div 
-            className="text-sm"
-            style={{ color: currentTheme.colors.textSecondary }}
-          >
-            Ready • Memory active • 3 documents indexed
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          {/* Mode indicator */}
-          <div 
-            className="flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium"
-            style={{ 
-              backgroundColor: currentTheme.colors.accent + '15',
-              color: currentTheme.colors.accent,
-            }}
-          >
-            <Search className="w-3 h-3" />
-            Research Mode
-          </div>
-          
-          <ThemeSwitcher variant="dropdown" />
-        </div>
+        <ModeSwitcher />
       </header>
 
       {/* Messages Area */}
