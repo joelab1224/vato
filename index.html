@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VATO - Organismos Pensantes Autónomos Virtuales | Centro de Documentación</title>
+    <meta name="description" content="Explora la arquitectura cognitiva, sistemas de bases de datos y documentación interactiva de VATO para construir organismos pensantes autónomos.">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Barlow', sans-serif;
+            background: linear-gradient(135deg, #0a0f1c 0%, #16213e 50%, #0f1729 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            animation: patternMove 30s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes patternMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(60px, 60px); }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 4rem 0;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+        
+        .header-logos {
+            position: absolute;
+            top: 1rem;
+            right: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            z-index: 10;
+        }
+        
+        .company-logo {
+            height: 48px;
+            width: auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .company-logo:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logo-divider {
+            width: 2px;
+            height: 32px;
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.3), transparent);
+        }
+        
+        .logo {
+            display: inline-block;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .logo-circle {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 15px 60px rgba(102, 126, 234, 0.5);
+            }
+        }
+        
+        .header h1 {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 4.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #a78bfa);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: -0.02em;
+        }
+        
+        .header .tagline {
+            font-size: 1.5rem;
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+        
+        .header .description {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+        
+        /* Documentation Grid */
+        .docs-section {
+            margin-bottom: 5rem;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 2.5rem;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: #94a3b8;
+        }
+        
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .doc-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .doc-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        
+        .doc-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+        
+        .doc-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .doc-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .doc-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.75rem;
+        }
+        
+        .doc-description {
+            font-size: 1rem;
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .doc-meta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+        
+        .meta-tag {
+            background: rgba(102, 126, 234, 0.2);
+            color: #a78bfa;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .cta-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #a78bfa;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .doc-card:hover .cta-link {
+            gap: 1rem;
+            color: #ffffff;
+        }
+        
+        /* Footer */
+        .footer {
+            background: rgba(15, 23, 41, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem 0;
+            text-align: center;
+            margin-top: 5rem;
+        }
+        
+        .footer-content {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .footer-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-link:hover {
+            color: #a78bfa;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .header .tagline {
+                font-size: 1.2rem;
+            }
+            
+            .docs-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .header-logos {
+                position: static;
+                justify-content: center;
+                margin-bottom: 1.5rem;
+            }
+            
+            .company-logo {
+                height: 40px;
+            }
+        }
+        
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .doc-card {
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        .doc-card:nth-child(1) { animation-delay: 0.1s; }
+        .doc-card:nth-child(2) { animation-delay: 0.2s; }
+        .doc-card:nth-child(3) { animation-delay: 0.3s; }
+        .doc-card:nth-child(4) { animation-delay: 0.4s; }
+        .doc-card:nth-child(5) { animation-delay: 0.5s; }
+        .doc-card:nth-child(6) { animation-delay: 0.6s; }
+        .doc-card:nth-child(7) { animation-delay: 0.7s; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-logos">
+            <img src="vato-database-documentation/logo_sintheria.png" alt="Sintheria Logo" class="company-logo">
+            <div class="logo-divider"></div>
+            <img src="vato-concept/logo_cody.png" alt="Cody Logo" class="company-logo">
+            <div class="logo-divider"></div>
+            <img src="vato-concept/logo_eugenia.png" alt="Eugenia Logo" class="company-logo">
+        </div>
+        <div class="container">
+            <div class="logo">
+                <div class="logo-circle">🧠</div>
+            </div>
+            <h1>VATO</h1>
+            <p class="tagline">Organismos Pensantes Autónomos Virtuales</p>
+            <p class="description">
+                Explora la arquitectura cognitiva, sistemas de bases de datos y documentación interactiva para construir organismos pensantes autónomos con capacidades avanzadas de memoria, aprendizaje y razonamiento.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Core Architecture Section -->
+        <section class="docs-section">
+            <div class="section-header">
+                <h2 class="section-title">🏭️ Arquitectura Base</h2>
+                <p class="section-subtitle">Arquitecturas cognitivas y de bases de datos fundamentales</p>
+            </div>
+            <div class="docs-grid">
+                <a href="vato-concept/arquitectura-cognitiva-interactiva.html" class="doc-card">
+                    <span class="doc-icon">🧠</span>
+                    <h3 class="doc-title">Arquitectura Cognitiva Interactiva</h3>
+                    <p class="doc-description">
+                        Explora las 5 capas de arquitectura cognitiva: Percepción, Procesamiento, Memoria, Cognición Superior y Metacognición. Sistema completo para organismos autónomos pensantes.
+                    </p>
+                    <div class="doc-meta">
+                        <span class="meta-tag">Español</span>
+                        <span class="meta-tag">Interactivo</span>
+                        <span class="meta-tag">Cognitivo</span>
+                    </div>
+                    <span class="cta-link">Explorar arquitectura →</span>
+                </a>
+
+                <a href="vato-concept/vato-cognitive-architecture.html" class="doc-card">
+                    <span class="doc-icon">🎯</span>
+                    <h3 class="doc-title">Arquitectura Cognitiva VATO</h3>
+                    <p class="doc-description">
+                        Documentación técnica de la arquitectura cognitiva de 5 capas de VATO con desgloses detallados de componentes, flujos de sistema y patrones de implementación.
+                    </p>
+                    <div class="doc-meta">
+                        <span class="meta-tag">Inglés</span>
+                        <span class="meta-tag">Técnico</span>
+                        <span class="meta-tag">Arquitectura</span>
+                    </div>
+                    <span class="cta-link">Ver documentación →</span>
+                </a>
+
+                <a href="vato-database-documentation/vato-database-architecture.html" class="doc-card">
+                    <span class="doc-icon">🗄️</span>
+                    <h3 class="doc-title">Arquitectura de Bases de Datos</h3>
+                    <p class="doc-description">
+                        Arquitectura multi-base de datos con PostgreSQL, Neo4j, Qdrant, Redis, MongoDB y MinIO en 8 dominios de negocio con especificaciones técnicas detalladas.
+                    </p>
+                    <div class="doc-meta">
+                        <span class="meta-tag">Español</span>
+                        <span class="meta-tag">Bases de Datos</span>
+                        <span class="meta-tag">Infraestructura</span>
+                    </div>
+                    <span class="cta-link">Explorar bases de datos →</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Interactive Journeys Section -->
+        <section class="docs-section">
+            <div class="section-header">
+                <h2 class="section-title">🚀 Viajes Interactivos</h2>
+                <p class="section-subtitle">Visualizaciones paso a paso de flujos de datos y cognitivos</p>
+            </div>
+            <div class="docs-grid">
+                <a href="vato-concept/data-journey-interactive.html" class="doc-card">
+                    <span class="doc-icon">📊</span>
+                    <h3 class="doc-title">Viaje de Datos Interactivo</h3>
+                    <p class="doc-description">
+                        Sigue la entrada del usuario a través de 6 etapas: Ingestión de Mensajes, Extracción de Conocimiento, Ensamblaje de Contexto, Personalización, Ciclo Cognitivo y Respuesta & Retroalimentación.
+                    </p>
+                    <div class="doc-meta">
+                        <span class="meta-tag">Inglés</span>
+                        <span class="meta-tag">Interactivo</span>
+                        <span class="meta-tag">Flujo de Datos</span>
+                    </div>
+                    <span class="cta-link">Comenzar viaje →</span>
+                </a>
+
+                <a href="vato-concept/cognitive-journey-interactive.html" class="doc-card">
+                    <span class="doc-icon">💡</span>
+                    <h3 class="doc-title">Viaje Cognitivo Interactivo</h3>
+                    <p class="doc-description">
+                        Sigue el proceso cognitivo completo: Percepción, Memoria, Aprendizaje, Personalización, Razonamiento y Respuesta. Caso de uso creativo con Pepe Aguilar.
+                    </p>
+                    <div class="doc-meta">
+                        <span class="meta-tag">Español</span>
+                        <span class="meta-tag">Interactivo</span>
+                        <span class="meta-tag">Caso de Uso</span>
+                    </div>
+                    <span class="cta-link">Comenzar viaje →</span>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2024 VATO - Organismos Pensantes Autónomos Virtuales</p>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+                    Construyendo el futuro de los sistemas cognitivos autónomos
+                </p>
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Documentación</a>
+                <a href="#" class="footer-link">Referencia API</a>
+                <a href="#" class="footer-link">GitHub</a>
+                <a href="#" class="footer-link">Contacto</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

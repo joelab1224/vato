@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>VATO Navigation Prototype</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* === VATO DESIGN SYSTEM V2 TOKENS === */
+    :root {
+      /* Colors - Base (Cognitive backgrounds) */
+      --color-base-warm: #F5F1E8;
+      --color-base-neutral: #E8E4DC;
+      
+      /* Colors - Accent (Insight highlighting) */
+      --color-accent-primary: #F4E5A8;
+      
+      /* Colors - Text (Information structure) */
+      --color-text-primary: #2A2A2A;
+      --color-text-secondary: #666666;
+      --color-text-tertiary: #999999;
+      
+      /* Colors - Surface (Knowledge containers) */
+      --color-surface-elevated: rgba(255, 255, 255, 0.95);
+      --color-surface-overlay: rgba(255, 255, 255, 0.85);
+      --color-glass-nav: rgba(232, 228, 220, 0.25);
+      --color-glass-header: rgba(245, 241, 232, 0.85);
+      
+      /* Colors - Effects */
+      --color-shadow: rgba(0, 0, 0, 0.08);
+      
+      /* Colors - Gradients */
+      --gradient-ambient: linear-gradient(180deg, #F5F1E8 0%, #E1DCD5 100%);
+      
+      /* Colors - Modules */
+      --color-module-home: #F4E5A8;
+      --color-module-knowledge: #E8DFC8;
+      --color-module-cognition: #F0E8D8;
+      --color-module-talk: #E8E4DC;
+      --color-module-settings: #DDD9D1;
+      
+      /* Typography - Font Family */
+      --font-family-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-family-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      
+      /* Typography - Font Sizes */
+      --font-size-h1: 28px;
+      --font-line-height-h1: 1.2;
+      --font-weight-h1: 600;
+      
+      --font-size-h2: 20px;
+      --font-line-height-h2: 1.3;
+      --font-weight-h2: 600;
+      
+      --font-size-body: 15px;
+      --font-line-height-body: 1.5;
+      --font-weight-body: 400;
+      
+      --font-size-caption: 13px;
+      --font-line-height-caption: 1.4;
+      --font-weight-caption: 400;
+      
+      --font-size-micro: 11px;
+      --font-line-height-micro: 1.3;
+      --font-weight-micro: 500;
+      
+      /* Spacing - 8px Base System */
+      --space-base: 8px;
+      --space-xs: 8px;
+      --space-sm: 16px;
+      --space-md: 20px;
+      --space-lg: 32px;
+      --space-xl: 40px;
+      --space-container-margin: 20px;
+      
+      /* Border Radius - Organic Forms */
+      --radius-card: 20px;
+      --radius-image: 16px;
+      --radius-button: 24px;
+      --radius-icon: 50%;
+      --radius-indicator: 6px;
+      
+      /* Shadows - Elevation System */
+      --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.06);
+      --shadow-card-hover: 0 12px 48px rgba(0, 0, 0, 0.08);
+      --shadow-card-active: 0 4px 16px rgba(0, 0, 0, 0.04);
+      
+      /* Effects - Glass Morphism */
+      --effect-blur: blur(20px);
+      --effect-blur-light: blur(10px);
+      --effect-blur-medium: blur(20px) saturate(180%);
+      --effect-blur-strong: blur(24px) saturate(180%);
+      --effect-transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+      
+      /* Component - Button */
+      --button-primary-bg: rgba(42, 42, 42, 0.9);
+      --button-primary-height: 44px;
+      --button-primary-padding: 12px 24px;
+      --button-icon-size: 44px;
+      --button-icon-bg: rgba(255, 255, 255, 0.95);
+      
+      /* Component - Focus */
+      --focus-outline: 2px solid;
+      --focus-outline-offset: 2px;
+      
+      /* Layout */
+      --header-height: 56px;
+      --bottom-nav-height: 72px;
+      --sidebar-width: 240px;
+      --sidebar-collapsed: 64px;
+      --container-max-width: 428px;
+      
+      /* Animation - Duration */
+      --duration-instant: 0ms;
+      --duration-fast: 150ms;
+      --duration-base: 200ms;
+      --duration-moderate: 300ms;
+      --duration-slow: 500ms;
+      --duration-slower: 800ms;
+      
+      /* Animation - Easing */
+      --easing-linear: linear;
+      --easing-smooth: cubic-bezier(0.4, 0.0, 0.2, 1);
+      --easing-snappy: cubic-bezier(0.4, 0.0, 1, 1);
+      --easing-gentle: cubic-bezier(0.25, 0.1, 0.25, 1);
+      --easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      --easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --easing-decelerate: cubic-bezier(0.0, 0.0, 0.2, 1);
+      --easing-accelerate: cubic-bezier(0.4, 0.0, 1, 1);
+      
+      /* Accessibility */
+      --touch-target-minimum: 44px;
+      --contrast-body-text: 4.5;
+      --contrast-large-text: 3;
+      
+      /* Iconography */
+      --icon-size-default: 24px;
+      --icon-size-compact: 20px;
+      --icon-stroke-width: 2px;
+    }
+    
+    /* === ICON STYLES === */
+    .icon {
+      width: var(--icon-size-default);
+      height: var(--icon-size-default);
+      stroke: var(--color-text-secondary);
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+    
+    .icon-compact {
+      width: var(--icon-size-compact);
+      height: var(--icon-size-compact);
+    }
+    
+    /* === RESET === */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: var(--font-family-body);
+      background: var(--color-base-warm);
+      color: var(--color-text-primary);
+      font-size: var(--font-size-body);
+      line-height: var(--font-line-height-body);
+      font-weight: var(--font-weight-body);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    
+    /* === LAYOUT === */
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      position: relative;
+    }
+    
+    /* === HEADER === */
+    .header {
+      position: sticky;
+      top: 0;
+      height: var(--header-height);
+      background: var(--color-glass-header);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), inset 0 -1px 0 rgba(255, 255, 255, 0.5);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+      backdrop-filter: var(--effect-blur-medium);
+      -webkit-backdrop-filter: var(--effect-blur-medium);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--space-md);
+      z-index: 100;
+      backdrop-filter: blur(20px);
+    }
+    
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    
+    .header-center {
+      flex: 1;
+      text-align: center;
+      font-family: var(--font-family-display);
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--color-text-primary);
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    
+    .header-icon-btn {
+      width: var(--button-icon-size);
+      height: var(--button-icon-size);
+      border: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: opacity var(--duration-fast) var(--easing-smooth);
+      padding: 0;
+    }
+    
+    .menu-toggle {
+      display: none;
+    }
+    
+    .header-icon-btn:hover {
+      opacity: 0.7;
+    }
+    
+    .header-icon-btn:active {
+      opacity: 0.5;
+    }
+    
+    .header-icon-btn:focus-visible {
+      outline: var(--focus-outline) var(--color-text-primary);
+      outline-offset: var(--focus-outline-offset);
+    }
+    
+    .header-logo {
+      font-family: var(--font-family-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      letter-spacing: -0.02em;
+      display: none;
+    }
+    
+    .breadcrumbs {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      display: none;
+    }
+    
+    /* === MAIN CONTENT === */
+    .main-content {
+      flex: 1;
+      padding: var(--space-md);
+      padding-bottom: calc(var(--bottom-nav-height) + var(--space-md));
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    
+    .module-view {
+      display: none;
+      animation: slideUp var(--duration-base) var(--easing-smooth) both;
+    }
+    
+    .module-view.active {
+      display: block;
+    }
+    
+    /* === KEYFRAME ANIMATIONS === */
+    @keyframes slideUp {
+      from { 
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to { 
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes scaleIn {
+      from { 
+        transform: scale(0.95);
+        opacity: 0;
+      }
+      to { 
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+    
+    /* === CARDS === */
+    .card {
+      background: var(--color-surface-elevated);
+      border-radius: var(--radius-card);
+      padding: var(--space-md);
+      box-shadow: var(--shadow-card);
+      margin-bottom: var(--space-sm);
+      transition: transform var(--duration-base) var(--easing-smooth), 
+                  box-shadow var(--duration-base) var(--easing-smooth),
+                  background var(--duration-base) var(--easing-smooth);
+      backdrop-filter: var(--effect-blur-light);
+      -webkit-backdrop-filter: var(--effect-blur-light);
+    }
+    
+    .card:hover {
+      background: rgba(255, 255, 255, 1);
+      box-shadow: var(--shadow-card-hover);
+      transform: scale(1.02);
+    }
+    
+    .card:active {
+      background: rgba(255, 255, 255, 1);
+      box-shadow: var(--shadow-card-active);
+      transform: scale(0.98);
+    }
+    
+    .card-title {
+      font-family: var(--font-family-display);
+      font-size: var(--font-size-h2);
+      font-weight: var(--font-weight-h2);
+      line-height: var(--font-line-height-h2);
+      margin-bottom: var(--space-xs);
+      letter-spacing: -0.01em;
+    }
+    
+    .card-text {
+      font-size: var(--font-size-body);
+      color: var(--color-text-secondary);
+      line-height: var(--font-line-height-body);
+    }
+    
+    .card-meta {
+      font-size: var(--font-size-caption);
+      color: var(--color-text-tertiary);
+      line-height: var(--font-line-height-caption);
+      margin-top: var(--space-xs);
+    }
+    
+    /* === BOTTOM NAVIGATION (MOBILE) === */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--bottom-nav-height);
+      background: var(--color-glass-nav);
+      box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      backdrop-filter: var(--effect-blur-medium);
+      -webkit-backdrop-filter: var(--effect-blur-medium);
+      border-top: 1px solid rgba(255, 255, 255, 0.4);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: var(--space-xs) 0;
+      z-index: 200;
+      border-radius: 32px 32px 0 0;
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      min-width: 64px;
+      padding: var(--space-xs) var(--space-xs) 6px;
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--easing-smooth);
+      position: relative;
+      border-bottom: 2px solid transparent;
+    }
+    
+    .nav-item:active {
+      transform: scale(0.95);
+    }
+    
+    .nav-item.active {
+      border-bottom-color: var(--color-text-primary);
+    }
+    
+    .nav-item.talk {
+      transform: scale(1.1);
+    }
+    
+    .nav-item.talk.active {
+      border-bottom-color: var(--color-text-primary);
+    }
+    
+    .nav-item.talk .icon {
+      width: 22px;
+      height: 22px;
+    }
+    
+    .nav-item.talk.active .icon {
+      stroke: var(--color-text-primary);
+    }
+    
+    .nav-item.talk.active .nav-label {
+      color: var(--color-text-primary);
+    }
+    
+    .nav-item .icon {
+      width: 20px;
+      height: 20px;
+      stroke: var(--color-text-secondary);
+      transition: stroke var(--duration-fast) var(--easing-smooth);
+    }
+    
+    .nav-item.active .icon {
+      stroke: var(--color-text-primary);
+    }
+    
+    .nav-label {
+      font-size: var(--font-size-micro);
+      font-weight: var(--font-weight-micro);
+      line-height: var(--font-line-height-micro);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: color var(--duration-fast) var(--easing-smooth);
+    }
+    
+    .nav-item.active .nav-label {
+      color: var(--color-text-primary);
+      font-weight: 600;
+    }
+    
+    /* === SIDEBAR (DESKTOP ONLY - COLLAPSIBLE) === */
+    .sidebar {
+      display: none; /* Hidden on mobile */
+    }
+    
+    .sidebar-overlay {
+      display: none; /* Not needed on mobile */
+    }
+    
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-md);
+      margin: 4px var(--space-sm);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--easing-smooth);
+      color: var(--color-text-secondary);
+    }
+    
+    .sidebar-item:hover {
+      background: var(--color-base-neutral);
+      transform: translateX(2px);
+    }
+    
+    .sidebar-item.active {
+      background: var(--color-accent-primary);
+      color: var(--color-text-primary);
+      font-weight: 600;
+    }
+    
+    .sidebar-item.talk {
+      background: var(--button-primary-bg);
+      color: var(--color-surface-elevated);
+      font-weight: 600;
+      margin: var(--space-xs) var(--space-sm);
+      animation: float 3s var(--easing-gentle) infinite;
+    }
+    
+    .sidebar-item.talk:hover {
+      background: #1a1a1a;
+    }
+    
+    .sidebar-item .icon {
+      stroke: var(--color-text-secondary);
+      transition: stroke var(--duration-fast) var(--easing-smooth);
+    }
+    
+    .sidebar-item.active .icon {
+      stroke: var(--color-text-primary);
+    }
+    
+    .sidebar-item.talk .icon {
+      stroke: var(--color-surface-elevated);
+    }
+    
+    .sidebar-label {
+      font-size: 15px;
+      font-family: var(--font-family-display);
+      font-weight: 500;
+    }
+    
+    /* === RESPONSIVE === */
+    @media (min-width: 768px) {
+      .main-content {
+        padding-bottom: var(--space-md);
+      }
+    }
+    
+    @media (min-width: 1280px) {
+      /* Show hamburger menu on desktop */
+      .menu-toggle {
+        display: flex;
+      }
+      
+      /* Hide mobile elements */
+      .header-logo {
+        display: none;
+      }
+      
+      .header-center {
+        opacity: 0;
+        pointer-events: none;
+      }
+      
+      .bottom-nav {
+        display: none;
+      }
+      
+      /* Show sidebar - collapsible from left */
+      .sidebar {
+        display: block;
+        position: fixed;
+        left: -280px;
+        top: var(--header-height);
+        bottom: 0;
+        width: var(--sidebar-width);
+        background: var(--color-surface-overlay);
+        backdrop-filter: var(--effect-blur-strong);
+        -webkit-backdrop-filter: var(--effect-blur-strong);
+        border-right: 1px solid rgba(255, 255, 255, 0.3);
+        padding: var(--space-md) 0;
+        z-index: 150;
+        transition: left var(--duration-moderate) var(--easing-smooth);
+        box-shadow: 2px 0 24px rgba(0, 0, 0, 0.12);
+      }
+      
+      .sidebar.open {
+        left: 0;
+      }
+      
+      /* Show overlay when sidebar open */
+      .sidebar-overlay {
+        display: block;
+        position: fixed;
+        top: var(--header-height);
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(42, 42, 42, 0.4);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity var(--duration-moderate) var(--easing-smooth);
+        z-index: 140;
+      }
+      
+      .sidebar-overlay.visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      
+      /* Adjust content when sidebar open */
+      .main-content {
+        transition: margin-left var(--duration-moderate) var(--easing-smooth);
+      }
+      
+      body.sidebar-open .main-content {
+        margin-left: var(--sidebar-width);
+      }
+    }
+    
+    /* === MODULE-SPECIFIC STYLES === */
+    
+    /* Home Module */
+    .welcome-section {
+      text-align: center;
+      padding: var(--space-lg) 0;
+    }
+    
+    .welcome-title {
+      font-family: var(--font-family-display);
+      font-size: var(--font-size-h1);
+      font-weight: var(--font-weight-h1);
+      line-height: var(--font-line-height-h1);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-sm);
+    }
+    
+    .welcome-text {
+      font-size: var(--font-size-body);
+      line-height: var(--font-line-height-body);
+      color: var(--color-text-secondary);
+      max-width: 400px;
+      margin: 0 auto var(--space-lg);
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-sm);
+      margin-top: var(--space-md);
+    }
+    
+    .stat-card {
+      background: var(--color-surface-elevated);
+      border-radius: var(--radius-card);
+      padding: var(--space-md);
+      box-shadow: var(--shadow-card);
+      text-align: center;
+      transition: transform var(--duration-base) var(--easing-smooth);
+    }
+    
+    .stat-card:hover {
+      transform: scale(1.02);
+    }
+    
+    .stat-value {
+      font-family: var(--font-family-display);
+      font-size: var(--font-size-h1);
+      font-weight: var(--font-weight-h1);
+      line-height: var(--font-line-height-h1);
+      color: var(--color-text-primary);
+      margin-bottom: 4px;
+    }
+    
+    .stat-label {
+      font-size: var(--font-size-caption);
+      line-height: var(--font-line-height-caption);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    /* Knowledge Module */
+    .knowledge-graph-preview {
+      background: var(--color-surface-elevated);
+      border-radius: var(--radius-card);
+      padding: var(--space-md);
+      box-shadow: var(--shadow-card);
+      margin-bottom: var(--space-md);
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .graph-node {
+      width: 60px;
+      height: 60px;
+      border-radius: var(--radius-icon);
+      background: var(--color-accent-primary);
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      box-shadow: var(--shadow-card);
+      animation: float 3s var(--easing-gentle) infinite;
+    }
+    
+    .graph-node:nth-child(1) { animation-delay: 0s; }
+    .graph-node:nth-child(2) { animation-delay: 0.5s; }
+    .graph-node:nth-child(3) { animation-delay: 1s; }
+    
+    .node-1 { top: 50%; left: 30%; transform: translate(-50%, -50%); }
+    .node-2 { top: 30%; left: 60%; transform: translate(-50%, -50%); }
+    .node-3 { top: 70%; left: 65%; transform: translate(-50%, -50%); }
+    
+    .graph-connection {
+      position: absolute;
+      height: 2px;
+      background: var(--color-base-neutral);
+      transform-origin: left center;
+    }
+    
+    /* Talk Module */
+    .theme-switcher {
+      display: flex;
+      gap: var(--space-xs);
+      margin-bottom: var(--space-md);
+      padding: 4px;
+      background: var(--color-surface-elevated);
+      border-radius: var(--radius-button);
+      box-shadow: var(--shadow-card);
+    }
+    
+    .theme-btn {
+      flex: 1;
+      padding: var(--space-sm);
+      border: none;
+      border-radius: calc(var(--radius-button) - 4px);
+      background: transparent;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--easing-smooth);
+      color: var(--color-text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--color-accent-primary);
+      color: var(--color-text-primary);
+      font-weight: 600;
+    }
+    
+    .chat-preview {
+      background: var(--color-surface-elevated);
+      border-radius: var(--radius-card);
+      padding: var(--space-md);
+      box-shadow: var(--shadow-card);
+      min-height: 300px;
+    }
+    
+    .chat-message {
+      margin-bottom: var(--space-sm);
+      padding: var(--space-sm);
+      border-radius: 12px;
+      max-width: 80%;
+    }
+    
+    .chat-message.user {
+      background: var(--color-accent-primary);
+      margin-left: auto;
+    }
+    
+    .chat-message.assistant {
+      background: var(--color-base-neutral);
+    }
+    
+    /* Cognition Module */
+    .timeline {
+      position: relative;
+      padding-left: var(--space-md);
+    }
+    
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--color-base-neutral);
+    }
+    
+    .timeline-item {
+      position: relative;
+      margin-bottom: var(--space-md);
+    }
+    
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -25px;
+      top: 8px;
+      width: 12px;
+      height: 12px;
+      border-radius: var(--radius-icon);
+      background: var(--color-accent-primary);
+      border: 2px solid var(--color-base-warm);
+    }
+    
+    /* Settings Module */
+    .settings-list {
+      background: var(--color-surface-elevated);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+    
+    .settings-item {
+      padding: var(--space-md);
+      border-bottom: 1px solid var(--color-base-neutral);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: background var(--duration-fast) var(--easing-smooth);
+    }
+    
+    .settings-item:last-child {
+      border-bottom: none;
+    }
+    
+    .settings-item:hover {
+      background: var(--color-base-neutral);
+    }
+    
+    .settings-label {
+      font-size: 15px;
+      font-weight: 500;
+    }
+    
+    .settings-value {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+    }
+    
+    /* === DEVICE PREVIEW TOGGLE === */
+    .device-toggle {
+      position: fixed;
+      top: var(--space-md);
+      right: var(--space-md);
+      z-index: 300;
+      background: var(--color-surface-elevated);
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-button);
+      box-shadow: var(--shadow-card);
+      font-size: 13px;
+      font-weight: 500;
+      display: none;
+    }
+    
+    @media (min-width: 768px) {
+      .device-toggle {
+        display: block;
+      }
+    }
+    
+    /* === ACCESSIBILITY - Reduced Motion === */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <button class="header-icon-btn menu-toggle" aria-label="Menu">
+          <i data-lucide="menu" class="icon icon-compact"></i>
+        </button>
+      </div>
+      <div class="header-center">
+      </div>
+      <div class="header-right">
+        <button class="header-icon-btn" aria-label="Search">
+          <i data-lucide="search" class="icon icon-compact"></i>
+        </button>
+        <button class="header-icon-btn" aria-label="Notifications">
+          <i data-lucide="bell" class="icon icon-compact"></i>
+        </button>
+        <button class="header-icon-btn" aria-label="User menu">
+          <i data-lucide="user" class="icon icon-compact"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Sidebar Overlay (Mobile) -->
+    <div class="sidebar-overlay"></div>
+    
+    <!-- Sidebar (Mobile Drawer + Desktop) -->
+    <nav class="sidebar">
+      <div class="sidebar-item active" data-module="home">
+        <i data-lucide="home" class="icon"></i>
+        <span class="sidebar-label">Home</span>
+      </div>
+      <div class="sidebar-item" data-module="knowledge">
+        <i data-lucide="book-open" class="icon"></i>
+        <span class="sidebar-label">Knowledge</span>
+      </div>
+      <div class="sidebar-item talk" data-module="talk">
+        <i data-lucide="message-circle" class="icon"></i>
+        <span class="sidebar-label">Talk</span>
+      </div>
+      <div class="sidebar-item" data-module="cognition">
+        <i data-lucide="brain" class="icon"></i>
+        <span class="sidebar-label">Cognition</span>
+      </div>
+      <div class="sidebar-item" data-module="settings">
+        <i data-lucide="settings" class="icon"></i>
+        <span class="sidebar-label">Settings</span>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Home Module -->
+      <div class="module-view active" data-module="home">
+        <div class="welcome-section">
+          <h1 class="welcome-title">Welcome to VATO</h1>
+          <p class="welcome-text">Your Virtual Autonomous Thinking Organism—ready to help you think, learn, and create.</p>
+        </div>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value">127</div>
+            <div class="stat-label">Documents</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">43</div>
+            <div class="stat-label">Nodes</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">8</div>
+            <div class="stat-label">Active Agents</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">256</div>
+            <div class="stat-label">Memories</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 32px;">
+          <div class="card">
+            <div class="card-title">Quick Actions</div>
+            <div class="card-text">Start a conversation, upload documents, or explore your knowledge graph.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Knowledge Module -->
+      <div class="module-view" data-module="knowledge">
+        <h2 style="font-family: var(--font-display); font-size: 28px; font-weight: 700; margin-bottom: 24px;">Knowledge Base</h2>
+        
+        <div class="knowledge-graph-preview">
+          <div class="graph-node node-1">Node A</div>
+          <div class="graph-node node-2">Node B</div>
+          <div class="graph-node node-3">Node C</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Introduction to Neural Networks</div>
+          <div class="card-text">A comprehensive guide to understanding artificial neural networks and their applications in modern AI systems.</div>
+          <div class="card-meta">Updated 2 hours ago • 12 connections</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Cognitive Architecture Patterns</div>
+          <div class="card-text">Exploring different patterns for building cognitive systems that can reason, learn, and adapt.</div>
+          <div class="card-meta">Updated yesterday • 8 connections</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Memory Management in AI</div>
+          <div class="card-text">Strategies for efficient memory storage and retrieval in autonomous thinking systems.</div>
+          <div class="card-meta">Updated 3 days ago • 15 connections</div>
+        </div>
+      </div>
+
+      <!-- Talk Module -->
+      <div class="module-view" data-module="talk">
+        <h2 style="font-family: var(--font-display); font-size: 28px; font-weight: 700; margin-bottom: 24px;">Talk</h2>
+        
+        <div class="theme-switcher">
+          <button class="theme-btn active">Clean</button>
+          <button class="theme-btn">Warm</button>
+          <button class="theme-btn">Dark</button>
+        </div>
+
+        <div class="chat-preview">
+          <div class="chat-message assistant">
+            <div style="font-weight: 500; margin-bottom: 4px;">VATO</div>
+            <div>Hello! How can I help you today?</div>
+          </div>
+          <div class="chat-message user">
+            <div>Can you help me understand my knowledge graph?</div>
+          </div>
+          <div class="chat-message assistant">
+            <div style="font-weight: 500; margin-bottom: 4px;">VATO</div>
+            <div>Of course! Your knowledge graph currently has 43 nodes representing different concepts and documents. Would you like me to explain the main clusters?</div>
+          </div>
+          <div class="chat-message user">
+            <div>Yes, please show me the main topics.</div>
+          </div>
+          <div class="chat-message assistant">
+            <div style="font-weight: 500; margin-bottom: 4px;">VATO</div>
+            <div>I can see three main topic clusters: Neural Networks (15 nodes), Cognitive Systems (12 nodes), and Machine Learning (16 nodes). They're all interconnected through shared concepts.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cognition Module -->
+      <div class="module-view" data-module="cognition">
+        <h2 style="font-family: var(--font-display); font-size: 28px; font-weight: 700; margin-bottom: 24px;">Cognition</h2>
+        
+        <div class="card" style="margin-bottom: 24px;">
+          <div class="card-title">Active Agents</div>
+          <div class="card-text">8 autonomous agents currently processing information and forming connections.</div>
+        </div>
+
+        <h3 style="font-family: var(--font-display); font-size: 20px; font-weight: 600; margin-bottom: 16px;">Memory Timeline</h3>
+        
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="card">
+              <div class="card-title">Document Analysis Complete</div>
+              <div class="card-text">Analyzed "Introduction to Neural Networks" and created 5 new knowledge nodes.</div>
+              <div class="card-meta">2 hours ago</div>
+            </div>
+          </div>
+          
+          <div class="timeline-item">
+            <div class="card">
+              <div class="card-title">Connection Formed</div>
+              <div class="card-text">Linked "Cognitive Architecture" with "Memory Systems" based on conceptual similarity.</div>
+              <div class="card-meta">5 hours ago</div>
+            </div>
+          </div>
+          
+          <div class="timeline-item">
+            <div class="card">
+              <div class="card-title">Conversation Summarized</div>
+              <div class="card-text">Created summary of discussion about machine learning fundamentals.</div>
+              <div class="card-meta">Yesterday</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="card">
+              <div class="card-title">Knowledge Synthesis</div>
+              <div class="card-text">Generated insights connecting neural networks and cognitive systems.</div>
+              <div class="card-meta">2 days ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Module -->
+      <div class="module-view" data-module="settings">
+        <h2 style="font-family: var(--font-display); font-size: 28px; font-weight: 700; margin-bottom: 24px;">Settings</h2>
+        
+        <div class="settings-list">
+          <div class="settings-item">
+            <span class="settings-label">Profile</span>
+            <span class="settings-value">→</span>
+          </div>
+          <div class="settings-item">
+            <span class="settings-label">Preferences</span>
+            <span class="settings-value">→</span>
+          </div>
+          <div class="settings-item">
+            <span class="settings-label">Privacy</span>
+            <span class="settings-value">→</span>
+          </div>
+          <div class="settings-item">
+            <span class="settings-label">Data Management</span>
+            <span class="settings-value">→</span>
+          </div>
+          <div class="settings-item">
+            <span class="settings-label">Notifications</span>
+            <span class="settings-value">Enabled</span>
+          </div>
+          <div class="settings-item">
+            <span class="settings-label">Appearance</span>
+            <span class="settings-value">System</span>
+          </div>
+          <div class="settings-item">
+            <span class="settings-label">About</span>
+            <span class="settings-value">v2.0.0</span>
+          </div>
+          <div class="settings-item" style="color: #DC2626;">
+            <span class="settings-label">Sign Out</span>
+            <span class="settings-value">→</span>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <nav class="bottom-nav">
+      <div class="nav-item active" data-module="home">
+        <i data-lucide="home" class="icon"></i>
+        <span class="nav-label">Home</span>
+      </div>
+      <div class="nav-item" data-module="knowledge">
+        <i data-lucide="book-open" class="icon"></i>
+        <span class="nav-label">Know</span>
+      </div>
+      <div class="nav-item talk" data-module="talk">
+        <i data-lucide="message-circle" class="icon"></i>
+        <span class="nav-label">Talk</span>
+      </div>
+      <div class="nav-item" data-module="cognition">
+        <i data-lucide="brain" class="icon"></i>
+        <span class="nav-label">Cog</span>
+      </div>
+      <div class="nav-item" data-module="settings">
+        <i data-lucide="settings" class="icon"></i>
+        <span class="nav-label">Set</span>
+      </div>
+    </nav>
+  </div>
+
+  <script>
+    // Module switching logic
+    const navItems = document.querySelectorAll('.nav-item, .sidebar-item');
+    const moduleViews = document.querySelectorAll('.module-view');
+    const mobileTitle = document.querySelector('.mobile-title');
+    const breadcrumbs = document.querySelector('.breadcrumbs');
+
+    const moduleNames = {
+      home: 'Home',
+      knowledge: 'Knowledge',
+      talk: 'Talk',
+      cognition: 'Cognition',
+      settings: 'Settings'
+    };
+
+    function switchModule(moduleName) {
+      // Update active states
+      navItems.forEach(item => {
+        if (item.dataset.module === moduleName) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
+
+      // Update views
+      moduleViews.forEach(view => {
+        if (view.dataset.module === moduleName) {
+          view.classList.add('active');
+        } else {
+          view.classList.remove('active');
+        }
+      });
+
+      // Update header
+      const displayName = moduleNames[moduleName] || moduleName;
+      if (mobileTitle) mobileTitle.textContent = displayName;
+      if (breadcrumbs) breadcrumbs.textContent = displayName;
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Add click handlers
+    navItems.forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const module = item.dataset.module;
+        if (module) {
+          switchModule(module);
+        }
+      });
+    });
+
+    // Theme switcher for Talk module
+    const themeBtns = document.querySelectorAll('.theme-btn');
+    themeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        themeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // Desktop-specific logic
+    function updateLayout() {
+      const isDesktop = window.innerWidth >= 1280;
+      const logo = document.querySelector('.header-logo');
+      
+      if (logo) {
+        logo.style.display = isDesktop ? 'block' : 'none';
+      }
+    }
+
+    window.addEventListener('resize', updateLayout);
+    updateLayout();
+
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Menu toggle functionality (Desktop only)
+    const menuToggle = document.querySelector('.menu-toggle');
+    const sidebar = document.querySelector('.sidebar');
+    const sidebarOverlay = document.querySelector('.sidebar-overlay');
+    
+    function openSidebar() {
+      sidebar.classList.add('open');
+      sidebarOverlay.classList.add('visible');
+      document.body.classList.add('sidebar-open');
+    }
+    
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('visible');
+      document.body.classList.remove('sidebar-open');
+    }
+    
+    // Only works on desktop (1280px+)
+    menuToggle.addEventListener('click', () => {
+      if (window.innerWidth >= 1280) {
+        if (sidebar.classList.contains('open')) {
+          closeSidebar();
+        } else {
+          openSidebar();
+        }
+      }
+    });
+    
+    sidebarOverlay.addEventListener('click', closeSidebar);
+    
+    // Close sidebar when clicking nav item on desktop
+    const sidebarItems = document.querySelectorAll('.sidebar-item');
+    sidebarItems.forEach(item => {
+      item.addEventListener('click', () => {
+        if (window.innerWidth >= 1280) {
+          closeSidebar();
+        }
+      });
+    });
+    
+    // Close sidebar on window resize if going below desktop breakpoint
+    window.addEventListener('resize', () => {
+      if (window.innerWidth < 1280) {
+        closeSidebar();
+      }
+    });
+  </script>
+</body>
+</html>

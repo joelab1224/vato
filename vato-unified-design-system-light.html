@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VATO Unified Design System - Light</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Space Grotesk', 'sans-serif'],
+                        body: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        vato: {
+                            light: {
+                                50: '#fafafa',
+                                100: '#f5f5f5',
+                                200: '#e5e5e5',
+                            },
+                            violet: {
+                                400: '#a78bfa',
+                                500: '#8b5cf6',
+                                600: '#7c3aed',
+                            },
+                            purple: {
+                                500: '#a855f7',
+                                600: '#9333ea',
+                            },
+                            pink: {
+                                500: '#ec4899',
+                                600: '#db2777',
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* === DESIGN TOKENS === */
+        :root {
+            /* Colors - Light Theme with Vibrant Accents */
+            --bg-primary: #ffffff;
+            --bg-secondary: #fafafa;
+            --bg-elevated: rgba(255, 255, 255, 0.7);
+            --bg-glass: rgba(139, 92, 246, 0.05);
+            
+            --accent-violet: #8b5cf6;
+            --accent-purple: #9333ea;
+            --accent-pink: #ec4899;
+            
+            --text-primary: #18181b;
+            --text-secondary: #52525b;
+            --text-tertiary: #a1a1aa;
+            
+            /* Typography */
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            
+            /* Spacing - Tailwind 4px base */
+            --space-1: 0.25rem;  /* 4px */
+            --space-2: 0.5rem;   /* 8px */
+            --space-3: 0.75rem;  /* 12px */
+            --space-4: 1rem;     /* 16px */
+            --space-5: 1.25rem;  /* 20px */
+            --space-6: 1.5rem;   /* 24px */
+            --space-8: 2rem;     /* 32px */
+            --space-10: 2.5rem;  /* 40px */
+            --space-12: 3rem;    /* 48px */
+            
+            /* Border Radius */
+            --radius-sm: 0.5rem;   /* 8px */
+            --radius-md: 0.75rem;  /* 12px */
+            --radius-lg: 1rem;     /* 16px */
+            --radius-xl: 1.25rem;  /* 20px */
+            --radius-full: 9999px;
+            
+            /* Glassmorphism */
+            --glass-blur: 20px;
+            --glass-border: rgba(0, 0, 0, 0.08);
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow-glow: 0 0 30px rgba(139, 92, 246, 0.25);
+        }
+        
+        /* === GLOBAL STYLES === */
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(135deg, #fafafa 0%, #ffffff 50%, #f5f0ff 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-display);
+        }
+        
+        /* === GLASSMORPHISM EFFECT === */
+        .glass {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        }
+        
+        .glass-violet {
+            background: rgba(139, 92, 246, 0.08);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.1);
+        }
+        
+        .glass-purple {
+            background: rgba(147, 51, 234, 0.08);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid rgba(147, 51, 234, 0.15);
+            box-shadow: 0 4px 16px rgba(147, 51, 234, 0.1);
+        }
+        
+        .glass-pink {
+            background: rgba(236, 72, 153, 0.08);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid rgba(236, 72, 153, 0.15);
+            box-shadow: 0 4px 16px rgba(236, 72, 153, 0.1);
+        }
+        
+        /* === GRADIENT BACKGROUNDS === */
+        .gradient-violet-purple {
+            background: linear-gradient(135deg, #8b5cf6 0%, #9333ea 100%);
+        }
+        
+        .gradient-purple-pink {
+            background: linear-gradient(135deg, #9333ea 0%, #ec4899 100%);
+        }
+        
+        .gradient-violet-pink {
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+        }
+        
+        /* === COMPONENT CLASSES === */
+        
+        /* Cards */
+        .card {
+            border-radius: var(--radius-lg);
+            transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-glow);
+        }
+        
+        /* Buttons */
+        .btn {
+            font-family: var(--font-body);
+            font-weight: 600;
+            height: 44px;
+            padding: 0 var(--space-6);
+            border-radius: var(--radius-md);
+            transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6 0%, #9333ea 100%);
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-glow);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(var(--glass-blur));
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(139, 92, 246, 0.2);
+        }
+        
+        /* Badges */
+        .badge {
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-full);
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+        
+        /* Status Indicators */
+        .status-pulse {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+        
+        /* Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(var(--glass-blur));
+            border-top: 1px solid var(--glass-border);
+            padding: var(--space-4);
+            z-index: 50;
+            box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-1);
+            color: var(--text-tertiary);
+            font-size: 0.75rem;
+            transition: color 200ms;
+        }
+        
+        .nav-item.active {
+            color: var(--accent-violet);
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fadeInUp {
+            animation: fadeInUp 400ms ease-out;
+        }
+        
+        /* Container */
+        .container-mobile {
+            max-width: 428px;
+            margin: 0 auto;
+            padding: var(--space-4);
+        }
+        
+        @media (min-width: 768px) {
+            .container-desktop {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Main Container -->
+    <div class="container-mobile min-h-screen pb-24">
+        
+        <!-- Header Section -->
+        <header class="py-8 animate-fadeInUp">
+            <div class="text-center mb-6">
+                <h1 class="text-4xl font-display font-bold mb-2 bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                    VATO Design System
+                </h1>
+                <p class="text-zinc-600 font-body">
+                    Unified component library - Light
+                </p>
+            </div>
+            
+            <!-- Status Bar -->
+            <div class="glass rounded-2xl p-4 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="status-pulse bg-green-500"></div>
+                    <span class="text-sm text-zinc-700">System Active</span>
+                </div>
+                <div class="badge glass-violet text-violet-700">
+                    v1.0.0
+                </div>
+            </div>
+        </header>
+        
+        <!-- Color System -->
+        <section class="mb-8 animate-fadeInUp" style="animation-delay: 100ms">
+            <h2 class="text-2xl font-display font-semibold mb-4 text-zinc-800">Color System</h2>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <!-- Violet -->
+                <div class="glass-violet card p-6">
+                    <div class="w-12 h-12 rounded-lg bg-violet-500 mb-3"></div>
+                    <h3 class="font-display font-semibold text-violet-700 mb-1">Violet</h3>
+                    <p class="text-xs text-zinc-600">#8b5cf6</p>
+                </div>
+                
+                <!-- Purple -->
+                <div class="glass-purple card p-6">
+                    <div class="w-12 h-12 rounded-lg bg-purple-600 mb-3"></div>
+                    <h3 class="font-display font-semibold text-purple-700 mb-1">Purple</h3>
+                    <p class="text-xs text-zinc-600">#9333ea</p>
+                </div>
+                
+                <!-- Pink -->
+                <div class="glass-pink card p-6">
+                    <div class="w-12 h-12 rounded-lg bg-pink-500 mb-3"></div>
+                    <h3 class="font-display font-semibold text-pink-700 mb-1">Pink</h3>
+                    <p class="text-xs text-zinc-600">#ec4899</p>
+                </div>
+                
+                <!-- White -->
+                <div class="glass card p-6">
+                    <div class="w-12 h-12 rounded-lg bg-white border border-zinc-200 mb-3"></div>
+                    <h3 class="font-display font-semibold text-zinc-700 mb-1">White</h3>
+                    <p class="text-xs text-zinc-600">#ffffff</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Typography -->
+        <section class="mb-8 animate-fadeInUp" style="animation-delay: 200ms">
+            <h2 class="text-2xl font-display font-semibold mb-4 text-zinc-800">Typography</h2>
+            
+            <div class="glass card p-6 space-y-4">
+                <div>
+                    <p class="text-xs text-zinc-500 mb-1">Display - Space Grotesk</p>
+                    <h1 class="text-3xl font-display font-bold text-zinc-900">Heading 1</h1>
+                </div>
+                <div>
+                    <p class="text-xs text-zinc-500 mb-1">Display - Space Grotesk</p>
+                    <h2 class="text-2xl font-display font-semibold text-zinc-900">Heading 2</h2>
+                </div>
+                <div>
+                    <p class="text-xs text-zinc-500 mb-1">Body - Inter</p>
+                    <p class="text-base font-body text-zinc-700">Body text example with regular weight</p>
+                </div>
+                <div>
+                    <p class="text-xs text-zinc-500 mb-1">Caption - Inter</p>
+                    <p class="text-sm font-body text-zinc-600">Small caption text for metadata</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Buttons -->
+        <section class="mb-8 animate-fadeInUp" style="animation-delay: 300ms">
+            <h2 class="text-2xl font-display font-semibold mb-4 text-zinc-800">Buttons</h2>
+            
+            <div class="space-y-4">
+                <button class="btn btn-primary w-full">
+                    Primary Button
+                </button>
+                
+                <button class="btn btn-secondary w-full">
+                    Secondary Button
+                </button>
+                
+                <button class="btn btn-primary w-full flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                    </svg>
+                    Button with Icon
+                </button>
+            </div>
+        </section>
+        
+        <!-- Cards with Glassmorphism -->
+        <section class="mb-8 animate-fadeInUp" style="animation-delay: 400ms">
+            <h2 class="text-2xl font-display font-semibold mb-4 text-zinc-800">Cards</h2>
+            
+            <div class="space-y-4">
+                <!-- Default Glass Card -->
+                <div class="glass card p-6">
+                    <h3 class="font-display font-semibold text-lg text-zinc-900 mb-2">Default Glass Card</h3>
+                    <p class="text-zinc-600 text-sm mb-4">
+                        Standard glassmorphism effect with neutral background
+                    </p>
+                    <div class="badge glass-violet text-violet-700">
+                        Featured
+                    </div>
+                </div>
+                
+                <!-- Violet Glass Card -->
+                <div class="glass-violet card p-6">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="w-10 h-10 rounded-lg gradient-violet-purple flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                        </div>
+                        <div class="status-pulse bg-violet-500"></div>
+                    </div>
+                    <h3 class="font-display font-semibold text-lg text-violet-700 mb-2">Violet Accent Card</h3>
+                    <p class="text-zinc-600 text-sm">
+                        Card with violet glassmorphism for primary actions
+                    </p>
+                </div>
+                
+                <!-- Purple Glass Card -->
+                <div class="glass-purple card p-6">
+                    <h3 class="font-display font-semibold text-lg text-purple-700 mb-2">Purple Accent Card</h3>
+                    <p class="text-zinc-600 text-sm mb-4">
+                        Card with purple glassmorphism for secondary actions
+                    </p>
+                    <div class="flex gap-2">
+                        <span class="badge glass text-zinc-700">Tag 1</span>
+                        <span class="badge glass text-zinc-700">Tag 2</span>
+                    </div>
+                </div>
+                
+                <!-- Gradient Card -->
+                <div class="gradient-violet-purple card p-6">
+                    <h3 class="font-display font-bold text-xl text-white mb-2">Gradient Card</h3>
+                    <p class="text-violet-100 text-sm mb-4">
+                        High-contrast card with gradient background
+                    </p>
+                    <button class="btn btn-secondary">
+                        Learn More
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Badges & Status -->
+        <section class="mb-8 animate-fadeInUp" style="animation-delay: 500ms">
+            <h2 class="text-2xl font-display font-semibold mb-4 text-zinc-800">Badges & Status</h2>
+            
+            <div class="glass card p-6 space-y-4">
+                <div class="flex flex-wrap gap-2">
+                    <span class="badge glass-violet text-violet-700">Active</span>
+                    <span class="badge glass-purple text-purple-700">Processing</span>
+                    <span class="badge glass-pink text-pink-700">New</span>
+                    <span class="badge glass text-zinc-700">Neutral</span>
+                </div>
+                
+                <div class="flex flex-wrap gap-3">
+                    <div class="flex items-center gap-2">
+                        <div class="status-pulse bg-green-500"></div>
+                        <span class="text-sm text-zinc-700">Active</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="status-pulse bg-yellow-500"></div>
+                        <span class="text-sm text-zinc-700">Pending</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="status-pulse bg-red-500"></div>
+                        <span class="text-sm text-zinc-700">Error</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Spacing Scale -->
+        <section class="mb-8 animate-fadeInUp" style="animation-delay: 600ms">
+            <h2 class="text-2xl font-display font-semibold mb-4 text-zinc-800">Spacing Scale</h2>
+            
+            <div class="glass card p-6">
+                <div class="space-y-3">
+                    <div class="flex items-center gap-4">
+                        <div class="w-1 bg-violet-500" style="height: 4px;"></div>
+                        <span class="text-sm text-zinc-600">4px - space-1</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-2 bg-violet-500" style="height: 4px;"></div>
+                        <span class="text-sm text-zinc-600">8px - space-2</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-4 bg-violet-500" style="height: 4px;"></div>
+                        <span class="text-sm text-zinc-600">16px - space-4</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-6 bg-violet-500" style="height: 4px;"></div>
+                        <span class="text-sm text-zinc-600">24px - space-6</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 bg-violet-500" style="height: 4px;"></div>
+                        <span class="text-sm text-zinc-600">32px - space-8</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Border Radius -->
+        <section class="mb-8 animate-fadeInUp" style="animation-delay: 700ms">
+            <h2 class="text-2xl font-display font-semibold mb-4 text-zinc-800">Border Radius</h2>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="glass card p-6" style="border-radius: 8px;">
+                    <p class="text-sm text-zinc-700">radius-sm</p>
+                    <p class="text-xs text-zinc-500">8px</p>
+                </div>
+                <div class="glass card p-6" style="border-radius: 12px;">
+                    <p class="text-sm text-zinc-700">radius-md</p>
+                    <p class="text-xs text-zinc-500">12px</p>
+                </div>
+                <div class="glass card p-6" style="border-radius: 16px;">
+                    <p class="text-sm text-zinc-700">radius-lg</p>
+                    <p class="text-xs text-zinc-500">16px</p>
+                </div>
+                <div class="glass card p-6" style="border-radius: 20px;">
+                    <p class="text-sm text-zinc-700">radius-xl</p>
+                    <p class="text-xs text-zinc-500">20px</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Transparency Examples -->
+        <section class="mb-8 animate-fadeInUp" style="animation-delay: 800ms">
+            <h2 class="text-2xl font-display font-semibold mb-4 text-zinc-800">Transparency Levels</h2>
+            
+            <div class="space-y-4">
+                <div class="p-6 rounded-2xl" style="background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); border: 1px solid rgba(0, 0, 0, 0.08);">
+                    <p class="text-sm font-semibold text-zinc-800 mb-1">90% Opacity</p>
+                    <p class="text-xs text-zinc-600">rgba(255, 255, 255, 0.9)</p>
+                </div>
+                
+                <div class="p-6 rounded-2xl" style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(0, 0, 0, 0.08);">
+                    <p class="text-sm font-semibold text-zinc-800 mb-1">70% Opacity</p>
+                    <p class="text-xs text-zinc-600">rgba(255, 255, 255, 0.7)</p>
+                </div>
+                
+                <div class="p-6 rounded-2xl" style="background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(20px); border: 1px solid rgba(0, 0, 0, 0.08);">
+                    <p class="text-sm font-semibold text-zinc-800 mb-1">50% Opacity</p>
+                    <p class="text-xs text-zinc-600">rgba(255, 255, 255, 0.5)</p>
+                </div>
+                
+                <div class="p-6 rounded-2xl" style="background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(20px); border: 1px solid rgba(0, 0, 0, 0.08);">
+                    <p class="text-sm font-semibold text-zinc-800 mb-1">30% Opacity</p>
+                    <p class="text-xs text-zinc-600">rgba(255, 255, 255, 0.3)</p>
+                </div>
+            </div>
+        </section>
+        
+    </div>
+    
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="grid grid-cols-5 gap-2">
+            <button class="nav-item active">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+                <span>Home</span>
+            </button>
+            
+            <button class="nav-item">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
+                </svg>
+                <span>Design</span>
+            </button>
+            
+            <button class="nav-item">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                </svg>
+                <span>Code</span>
+            </button>
+            
+            <button class="nav-item">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+                <span>Metrics</span>
+            </button>
+            
+            <button class="nav-item">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <span>Settings</span>
+            </button>
+        </div>
+    </nav>
+    
+</body>
+</html>

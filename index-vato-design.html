@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VATO - Centro de Documentación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .7; }
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-4px);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen bg-gray-50">
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto pb-20">
+        <div class="p-4 space-y-6 max-w-md mx-auto">
+            
+            <!-- Hero Header with Gradient -->
+            <div class="bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 rounded-2xl p-6 text-white">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h1 class="text-2xl font-bold">Centro de Documentación 🧠</h1>
+                        <p class="text-violet-100">Arquitectura cognitiva y sistemas VATO</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                        <span class="text-sm">Activo</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold">5</div>
+                        <div class="text-xs text-violet-200">Documentos</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold">2</div>
+                        <div class="text-xs text-violet-200">Idiomas</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold">6</div>
+                        <div class="text-xs text-violet-200">Capas</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-2 gap-3">
+                <a href="vato-concept/arquitectura-cognitiva-interactiva.html" class="block">
+                    <div class="rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer bg-gradient-to-br from-violet-50 to-purple-50 hover-lift">
+                        <div class="p-4 flex flex-col items-center space-y-3">
+                            <div class="w-12 h-12 bg-violet-100 rounded-full flex items-center justify-center">
+                                <span class="text-2xl">🧠</span>
+                            </div>
+                            <div class="text-center">
+                                <div class="font-medium text-sm">Arquitectura</div>
+                                <div class="text-xs text-gray-500">Interactiva</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="vato-concept/cognitive-journey-interactive.html" class="block">
+                    <div class="rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer bg-gradient-to-br from-pink-50 to-rose-50 hover-lift">
+                        <div class="p-4 flex flex-col items-center space-y-3">
+                            <div class="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center">
+                                <span class="text-2xl">💡</span>
+                            </div>
+                            <div class="text-center">
+                                <div class="font-medium text-sm">Viaje Cognitivo</div>
+                                <div class="text-xs text-gray-500">Pepe Aguilar</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Arquitectura Base Section -->
+            <div class="rounded-lg border bg-white shadow-sm">
+                <div class="p-6 pb-3">
+                    <div class="font-semibold tracking-tight flex items-center text-lg">
+                        <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                        Arquitectura Base
+                    </div>
+                </div>
+                <div class="p-6 pt-0 space-y-3">
+                    
+                    <!-- Arquitectura Cognitiva Interactiva -->
+                    <a href="vato-concept/arquitectura-cognitiva-interactiva.html" class="block">
+                        <div class="flex items-start space-x-3 p-3 bg-gradient-to-r from-violet-50 to-purple-50 rounded-lg border border-violet-100 hover:shadow-md transition-all hover-lift">
+                            <div class="w-2 h-2 bg-violet-400 rounded-full mt-2"></div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium">Arquitectura Cognitiva Interactiva</p>
+                                <p class="text-xs text-gray-600 mt-1">5 capas cognitivas: Percepción, Procesamiento, Memoria, Cognición Superior y Metacognición</p>
+                                <div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold mt-2 bg-white border-violet-200 text-violet-700">
+                                    🇪🇸 Español
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Cognitive Architecture -->
+                    <a href="vato-concept/vato-cognitive-architecture.html" class="block">
+                        <div class="flex items-start space-x-3 p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-100 hover:shadow-md transition-all hover-lift">
+                            <div class="w-2 h-2 bg-blue-400 rounded-full mt-2"></div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium">VATO Cognitive Architecture</p>
+                                <p class="text-xs text-gray-600 mt-1">Documentación técnica con desgloses de componentes y patrones de implementación</p>
+                                <div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold mt-2 bg-white border-blue-200 text-blue-700">
+                                    🇬🇧 English
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Database Architecture -->
+                    <a href="vato-database-documentation/vato-database-architecture.html" class="block">
+                        <div class="flex items-start space-x-3 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-100 hover:shadow-md transition-all hover-lift">
+                            <div class="w-2 h-2 bg-green-400 rounded-full mt-2"></div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium">Arquitectura de Bases de Datos</p>
+                                <p class="text-xs text-gray-600 mt-1">PostgreSQL, Neo4j, Qdrant, Redis, MongoDB y MinIO en 8 dominios de negocio</p>
+                                <div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold mt-2 bg-white border-green-200 text-green-700">
+                                    🗄️ Multi-DB
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+
+            <!-- Viajes Interactivos Section -->
+            <div class="rounded-lg border bg-white shadow-sm">
+                <div class="p-6 pb-3">
+                    <div class="font-semibold tracking-tight flex items-center justify-between text-lg">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                            Viajes Interactivos
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 pt-0">
+                    <div class="space-y-3">
+                        
+                        <!-- Data Journey -->
+                        <a href="vato-concept/data-journey-interactive.html" class="block">
+                            <div class="flex items-center justify-between p-3 bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg border border-purple-100 hover:shadow-md transition-all hover-lift">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                                        <span class="text-sm">📊</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium">Viaje de Datos</p>
+                                        <p class="text-xs text-gray-500">6 etapas interactivas</p>
+                                    </div>
+                                </div>
+                                <div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-white">
+                                    🇬🇧 EN
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Cognitive Journey -->
+                        <a href="vato-concept/cognitive-journey-interactive.html" class="block">
+                            <div class="flex items-center justify-between p-3 bg-gradient-to-r from-pink-50 to-rose-50 rounded-lg border border-pink-100 hover:shadow-md transition-all hover-lift">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center">
+                                        <span class="text-sm">💡</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium">Viaje Cognitivo</p>
+                                        <p class="text-xs text-gray-500">Caso Pepe Aguilar</p>
+                                    </div>
+                                </div>
+                                <div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-white">
+                                    🇪🇸 ES
+                                </div>
+                            </div>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- VATO Status -->
+            <div class="rounded-lg border bg-white shadow-sm">
+                <div class="p-6 pb-3">
+                    <div class="font-semibold tracking-tight flex items-center text-lg">
+                        <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                        Estado del Sistema
+                    </div>
+                </div>
+                <div class="p-6 pt-0">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center p-3 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border border-green-100">
+                            <svg class="w-5 h-5 mx-auto text-green-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <div class="text-sm font-medium">Documentos</div>
+                            <div class="text-xs text-gray-500">5 activos</div>
+                        </div>
+                        <div class="text-center p-3 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg border border-blue-100">
+                            <svg class="w-5 h-5 mx-auto text-blue-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                            <div class="text-sm font-medium">Interactivos</div>
+                            <div class="text-xs text-gray-500">2 viajes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Company Logos -->
+            <div class="rounded-lg border bg-white shadow-sm p-6">
+                <div class="flex items-center justify-center space-x-6">
+                    <img src="vato-database-documentation/logo_sintheria.png" alt="Sintheria" class="h-10 opacity-75 hover:opacity-100 transition-opacity">
+                    <div class="w-px h-8 bg-gray-200"></div>
+                    <img src="vato-concept/logo_cody.png" alt="Cody" class="h-10 opacity-75 hover:opacity-100 transition-opacity">
+                    <div class="w-px h-8 bg-gray-200"></div>
+                    <img src="vato-concept/logo_eugenia.png" alt="Eugenia" class="h-10 opacity-75 hover:opacity-100 transition-opacity">
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 h-16 backdrop-blur-lg bg-white/90">
+        <div class="grid grid-cols-5 h-full max-w-md mx-auto">
+            <a class="flex flex-col items-center justify-center text-violet-600" href="#">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                </svg>
+                <span class="text-xs mt-1">Docs</span>
+            </a>
+            <a class="flex flex-col items-center justify-center text-gray-500 hover:text-violet-600 transition-colors" href="vato-concept/arquitectura-cognitiva-interactiva.html">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                </svg>
+                <span class="text-xs mt-1">Arq</span>
+            </a>
+            <a class="flex flex-col items-center justify-center text-gray-500 hover:text-violet-600 transition-colors" href="vato-concept/data-journey-interactive.html">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                <span class="text-xs mt-1">Viajes</span>
+            </a>
+            <a class="flex flex-col items-center justify-center text-gray-500 hover:text-violet-600 transition-colors" href="vato-database-documentation/vato-database-architecture.html">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
+                </svg>
+                <span class="text-xs mt-1">DB</span>
+            </a>
+            <a class="flex flex-col items-center justify-center text-gray-500 hover:text-violet-600 transition-colors" href="https://documentation.vato-ia.com" target="_blank">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                </svg>
+                <span class="text-xs mt-1">Web</span>
+            </a>
+        </div>
+    </nav>
+</body>
+</html>
