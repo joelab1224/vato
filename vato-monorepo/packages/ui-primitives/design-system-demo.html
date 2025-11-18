@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="light">
+    <title>VATO Design System V2 - Information-Centric UI</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ============================================================================
+           DESIGN TOKENS - CSS Variables
+           ============================================================================ */
+        :root {
+            /* Colors - Base */
+            --color-base-warm: #F5F1E8;
+            --color-base-neutral: #E8E4DC;
+            --color-accent-primary: #F4E5A8;
+            --color-text-primary: #2A2A2A;
+            --color-text-secondary: #666666;
+            --color-text-tertiary: #999999;
+            --color-surface-elevated: rgba(255, 255, 255, 0.95);
+            --color-overlay: rgba(255, 255, 255, 0.85);
+            --color-shadow: rgba(0, 0, 0, 0.08);
+            --color-glass-nav: rgba(232, 228, 220, 0.25);
+            --color-glass-header: rgba(245, 241, 232, 0.85);
+            
+            /* Typography */
+            --font-family-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-family-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-size-h1: 28px;
+            --font-size-h2: 20px;
+            --font-size-body: 15px;
+            --font-size-caption: 13px;
+            --font-size-micro: 11px;
+            --font-weight-regular: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+            
+            /* Spacing - 8px base */
+            --spacing-xs: 8px;
+            --spacing-sm: 16px;
+            --spacing-md: 20px;
+            --spacing-lg: 32px;
+            --spacing-xl: 40px;
+            
+            /* Border Radius */
+            --radius-card: 20px;
+            --radius-image: 16px;
+            --radius-button: 24px;
+            --radius-icon: 50%;
+            --radius-indicator: 6px;
+            
+            /* Shadows */
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.06);
+            --shadow-card-hover: 0 12px 48px rgba(0, 0, 0, 0.08);
+            --shadow-card-active: 0 4px 16px rgba(0, 0, 0, 0.04);
+            
+            /* Effects - Glass Morphism */
+            --blur: blur(20px);
+            --blur-light: blur(10px);
+            --blur-medium: blur(20px) saturate(180%);
+            --blur-strong: blur(24px) saturate(180%);
+            --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+            
+            /* Layout */
+            --container-max-width: 428px;
+            --container-margin: 20px;
+        }
+
+        /* ============================================================================
+           BASE STYLES
+           ============================================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: var(--font-family-body);
+            font-size: var(--font-size-body);
+            font-weight: var(--font-weight-regular);
+            line-height: 1.5;
+            color: var(--color-text-primary);
+            background: linear-gradient(180deg, #F5F1E8 0%, #E1DCD5 100%);
+            background-attachment: fixed;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        /* ============================================================================
+           TYPOGRAPHY
+           ============================================================================ */
+        h1 {
+            font-family: var(--font-family-display);
+            font-size: var(--font-size-h1);
+            font-weight: var(--font-weight-bold);
+            line-height: 1.2;
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-sm);
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-family: var(--font-family-display);
+            font-size: var(--font-size-h2);
+            font-weight: var(--font-weight-semibold);
+            line-height: 1.3;
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-xs);
+            letter-spacing: -0.01em;
+        }
+
+        p {
+            font-size: var(--font-size-body);
+            font-weight: var(--font-weight-regular);
+            line-height: 1.5;
+            color: var(--color-text-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .caption {
+            font-size: var(--font-size-caption);
+            font-weight: var(--font-weight-regular);
+            line-height: 1.4;
+            color: var(--color-text-tertiary);
+        }
+
+        .micro {
+            font-size: var(--font-size-micro);
+            font-weight: 500;
+            line-height: 1.3;
+            color: var(--color-text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ============================================================================
+           LAYOUT COMPONENTS
+           ============================================================================ */
+        .container {
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: 0 var(--container-margin);
+        }
+
+        .section {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* ============================================================================
+           CARD COMPONENTS (Knowledge Nodes)
+           ============================================================================ */
+        .card {
+            background: var(--color-surface-elevated);
+            border-radius: var(--radius-card);
+            padding: var(--spacing-md);
+            box-shadow: var(--shadow-card);
+            backdrop-filter: var(--blur-light);
+            -webkit-backdrop-filter: var(--blur-light);
+            transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+            cursor: pointer;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(1.02);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .card:active {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(0.98);
+            box-shadow: var(--shadow-card-active);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .card-meta {
+            display: flex;
+            gap: var(--spacing-xs);
+            margin-top: var(--spacing-xs);
+        }
+
+        /* Highlighted Card */
+        .card-highlight {
+            background: linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-surface-elevated) 100%);
+        }
+
+        /* ============================================================================
+           BUTTON COMPONENTS
+           ============================================================================ */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            height: 44px;
+            padding: 12px 24px;
+            background: rgba(42, 42, 42, 0.9);
+            color: var(--color-surface-elevated);
+            border: none;
+            border-radius: var(--radius-button);
+            font-family: var(--font-family-body);
+            font-size: var(--font-size-body);
+            font-weight: var(--font-weight-medium);
+            cursor: pointer;
+            transition: all var(--transition);
+            user-select: none;
+            letter-spacing: -0.01em;
+        }
+
+        .btn-primary:hover {
+            background: rgba(42, 42, 42, 1);
+            transform: scale(1.02);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: var(--radius-icon);
+            box-shadow: var(--shadow-card);
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .btn-icon:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .btn-icon:active {
+            transform: scale(0.95);
+        }
+
+        /* ============================================================================
+           BADGE COMPONENTS
+           ============================================================================ */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            background: var(--color-base-neutral);
+            border-radius: 12px;
+            font-size: var(--font-size-micro);
+            font-weight: 500;
+            color: var(--color-text-primary);
+        }
+
+        .badge-accent {
+            background: var(--color-accent-primary);
+        }
+
+        /* ============================================================================
+           IMAGE CONTAINER
+           ============================================================================ */
+        .image-container {
+            position: relative;
+            aspect-ratio: 16 / 9;
+            border-radius: var(--radius-image);
+            overflow: hidden;
+            background: var(--color-base-neutral);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .image-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.3), transparent);
+            pointer-events: none;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ============================================================================
+           DATA VISUALIZATION - Donut Chart
+           ============================================================================ */
+        .chart-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-md) 0;
+        }
+
+        .donut-chart {
+            position: relative;
+            width: 120px;
+            height: 120px;
+        }
+
+        .donut-chart svg {
+            transform: rotate(-90deg);
+        }
+
+        .donut-chart-bg {
+            fill: none;
+            stroke: var(--color-base-neutral);
+            stroke-width: 12;
+        }
+
+        .donut-chart-progress {
+            fill: none;
+            stroke: var(--color-accent-primary);
+            stroke-width: 12;
+            stroke-linecap: round;
+            stroke-dasharray: 283;
+            stroke-dashoffset: 71; /* 75% */
+            animation: donutProgress 800ms ease-out;
+        }
+
+        @keyframes donutProgress {
+            from {
+                stroke-dashoffset: 283;
+            }
+            to {
+                stroke-dashoffset: 71;
+            }
+        }
+
+        /* ============================================================================
+           ANIMATION LIBRARY - Keyframes
+           ============================================================================ */
+        @keyframes slideUp {
+            from { 
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scaleIn {
+            from { 
+                transform: scale(0.95);
+                opacity: 0;
+            }
+            to { 
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-4px);
+            }
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            }
+            50% {
+                box-shadow: 0 8px 32px rgba(244, 229, 168, 0.3);
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .donut-chart-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .donut-chart-value {
+            font-size: 24px;
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text-primary);
+        }
+
+        .donut-chart-caption {
+            font-size: var(--font-size-micro);
+            color: var(--color-text-tertiary);
+        }
+
+        /* ============================================================================
+           NAVIGATION INDICATORS
+           ============================================================================ */
+        .carousel-indicators {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            padding: var(--spacing-sm) 0;
+        }
+
+        .indicator {
+            width: 6px;
+            height: 6px;
+            background: var(--color-base-neutral);
+            border-radius: var(--radius-indicator);
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .indicator.active {
+            background: var(--color-text-primary);
+            width: 24px;
+        }
+
+        /* ============================================================================
+           HEADER
+           ============================================================================ */
+        .header {
+            padding: var(--spacing-md) 0;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        /* ============================================================================
+           FOCUS STATES (Accessibility)
+           ============================================================================ */
+        *:focus-visible {
+            outline: 2px solid var(--color-text-primary);
+            outline-offset: 2px;
+        }
+
+        /* ============================================================================
+           GRID SYSTEM
+           ============================================================================ */
+        .grid {
+            display: grid;
+            gap: var(--spacing-sm);
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        /* ============================================================================
+           UTILITIES
+           ============================================================================ */
+        .flex {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mb-xs { margin-bottom: var(--spacing-xs); }
+        .mb-sm { margin-bottom: var(--spacing-sm); }
+        .mb-md { margin-bottom: var(--spacing-md); }
+
+        /* ============================================================================
+           RESPONSIVE
+           ============================================================================ */
+        @media (min-width: 768px) {
+            body {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+            }
+            
+            .container {
+                padding: var(--spacing-lg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top">
+                <div>
+                    <p class="micro mb-xs">VATO Platform</p>
+                    <h1>Design System V2</h1>
+                </div>
+                <button class="btn-icon" aria-label="Settings">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6m0-18a11 11 0 1 1 0 22 11 11 0 0 1 0-22Z"></path>
+                    </svg>
+                </button>
+            </div>
+            <p class="caption">Information-centric UI modeling knowledge as living, interconnected organism</p>
+        </header>
+
+        <!-- Section: Fonts Showcase -->
+        <section class="section">
+            <p class="micro mb-sm">Modern Typography</p>
+            <div class="card">
+                <div class="mb-sm">
+                    <p class="caption mb-xs">Display Font: Space Grotesk</p>
+                    <h1 style="margin-bottom: 0;">Space Grotesk</h1>
+                </div>
+                <div>
+                    <p class="caption mb-xs">Body Font: Inter</p>
+                    <p style="margin-bottom: 0; font-size: 18px;">Inter — Clean, modern, designed for screens</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Typography -->
+        <section class="section">
+            <p class="micro mb-sm">Typography System</p>
+            <div class="card">
+                <h1 class="mb-xs">Heading 1 (28px)</h1>
+                <h2 class="mb-xs">Heading 2 (20px)</h2>
+                <p class="mb-xs">Body text at 15px with 1.5 line height for optimal readability on mobile devices. Maximum 3 type sizes per view.</p>
+                <p class="caption mb-xs">Caption text (13px) for metadata and supporting information</p>
+                <p class="micro">Micro text (11px) • Uppercase</p>
+            </div>
+        </section>
+
+        <!-- Section: Cards (Knowledge Nodes) -->
+        <section class="section">
+            <p class="micro mb-sm">Knowledge Nodes</p>
+            
+            <div class="card card-highlight">
+                <div class="card-header">
+                    <div>
+                        <h2>Highlighted Insight</h2>
+                        <p class="caption">Active knowledge node with accent gradient</p>
+                    </div>
+                    <button class="btn-icon" aria-label="Expand">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 8l5 5 5-5"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="card-meta">
+                    <span class="badge badge-accent">Insight</span>
+                    <span class="badge">Updated</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Standard Knowledge Card</h2>
+                <p>Soft, organic forms with 20px border radius. Glass morphism with backdrop blur creates depth and hierarchy.</p>
+                <div class="card-meta">
+                    <span class="badge">Connected</span>
+                    <span class="badge">3 nodes</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Visual Context -->
+        <section class="section">
+            <p class="micro mb-sm">Visual Context</p>
+            <div class="card">
+                <div class="image-container">
+                    <svg width="100%" height="100%" viewBox="0 0 400 225" fill="none">
+                        <rect width="400" height="225" fill="#E8E4DC"/>
+                        <text x="200" y="112" text-anchor="middle" font-family="system-ui" font-size="14" fill="#666">
+                            16:9 Image Container
+                        </text>
+                    </svg>
+                </div>
+                <h2>Visual Asset Node</h2>
+                <p class="caption">16:9 aspect ratio with gradient overlay and 16px border radius</p>
+            </div>
+        </section>
+
+        <!-- Section: Data Visualization -->
+        <section class="section">
+            <p class="micro mb-sm">Data Visualization</p>
+            <div class="card">
+                <h2 class="mb-sm">Progress Metric</h2>
+                <div class="chart-container">
+                    <div class="donut-chart">
+                        <svg viewBox="0 0 100 100">
+                            <circle class="donut-chart-bg" cx="50" cy="50" r="45"></circle>
+                            <circle class="donut-chart-progress" cx="50" cy="50" r="45"></circle>
+                        </svg>
+                        <div class="donut-chart-label">
+                            <div class="donut-chart-value">75%</div>
+                            <div class="donut-chart-caption">Complete</div>
+                        </div>
+                    </div>
+                </div>
+                <p class="caption">Donut chart with 12px stroke, 800ms ease-out animation</p>
+            </div>
+        </section>
+
+        <!-- Section: Interaction States -->
+        <section class="section">
+            <p class="micro mb-sm">Interaction Patterns</p>
+            <div class="grid grid-2">
+                <div class="card">
+                    <h2 class="mb-xs">Idle State</h2>
+                    <p class="caption mb-sm">Default appearance with subtle elevation</p>
+                    <div class="flex">
+                        <span class="badge">Scale: 1.0</span>
+                    </div>
+                </div>
+                
+                <div class="card" style="transform: scale(1.02); box-shadow: var(--shadow-card-hover);">
+                    <h2 class="mb-xs">Hover State</h2>
+                    <p class="caption mb-sm">Lifted with enhanced shadow</p>
+                    <div class="flex">
+                        <span class="badge">Scale: 1.02</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Actions -->
+        <section class="section">
+            <p class="micro mb-sm">Action Triggers</p>
+            <div class="card">
+                <h2 class="mb-sm">Primary Actions</h2>
+                <div class="flex mb-sm" style="flex-wrap: wrap;">
+                    <button class="btn-primary">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10 5v10M5 10h10"/>
+                        </svg>
+                        Add Node
+                    </button>
+                    <button class="btn-primary">Explore Network</button>
+                </div>
+                
+                <p class="caption mb-sm">Icon Buttons (44x44px touch target)</p>
+                <div class="flex">
+                    <button class="btn-icon" aria-label="Edit">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 16l12-12M16 4l-12 12"/>
+                        </svg>
+                    </button>
+                    <button class="btn-icon" aria-label="Share">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="5" cy="10" r="2"/>
+                            <circle cx="15" cy="5" r="2"/>
+                            <circle cx="15" cy="15" r="2"/>
+                            <path d="M7 9l6-3M7 11l6 3"/>
+                        </svg>
+                    </button>
+                    <button class="btn-icon" aria-label="More">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="10" cy="5" r="1"/>
+                            <circle cx="10" cy="10" r="1"/>
+                            <circle cx="10" cy="15" r="1"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Navigation -->
+        <section class="section">
+            <p class="micro mb-sm">Navigation Indicators</p>
+            <div class="card">
+                <h2 class="mb-xs">Carousel Progress</h2>
+                <p class="caption mb-sm">6px circles with 8px spacing</p>
+                <div class="carousel-indicators">
+                    <div class="indicator active"></div>
+                    <div class="indicator"></div>
+                    <div class="indicator"></div>
+                    <div class="indicator"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Badges -->
+        <section class="section">
+            <p class="micro mb-sm">Metadata Badges</p>
+            <div class="card">
+                <div class="flex" style="flex-wrap: wrap;">
+                    <span class="badge">Connected</span>
+                    <span class="badge badge-accent">Highlighted</span>
+                    <span class="badge">3 Pathways</span>
+                    <span class="badge">Active</span>
+                    <span class="badge">Updated 2h ago</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Animations -->
+        <section class="section">
+            <p class="micro mb-sm">Animation Library</p>
+            
+            <div class="card mb-sm">
+                <h2 class="mb-xs">Loading States</h2>
+                <div class="flex" style="align-items: center; gap: var(--spacing-md);">
+                    <div style="width: 40px; height: 40px; border: 3px solid var(--color-base-neutral); border-top-color: var(--color-accent-primary); border-radius: 50%; animation: rotate 1s linear infinite;"></div>
+                    <div style="width: 100px; height: 20px; background: linear-gradient(90deg, #E8E4DC 25%, #F5F1E8 50%, #E8E4DC 75%); background-size: 200% 100%; animation: shimmer 2s linear infinite; border-radius: 10px;"></div>
+                    <div style="animation: pulse 1.5s ease infinite;">
+                        <span class="badge">Pulsing</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-sm">
+                <h2 class="mb-xs">Card Animations</h2>
+                <p class="caption mb-sm">Staggered entrance animations</p>
+                <div class="grid grid-2">
+                    <div class="card" style="animation: slideUp 200ms cubic-bezier(0.4, 0, 0.2, 1) both; animation-delay: 0ms; margin-bottom: 0;">
+                        <p class="caption" style="margin: 0;">First (0ms)</p>
+                    </div>
+                    <div class="card" style="animation: slideUp 200ms cubic-bezier(0.4, 0, 0.2, 1) both; animation-delay: 50ms; margin-bottom: 0;">
+                        <p class="caption" style="margin: 0;">Second (50ms)</p>
+                    </div>
+                    <div class="card" style="animation: slideUp 200ms cubic-bezier(0.4, 0, 0.2, 1) both; animation-delay: 100ms; margin-bottom: 0;">
+                        <p class="caption" style="margin: 0;">Third (100ms)</p>
+                    </div>
+                    <div class="card" style="animation: slideUp 200ms cubic-bezier(0.4, 0, 0.2, 1) both; animation-delay: 150ms; margin-bottom: 0;">
+                        <p class="caption" style="margin: 0;">Fourth (150ms)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-sm">
+                <h2 class="mb-xs">Special Effects</h2>
+                <div class="flex" style="flex-wrap: wrap;">
+                    <button class="btn-primary" style="animation: glow 2s ease infinite;">Glowing</button>
+                    <button class="btn-icon" style="animation: float 2s ease infinite;" aria-label="Floating">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10 5v10M5 10h10"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="mb-xs">Interactive Test</h2>
+                <p class="caption mb-sm">Click to trigger animations</p>
+                <button class="btn-primary" id="animateBtn" onclick="triggerAnimation()">
+                    Animate Cards
+                </button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer style="padding: var(--spacing-lg) 0; text-align: center;">
+            <p class="caption">VATO Platform • Information-Centric Design</p>
+            <p class="micro" style="margin-top: var(--spacing-xs);">Mobile-First • 320-428px Target</p>
+        </footer>
+    </div>
+
+    <script>
+        // Add interaction to carousel indicators
+        document.querySelectorAll('.indicator').forEach((indicator, index) => {
+            indicator.addEventListener('click', function() {
+                document.querySelectorAll('.indicator').forEach(ind => ind.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Log interaction states for demo
+        document.querySelectorAll('.card, .btn-primary, .btn-icon').forEach(el => {
+            el.addEventListener('click', function() {
+                console.log('Interaction:', this.className);
+            });
+        });
+
+        // Animate cards on scroll (observe when they enter viewport)
+        const observeCards = () => {
+            const cards = document.querySelectorAll('.card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = `slideUp 200ms cubic-bezier(0.4, 0, 0.2, 1) both`;
+                        entry.target.style.animationDelay = `${index * 30}ms`;
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            cards.forEach(card => observer.observe(card));
+        };
+
+        // Trigger animation on button click
+        function triggerAnimation() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.animation = 'none';
+                setTimeout(() => {
+                    card.style.animation = `slideUp 200ms cubic-bezier(0.4, 0, 0.2, 1) both`;
+                    card.style.animationDelay = `${index * 30}ms`;
+                }, 10);
+            });
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            // Add entrance animation to all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach((section, index) => {
+                section.style.animation = `fadeIn 300ms cubic-bezier(0.4, 0, 0.2, 1) both`;
+                section.style.animationDelay = `${index * 50}ms`;
+            });
+        });
+    </script>
+</body>
+</html>

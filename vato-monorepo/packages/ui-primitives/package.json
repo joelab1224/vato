@@ -1,0 +1,17 @@
+{
+  "name": "@vato/ui-primitives",
+  "version": "2.0.0",
+  "description": "VATO Platform Design System - Information-centric UI components and design tokens",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "typescript": "^5.3.3"
+  }
+}

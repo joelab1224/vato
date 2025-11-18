@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VATO - Data Journey: From Input to Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Barlow', sans-serif;
+            background: linear-gradient(135deg, #0a0f1c 0%, #16213e 50%, #0f1729 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a1f2e 0%, #2563eb 100%);
+            padding: 3rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'%3E%3Cpath d='m0 40l40-40h-40v40zm40-40v40h-40l40-40z'/%3E%3C/g%3E%3C/svg%3E");
+            animation: patternMove 20s linear infinite;
+        }
+        
+        @keyframes patternMove {
+            0% { transform: translateX(-40px); }
+            100% { transform: translateX(40px); }
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header h1 {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #94a3b8);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .header .subtitle {
+            font-size: 1.3rem;
+            color: #cbd5e1;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* User Input (Sticky) */
+        .user-input-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 23, 41, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem 0;
+        }
+        
+        .user-input-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .user-message-box {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            color: #e2e8f0;
+        }
+        
+        .navigation-controls {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        
+        .nav-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 600;
+            font-family: 'Barlow', sans-serif;
+        }
+        
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+        }
+        
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .stage-counter {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            font-weight: 600;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        /* Timeline Scrubber */
+        .timeline-container {
+            position: sticky;
+            top: 80px;
+            z-index: 99;
+            background: rgba(15, 23, 41, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .timeline {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .timeline-track {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .timeline-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+        
+        .timeline-handle {
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            cursor: grab;
+        }
+        
+        .timeline-handle:active {
+            cursor: grabbing;
+        }
+        
+        .timeline-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        
+        .timeline-stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .timeline-stage.active {
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        /* Database Sidebar */
+        .db-sidebar {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 90;
+            background: rgba(30, 41, 59, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1rem;
+            width: 180px;
+        }
+        
+        .db-sidebar-title {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .db-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .db-indicator:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .db-indicator.active {
+            background: rgba(37, 99, 235, 0.2);
+            border-left: 3px solid #2563eb;
+        }
+        
+        .db-icon {
+            font-size: 1.5rem;
+        }
+        
+        .db-info {
+            flex: 1;
+        }
+        
+        .db-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+        
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #64748b;
+            transition: all 0.3s ease;
+        }
+        
+        .pulse-dot.active {
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            50% { opacity: 0.8; box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+        }
+        
+        /* Journey Stages */
+        .journey-stage {
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .journey-stage.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .stage-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stage-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .stage-title-container {
+            flex: 1;
+        }
+        
+        .stage-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stage-description {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+        
+        .stage-duration {
+            background: rgba(37, 99, 235, 0.2);
+            border: 1px solid rgba(37, 99, 235, 0.3);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            color: #60a5fa;
+            font-size: 0.9rem;
+        }
+        
+        /* Data Flow Visualization */
+        .data-flow-container {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 41, 0.8));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .flow-canvas {
+            position: relative;
+            min-height: 300px;
+        }
+        
+        .database-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .db-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .journey-stage.animate-in .db-card:nth-child(1) {
+            animation: fadeInScale 0.5s ease 0.2s forwards;
+        }
+        
+        .journey-stage.animate-in .db-card:nth-child(2) {
+            animation: fadeInScale 0.5s ease 0.4s forwards;
+        }
+        
+        .journey-stage.animate-in .db-card:nth-child(3) {
+            animation: fadeInScale 0.5s ease 0.6s forwards;
+        }
+        
+        .journey-stage.animate-in .db-card:nth-child(4) {
+            animation: fadeInScale 0.5s ease 0.8s forwards;
+        }
+        
+        @keyframes fadeInScale {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .db-card.active {
+            border-color: rgba(37, 99, 235, 0.5);
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.2);
+        }
+        
+        .db-card.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
+            animation: shimmer 2s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .db-card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .db-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+        
+        .db-card-activity {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+        }
+        
+        .data-preview {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: 0.75rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: #10b981;
+            text-align: left;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .db-card.active .data-preview {
+            max-height: 200px;
+        }
+        
+        /* Expandable Details */
+        .stage-details {
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.5s ease;
+        }
+        
+        .stage-details.expanded {
+            max-height: 2000px;
+        }
+        
+        .details-toggle {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            padding: 1rem;
+            color: #60a5fa;
+            font-family: 'Barlow', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .details-toggle:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .details-content {
+            padding: 2rem;
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .detail-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 3px solid #2563eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        
+        .detail-card h4 {
+            color: #60a5fa;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+        
+        .detail-card p {
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .detail-card pre {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: 1rem;
+            overflow-x: auto;
+            font-size: 0.8rem;
+            color: #10b981;
+        }
+        
+        /* Data Particles */
+        .data-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        .particle-blue {
+            background: #3b82f6;
+            box-shadow: 0 0 10px #3b82f6;
+        }
+        
+        .particle-purple {
+            background: #8b5cf6;
+            box-shadow: 0 0 10px #8b5cf6;
+        }
+        
+        .particle-green {
+            background: #10b981;
+            box-shadow: 0 0 10px #10b981;
+        }
+        
+        .particle-red {
+            background: #ef4444;
+            box-shadow: 0 0 10px #ef4444;
+        }
+        
+        .particle-yellow {
+            background: #f59e0b;
+            box-shadow: 0 0 10px #f59e0b;
+        }
+        
+        /* SVG Flow Lines */
+        .flow-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .flow-line {
+            fill: none;
+            stroke: #2563eb;
+            stroke-width: 2;
+            stroke-dasharray: 5, 5;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .journey-stage.animate-in .flow-line {
+            opacity: 0.6;
+            animation: flowLine 2s linear infinite;
+        }
+        
+        @keyframes flowLine {
+            0% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: -10; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .db-sidebar {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header .subtitle {
+                font-size: 1rem;
+            }
+            
+            .user-input-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .playback-controls {
+                justify-content: center;
+            }
+            
+            .stage-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .database-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1>🔄 Data Journey</h1>
+            <p class="subtitle">Follow the path from user input to intelligent response through 6 stages and 6 databases</p>
+        </div>
+    </header>
+
+    <!-- Sticky User Input -->
+    <div class="user-input-sticky">
+        <div class="user-input-container">
+            <div class="user-avatar">👤</div>
+            <div class="user-message-box">
+                "Can you help me analyze my quarterly sales report and suggest improvements based on what you know about my business?"
+            </div>
+            <div class="navigation-controls">
+                <button class="nav-btn" id="prevBtn" title="Previous Stage">
+                    <span>⬅️</span>
+                    <span>Previous</span>
+                </button>
+                <div class="stage-counter" id="stageCounter">Stage 1 of 6</div>
+                <button class="nav-btn" id="nextBtn" title="Next Stage">
+                    <span>Next</span>
+                    <span>➡️</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Timeline Scrubber -->
+    <div class="timeline-container">
+        <div class="timeline">
+            <div class="timeline-track" id="timelineTrack">
+                <div class="timeline-progress" id="timelineProgress">
+                    <div class="timeline-handle" id="timelineHandle"></div>
+                </div>
+            </div>
+            <div class="timeline-labels">
+                <div class="timeline-stage" data-stage="0">
+                    <span>0.0s</span>
+                    <span>Message</span>
+                </div>
+                <div class="timeline-stage" data-stage="1">
+                    <span>0.5s</span>
+                    <span>Extract</span>
+                </div>
+                <div class="timeline-stage" data-stage="2">
+                    <span>1.2s</span>
+                    <span>Context</span>
+                </div>
+                <div class="timeline-stage" data-stage="3">
+                    <span>2.0s</span>
+                    <span>Personalize</span>
+                </div>
+                <div class="timeline-stage" data-stage="4">
+                    <span>2.8s</span>
+                    <span>Cognition</span>
+                </div>
+                <div class="timeline-stage" data-stage="5">
+                    <span>4.3s</span>
+                    <span>Response</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Database Sidebar -->
+    <div class="db-sidebar">
+        <div class="db-sidebar-title">Database Activity</div>
+        <div class="db-indicator" data-db="postgresql">
+            <div class="db-icon">🐘</div>
+            <div class="db-info">
+                <div class="db-name">PostgreSQL</div>
+            </div>
+            <div class="pulse-dot"></div>
+        </div>
+        <div class="db-indicator" data-db="neo4j">
+            <div class="db-icon">🕸️</div>
+            <div class="db-info">
+                <div class="db-name">Neo4j</div>
+            </div>
+            <div class="pulse-dot"></div>
+        </div>
+        <div class="db-indicator" data-db="qdrant">
+            <div class="db-icon">🔍</div>
+            <div class="db-info">
+                <div class="db-name">Qdrant</div>
+            </div>
+            <div class="pulse-dot"></div>
+        </div>
+        <div class="db-indicator" data-db="redis">
+            <div class="db-icon">⚡</div>
+            <div class="db-info">
+                <div class="db-name">Redis</div>
+            </div>
+            <div class="pulse-dot"></div>
+        </div>
+        <div class="db-indicator" data-db="mongodb">
+            <div class="db-icon">🍃</div>
+            <div class="db-info">
+                <div class="db-name">MongoDB</div>
+            </div>
+            <div class="pulse-dot"></div>
+        </div>
+        <div class="db-indicator" data-db="minio">
+            <div class="db-icon">📦</div>
+            <div class="db-info">
+                <div class="db-name">MinIO</div>
+            </div>
+            <div class="pulse-dot"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Stage 1: Message Ingestion -->
+        <div class="journey-stage" data-stage="0" data-duration="0.5">
+            <div class="stage-header">
+                <div class="stage-number">1</div>
+                <div class="stage-title-container">
+                    <h2 class="stage-title">Message Ingestion</h2>
+                    <p class="stage-description">Raw input enters the system and gets stored across multiple databases</p>
+                </div>
+                <div class="stage-duration">0.5s</div>
+            </div>
+
+            <div class="data-flow-container">
+                <div class="flow-canvas">
+                    <svg class="flow-svg">
+                        <path class="flow-line" d="M 50 20 Q 50 50, 150 80" />
+                        <path class="flow-line" d="M 50 20 Q 50 50, 400 80" />
+                        <path class="flow-line" d="M 50 20 Q 50 50, 650 80" />
+                    </svg>
+                </div>
+
+                <div class="database-row">
+                    <div class="db-card" data-db="postgresql">
+                        <div class="db-card-icon">🐘</div>
+                        <div class="db-card-title">PostgreSQL</div>
+                        <div class="db-card-activity">Writing structured data...</div>
+                        <div class="data-preview">
+INSERT INTO messages
+VALUES (
+  'msg_123',
+  'conv_456',
+  'user_789',
+  'Can you help...',
+  NOW()
+)
+                        </div>
+                    </div>
+
+                    <div class="db-card" data-db="redis">
+                        <div class="db-card-icon">⚡</div>
+                        <div class="db-card-title">Redis</div>
+                        <div class="db-card-activity">Caching session data...</div>
+                        <div class="data-preview">
+SET session:user_789
+{
+  "conversation_id": "conv_456",
+  "last_message": "...",
+  "timestamp": 1699200000
+}
+EXPIRE 3600
+                        </div>
+                    </div>
+
+                    <div class="db-card" data-db="mongodb">
+                        <div class="db-card-icon">🍃</div>
+                        <div class="db-card-title">MongoDB</div>
+                        <div class="db-card-activity">Logging event data...</div>
+                        <div class="data-preview">
+db.conversation_logs.insertOne({
+  message_id: "msg_123",
+  user_id: "user_789",
+  content: "...",
+  metadata: {
+    client: "web",
+    latency_ms: 120
+  }
+})
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="details-toggle" onclick="toggleDetails(this)">
+                <span>🔍 View Detailed Breakdown</span>
+                <span>▼</span>
+            </button>
+            <div class="stage-details">
+                <div class="details-content">
+                    <div class="details-grid">
+                        <div class="detail-card">
+                            <h4>PostgreSQL Storage</h4>
+                            <p>Stores the message in the conversations.messages table with full ACID guarantees. Links to conversation and user entities.</p>
+                            <pre>
+- Table: conversations.messages
+- Rows: 1 inserted
+- Relationships: user_id, conversation_id
+- Indexes: Updated (user_id, timestamp)
+                            </pre>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Redis Cache</h4>
+                            <p>Caches the session state and last 10 messages for ultra-fast retrieval. TTL set to 1 hour.</p>
+                            <pre>
+- Key: session:user_789:active_conv
+- Type: Hash
+- TTL: 3600s
+- Size: ~2KB
+                            </pre>
+                        </div>
+                        <div class="detail-card">
+                            <h4>MongoDB Event Log</h4>
+                            <p>Creates comprehensive audit trail with full message payload and metadata for analytics.</p>
+                            <pre>
+- Collection: conversation_logs
+- Document size: ~1.5KB
+- Indexed: timestamp, user_id
+- Retention: 90 days
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage 2: Knowledge Extraction -->
+        <div class="journey-stage" data-stage="1" data-duration="0.7">
+            <div class="stage-header">
+                <div class="stage-number">2</div>
+                <div class="stage-title-container">
+                    <h2 class="stage-title">Knowledge Extraction</h2>
+                    <p class="stage-description">System extracts entities, concepts, and semantic meaning</p>
+                </div>
+                <div class="stage-duration">0.7s</div>
+            </div>
+
+            <div class="data-flow-container">
+                <div class="database-row">
+                    <div class="db-card" data-db="neo4j">
+                        <div class="db-card-icon">🕸️</div>
+                        <div class="db-card-title">Neo4j</div>
+                        <div class="db-card-activity">Creating knowledge graph...</div>
+                        <div class="data-preview">
+CREATE (d:Document {
+  type: "sales_report",
+  period: "quarterly"
+})
+CREATE (c:Concept {
+  name: "business_improvement"
+})
+CREATE (m:Message {id: "msg_123"})
+-[:EXTRACTED_FROM]-> (d)
+                        </div>
+                    </div>
+
+                    <div class="db-card" data-db="qdrant">
+                        <div class="db-card-icon">🔍</div>
+                        <div class="db-card-title">Qdrant</div>
+                        <div class="db-card-activity">Generating embeddings...</div>
+                        <div class="data-preview">
+upsert(
+  collection="message_embeddings",
+  points=[{
+    id: "msg_123",
+    vector: [0.123, -0.456, ...], 
+    payload: {
+      "type": "query",
+      "domain": "business_analytics"
+    }
+  }]
+)
+                        </div>
+                    </div>
+
+                    <div class="db-card" data-db="postgresql">
+                        <div class="db-card-icon">🐘</div>
+                        <div class="db-card-title">PostgreSQL</div>
+                        <div class="db-card-activity">Storing intent data...</div>
+                        <div class="data-preview">
+INSERT INTO message_intents
+VALUES (
+  'msg_123',
+  'analysis_request',
+  0.94,
+  ['document_analysis',
+   'suggestion_generation']
+)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="details-toggle" onclick="toggleDetails(this)">
+                <span>🔍 View Detailed Breakdown</span>
+                <span>▼</span>
+            </button>
+            <div class="stage-details">
+                <div class="details-content">
+                    <div class="details-grid">
+                        <div class="detail-card">
+                            <h4>Intent Detection</h4>
+                            <p>NLP analysis identifies primary intent as "analysis_request" with 94% confidence.</p>
+                            <pre>
+Intent: analysis_request (0.94)
+Sub-intents:
+- document_analysis (0.89)
+- suggestion_generation (0.87)
+Entities: [sales_report, quarterly]
+                            </pre>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Knowledge Graph</h4>
+                            <p>Creates nodes for entities and concepts, linking them to the message for traceability.</p>
+                            <pre>
+Nodes created: 3
+Relationships created: 2
+Graph depth: 2 levels
+Query time: 42ms
+                            </pre>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Vector Embeddings</h4>
+                            <p>Generates 1536-dimensional embedding for semantic search and similarity matching.</p>
+                            <pre>
+Model: text-embedding-ada-002
+Dimensions: 1536
+Index: HNSW (M=16, ef=100)
+Indexed in: 180ms
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage 3: Context Assembly -->
+        <div class="journey-stage" data-stage="2" data-duration="0.8">
+            <div class="stage-header">
+                <div class="stage-number">3</div>
+                <div class="stage-title-container">
+                    <h2 class="stage-title">Context Assembly</h2>
+                    <p class="stage-description">Gathering relevant context from multiple memory systems</p>
+                </div>
+                <div class="stage-duration">0.8s</div>
+            </div>
+
+            <div class="data-flow-container">
+                <div class="database-row">
+                    <div class="db-card" data-db="qdrant">
+                        <div class="db-card-icon">🔍</div>
+                        <div class="db-card-title">Qdrant</div>
+                        <div class="db-card-activity">Semantic search...</div>
+                        <div class="data-preview">
+search(
+  collection="document_embeddings",
+  query_vector=[...],
+  limit=5
+)
+Results:
+- Q3_Sales_Report.pdf (0.89)
+- Business_Strategy.pdf (0.76)
+- Conv #4523 (0.82)
+                        </div>
+                    </div>
+
+                    <div class="db-card" data-db="neo4j">
+                        <div class="db-card-icon">🕸️</div>
+                        <div class="db-card-title">Neo4j</div>
+                        <div class="db-card-activity">Retrieving episodic memory...</div>
+                        <div class="data-preview">
+MATCH (u:User {id: "user_789"})
+-[:PARTICIPATED_IN]->
+(c:Conversation)
+-[:ABOUT]->(t:Topic)
+WHERE t.name IN 
+  ["sales", "reports"]
+  AND c.timestamp > date() - 90
+RETURN c
+LIMIT 5
+                        </div>
+                    </div>
+
+                    <div class="db-card" data-db="postgresql">
+                        <div class="db-card-icon">🐘</div>
+                        <div class="db-card-title">PostgreSQL</div>
+                        <div class="db-card-activity">Loading user profile...</div>
+                        <div class="data-preview">
+SELECT * FROM user_preferences
+WHERE user_id = 'user_789'
+
+Results:
+- analysis_depth: "detailed"
+- business_domain: "e-commerce"
+- company_size: "50-100"
+                        </div>
+                    </div>
+
+                    <div class="db-card" data-db="redis">
+                        <div class="db-card-icon">⚡</div>
+                        <div class="db-card-title">Redis</div>
+                        <div class="db-card-activity">Accessing working memory...</div>
+                        <div class="data-preview">
+GET working_memory:user_789
+
+{
+  "current_focus": 
+    "quarterly_sales_analysis",
+  "active_docs": [
+    "Q3_Sales_Report.pdf"
+  ],
+  "goals": [
+    "analyze", "suggest"
+  ]
+}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="details-toggle" onclick="toggleDetails(this)">
+                <span>🔍 View Detailed Breakdown</span>
+                <span>▼</span>
+            </button>
+            <div class="stage-details">
+                <div class="details-content">
+                    <div class="details-grid">
+                        <div class="detail-card">
+                            <h4>Semantic Search Results</h4>
+                            <p>Found 3 highly relevant documents and 2 past conversations with similarity > 0.75.</p>
+                            <pre>
+Top matches:
+1. Q3_Sales_Report.pdf (0.89)
+2. Previous Conv #4523 (0.82)
+3. Business_Strategy_2024.pdf (0.76)
+
+Search time: 45ms
+Total candidates: 147
+                            </pre>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Episodic Memory</h4>
+                            <p>Retrieved 5 past conversations about sales and reports from the last 90 days.</p>
+                            <pre>
+Conversations found: 5
+Date range: Last 90 days
+Topics: sales, quarterly reviews
+Avg similarity: 0.78
+                            </pre>
+                        </div>
+                        <div class="detail-card">
+                            <h4>User Context</h4>
+                            <p>Loaded comprehensive user profile including preferences, domain knowledge, and recent activity.</p>
+                            <pre>
+Profile loaded:
+- Preferences: 12 items
+- Business context: e-commerce
+- Expertise: business_analytics (8/10)
+- Last active: 2 hours ago
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage 4: Personalization -->
+        <div class="journey-stage" data-stage="3" data-duration="0.8">
+            <div class="stage-header">
+                <div class="stage-number">4</div>
+                <div class="stage-title-container">
+                    <h2 class="stage-title">Personalization Layer</h2>
+                    <p class="stage-description">Adapting response based on learned user patterns</p>
+                </div>
+                <div class="stage-duration">0.8s</div>
+            </div>
+
+            <div class="data-flow-container">
+                <div class="database-row">
+                    <div class="db-card" data-db="postgresql">
+                        <div class="db-card-icon">🐘</div>
+                        <div class="db-card-title">PostgreSQL</div>
+                        <div class="db-card-activity">Loading preferences...</div>
+                        <div class="data-preview">
+SELECT * FROM user_preferences
+WHERE user_id = 'user_789'
+
+{
+  "tone": "balanced",
+  "detail_level": "comprehensive",
+  "visual_prefs": 
+    "charts_and_summaries",
+  "citation_style": 
+    "inline_with_footnotes"
+}
+                        </div>
+                    </div>
+
+                    <div class="db-card" data-db="neo4j">
+                        <div class="db-card-icon">🕸️</div>
+                        <div class="db-card-title">Neo4j</div>
+                        <div class="db-card-activity">Analyzing behavior patterns...</div>
+                        <div class="data-preview">
+MATCH (u:User {id: "user_789"})
+-[r:PREFERS|RESPONDS_WELL_TO]->
+(pattern)
+RETURN pattern
+
+Results:
+- PREFERS DataVisualization
+- RESPONDS_WELL_TO ActionableInsights
+- AVOIDS TechnicalJargon
+                        </div>
+                    </div>
+
+                    <div class="db-card" data-db="mongodb">
+                        <div class="db-card-icon">🍃</div>
+                        <div class="db-card-title">MongoDB</div>
+                        <div class="db-card-activity">Reviewing interaction history...</div>
+                        <div class="data-preview">
+db.user_interaction_logs.find({
+  user_id: "user_789",
+  response_type: "analysis",
+  feedback: "positive"
+})
+
+Pattern identified:
+User prefers responses with:
+- Executive summaries
+- Data visualizations
+- Action items
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="details-toggle" onclick="toggleDetails(this)">
+                <span>🔍 View Detailed Breakdown</span>
+                <span>▼</span>
+            </button>
+            <div class="stage-details">
+                <div class="details-content">
+                    <div class="details-grid">
+                        <div class="detail-card">
+                            <h4>Communication Style</h4>
+                            <p>User prefers balanced tone with comprehensive detail level and structured format.</p>
+                            <pre>
+Selected template:
+"structured_analysis_with_recommendations"
+
+Format includes:
+- Executive summary
+- Detailed findings
+- Data visualizations
+- Actionable recommendations
+                            </pre>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Behavioral Patterns</h4>
+                            <p>Historical data shows user responds best to actionable insights with visual elements.</p>
+                            <pre>
+Successful patterns:
+- Data visualizations: 92% positive
+- Actionable steps: 88% positive
+- Technical details: 45% follow-ups
+
+Avoid: heavy jargon
+                            </pre>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Temporal Context</h4>
+                            <p>Time of day indicates deep work mode; user expects thorough, comprehensive responses.</p>
+                            <pre>
+Current context:
+- Time: 10:00 AM (deep work)
+- Day: Tuesday (business focus)
+- Avg session: 15 minutes
+- Expected depth: High
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage 5: Cognition Cycle -->
+        <div class="journey-stage" data-stage="4" data-duration="1.5">
+            <div class="stage-header">
+                <div class="stage-number">5</div>
+                <div class="stage-title-container">
+                    <h2 class="stage-title">Cognition Cycle</h2>
+                    <p class="stage-description">Planning, reasoning, and executing multi-agent response generation</p>
+                </div>
+                <div class="stage-duration">1.5s</div>
+            </div>
+
+            <div class="data-flow-container">
+                <div class="database-row">
+                    <div class="db-card" data-db="postgresql">
+                        <div class="db-card-icon">🐘</div>
+                        <div class="db-card-title">PostgreSQL</div>
+                        <div class="db-card-activity">Task decomposition...</div>
+                        <div class="data-preview">
+INSERT INTO cognition.tasks
+VALUES (
+  'task_main',
+  'analyze_and_suggest',
+  'active'
+)
+
+Subtasks created:
+1. parse_document
+2. compare_historical
+3. identify_patterns
+4. generate_suggestions
+5. format_response
+                        </div>
+                    </div>
+
+                    <div class="db-card" data-db="neo4j">
+                        <div class="db-card-icon">🕸️</div>
+                        <div class="db-card-title">Neo4j</div>
+                        <div class="db-card-activity">Agent orchestration...</div>
+                        <div class="data-preview">
+CREATE (t:Task {id: "task_main"})
+CREATE (a1:Agent {
+  name: "DocumentAnalyzer"
+})
+CREATE (a2:Agent {
+  name: "DataAnalyst"
+})
+CREATE (a1)-[:EXECUTES]->(t)
+CREATE (a1)-[:FEEDS]->(a2)
+                        </div>
+                    </div>
+
+                    <div class="db-card" data-db="mongodb">
+                        <div class="db-card-icon">🍃</div>
+                        <div class="db-card-title">MongoDB</div>
+                        <div class="db-card-activity">Logging reasoning...</div>
+                        <div class="data-preview">
+db.agent_reasoning_logs.insertOne({
+  task_id: "task_main",
+  reasoning_type: "deductive",
+  steps: [
+    "Q3 revenue declined 12%",
+    "Pattern: Category B consistent",
+    "Hypothesis: Seasonal + marketing",
+    "Recommendation: Increase Q3 marketing"
+  ],
+  confidence: 0.87
+})
+                        </div>
+                    </div>
+
+                    <div class="db-card" data-db="redis">
+                        <div class="db-card-icon">⚡</div>
+                        <div class="db-card-title">Redis</div>
+                        <div class="db-card-activity">Tracking execution state...</div>
+                        <div class="data-preview">
+HSET task:task_main:state
+  status "in_progress"
+  current_step "3_of_5"
+  agents_active "2"
+  
+EXPIRE task:task_main:state 300
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="details-toggle" onclick="toggleDetails(this)">
+                <span>🔍 View Detailed Breakdown</span>
+                <span>▼</span>
+            </button>
+            <div class="stage-details">
+                <div class="details-content">
+                    <div class="details-grid">
+                        <div class="detail-card">
+                            <h4>Task Planning</h4>
+                            <p>Main task decomposed into 5 sequential subtasks with clear dependencies.</p>
+                            <pre>
+Task hierarchy:
+Main: analyze_and_suggest
+├─ parse_document (1.2s)
+├─ compare_historical (0.5s)
+├─ identify_patterns (0.8s)
+├─ generate_suggestions (0.6s)
+└─ format_response (0.4s)
+
+Total estimated: 3.5s
+                            </pre>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Agent Orchestration</h4>
+                            <p>4 specialized agents working in coordinated sequence with dependency management.</p>
+                            <pre>
+Agents involved:
+1. DocumentAnalyzer
+2. DataAnalyst
+3. BusinessAdvisor
+4. ResponseComposer
+
+Dependencies resolved
+Execution order: 1→2→3→4
+                            </pre>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Reasoning Trace</h4>
+                            <p>System applies deductive and inductive reasoning to generate evidence-based recommendations.</p>
+                            <pre>
+Reasoning applied:
+- Deductive: Extract facts
+- Inductive: Identify patterns
+- Abductive: Best explanation
+
+Confidence: 87%
+Alternatives considered: 2
+                            </pre>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Memory Formation</h4>
+                            <p>Creating episodic memory of this interaction for future reference and learning.</p>
+                            <pre>
+Episode created:
+- ID: "Q3_sales_analysis_2024"
+- Context: Business analysis
+- Outcome: Recommendations provided
+- Importance: 8/10
+- Emotional valence: Positive
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage 6: Response & Feedback -->
+        <div class="journey-stage" data-stage="5" data-duration="0.5">
+            <div class="stage-header">
+                <div class="stage-number">6</div>
+                <div class="stage-title-container">
+                    <h2 class="stage-title">Response & Feedback Loop</h2>
+                    <p class="stage-description">Delivering response and tracking engagement for continuous learning</p>
+                </div>
+                <div class="stage-duration">0.5s</div>
+            </div>
+
+            <div class="data-flow-container">
+                <div class="database-row">
+                    <div class="db-card" data-db="postgresql">
+                        <div class="db-card-icon">🐘</div>
+                        <div class="db-card-title">PostgreSQL</div>
+                        <div class="db-card-activity">Storing response metadata...</div>
+                        <div class="data-preview">
+INSERT INTO messages VALUES (
+  'resp_456',
+  'conv_456',
+  'assistant',
+  '...',
+  1247, -- tokens
+  4.3,  -- generation_time
+  3     -- sources_cited
+)
+                        </div>
+                    </div>
+
+                    <div class="db-card" data-db="mongodb">
+                        <div class="db-card-icon">🍃</div>
+                        <div class="db-card-title">MongoDB</div>
+                        <div class="db-card-activity">Tracking engagement...</div>
+                        <div class="data-preview">
+db.user_engagement.insertOne({
+  response_id: "resp_456",
+  user_reaction: {
+    read_time: 180,
+    scroll_depth: 0.95,
+    clicked_citations: [1, 3],
+    explicit_feedback: "👍"
+  }
+})
+                        </div>
+                    </div>
+
+                    <div class="db-card" data-db="neo4j">
+                        <div class="db-card-icon">🕸️</div>
+                        <div class="db-card-title">Neo4j</div>
+                        <div class="db-card-activity">Building provenance chain...</div>
+                        <div class="data-preview">
+MATCH (r:Response {id: "resp_456"})
+CREATE (r)-[:GENERATED_BY]->
+  (agents)
+CREATE (r)-[:BASED_ON]->
+  (sources)
+CREATE (r)-[:SATISFIED_USER]->
+  (u:User {id: "user_789"})
+                        </div>
+                    </div>
+
+                    <div class="db-card" data-db="qdrant">
+                        <div class="db-card-icon">🔍</div>
+                        <div class="db-card-title">Qdrant</div>
+                        <div class="db-card-activity">Indexing response...</div>
+                        <div class="data-preview">
+upsert(
+  collection="response_embeddings",
+  points=[{
+    id: "resp_456",
+    vector: [...],
+    payload: {
+      "quality_score": 0.92,
+      "user_satisfied": true
+    }
+  }]
+)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="details-toggle" onclick="toggleDetails(this)">
+                <span>🔍 View Detailed Breakdown</span>
+                <span>▼</span>
+            </button>
+            <div class="stage-details">
+                <div class="details-content">
+                    <div class="details-grid">
+                        <div class="detail-card">
+                            <h4>Response Delivery</h4>
+                            <p>Generated comprehensive response with 1247 tokens, 3 citations, and data visualizations.</p>
+                            <pre>
+Response metadata:
+- Generation time: 4.3s
+- Token count: 1247
+- Sources cited: 3
+- Agents involved: 4
+- Format: Structured markdown
+                            </pre>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Engagement Tracking</h4>
+                            <p>Monitoring user interaction to measure response quality and satisfaction.</p>
+                            <pre>
+Engagement metrics:
+- Read time: 3 minutes
+- Scroll depth: 95%
+- Citations clicked: 2 of 3
+- Text copied: Yes
+- Feedback: 👍 (positive)
+                            </pre>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Learning Updates</h4>
+                            <p>System learns from this successful interaction to improve future responses.</p>
+                            <pre>
+Updates applied:
+✓ Personalization profile updated
+✓ Knowledge graph strengthened
+✓ Episodic memory consolidated
+✓ Response pattern recorded
+
+Quality score: 0.92
+                            </pre>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Provenance Chain</h4>
+                            <p>Complete audit trail linking response to sources, agents, and reasoning processes.</p>
+                            <pre>
+Provenance established:
+- Response → 4 Agents
+- Response → 3 Source Documents
+- Response → 2 Reasoning Types
+- Response → User Satisfaction
+
+Traceability: Complete
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Section -->
+        <div style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.1)); border: 1px solid rgba(102, 126, 234, 0.3); border-radius: 20px; padding: 3rem; text-align: center; margin-top: 4rem;">
+            <h2 style="font-family: 'Barlow Condensed', sans-serif; font-size: 2.5rem; color: #ffffff; margin-bottom: 1rem;">
+                🎯 Complete Journey: 4.3 Seconds
+            </h2>
+            <p style="font-size: 1.2rem; color: #cbd5e1; margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+                From a single user message to an intelligent, personalized response — orchestrating 6 databases, 4 agents, and 5 cognitive stages.
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 3rem;">
+                <div>
+                    <div style="font-size: 3rem; color: #667eea; font-weight: 700;">6</div>
+                    <div style="color: #94a3b8;">Databases Used</div>
+                </div>
+                <div>
+                    <div style="font-size: 3rem; color: #667eea; font-weight: 700;">15+</div>
+                    <div style="color: #94a3b8;">Data Operations</div>
+                </div>
+                <div>
+                    <div style="font-size: 3rem; color: #667eea; font-weight: 700;">4</div>
+                    <div style="color: #94a3b8;">AI Agents</div>
+                </div>
+                <div>
+                    <div style="font-size: 3rem; color: #667eea; font-weight: 700;">100%</div>
+                    <div style="color: #94a3b8;">Traceable</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Navigation Controller
+        class DataJourneyNavigator {
+            constructor() {
+                this.stages = document.querySelectorAll('.journey-stage');
+                this.currentStage = 0;
+                this.totalStages = this.stages.length;
+                
+                this.initControls();
+                this.initTimeline();
+                this.initIntersectionObserver();
+                this.updateUI();
+            }
+            
+            initControls() {
+                document.getElementById('prevBtn').addEventListener('click', () => this.previousStage());
+                document.getElementById('nextBtn').addEventListener('click', () => this.nextStage());
+            }
+            
+            initTimeline() {
+                const track = document.getElementById('timelineTrack');
+                const handle = document.getElementById('timelineHandle');
+                
+                let isDragging = false;
+                
+                handle.addEventListener('mousedown', () => {
+                    isDragging = true;
+                    this.pause();
+                });
+                
+                document.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    
+                    const rect = track.getBoundingClientRect();
+                    const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+                    const percent = (x / rect.width) * 100;
+                    
+                    this.seekToPercent(percent);
+                });
+                
+                document.addEventListener('mouseup', () => {
+                    isDragging = false;
+                });
+                
+                track.addEventListener('click', (e) => {
+                    if (isDragging) return;
+                    
+                    const rect = track.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const percent = (x / rect.width) * 100;
+                    
+                    this.seekToPercent(percent);
+                });
+            }
+            
+            initIntersectionObserver() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting && entry.target.dataset.stage <= this.currentStage) {
+                            entry.target.classList.add('animate-in');
+                        }
+                    });
+                }, { threshold: 0.3 });
+                
+                this.stages.forEach(stage => observer.observe(stage));
+            }
+            
+            nextStage() {
+                if (this.currentStage < this.totalStages - 1) {
+                    this.currentStage++;
+                    this.goToStage(this.currentStage);
+                }
+            }
+            
+            previousStage() {
+                if (this.currentStage > 0) {
+                    this.currentStage--;
+                    this.goToStage(this.currentStage);
+                }
+            }
+            
+            goToStage(index) {
+                // Deactivate all stages
+                this.stages.forEach((stage, i) => {
+                    if (i <= index) {
+                        stage.classList.add('animate-in');
+                    } else {
+                        stage.classList.remove('animate-in');
+                    }
+                    stage.classList.remove('active');
+                    this.deactivateDatabases(stage);
+                });
+                
+                // Activate current stage
+                const currentStageElement = this.stages[index];
+                currentStageElement.classList.add('animate-in', 'active');
+                this.activateStage(currentStageElement);
+                
+                // Update UI
+                this.updateUI();
+                
+                // Update timeline
+                const percent = ((index + 1) / this.totalStages) * 100;
+                this.updateTimeline(percent);
+                
+                // Scroll to stage
+                currentStageElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            updateUI() {
+                // Update stage counter
+                document.getElementById('stageCounter').textContent = `Stage ${this.currentStage + 1} of ${this.totalStages}`;
+                
+                // Update button states
+                document.getElementById('prevBtn').disabled = this.currentStage === 0;
+                document.getElementById('nextBtn').disabled = this.currentStage === this.totalStages - 1;
+            }
+            
+            activateStage(stage) {
+                const dbCards = stage.querySelectorAll('.db-card');
+                const dbNames = Array.from(dbCards).map(card => card.dataset.db);
+                
+                dbCards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('active');
+                    }, index * 300);
+                });
+                
+                // Activate sidebar indicators
+                dbNames.forEach(dbName => {
+                    const indicator = document.querySelector(`.db-indicator[data-db="${dbName}"]`);
+                    if (indicator) {
+                        indicator.classList.add('active');
+                        indicator.querySelector('.pulse-dot').classList.add('active');
+                    }
+                });
+            }
+            
+            deactivateDatabases(stage) {
+                const dbCards = stage.querySelectorAll('.db-card');
+                const dbNames = Array.from(dbCards).map(card => card.dataset.db);
+                
+                dbCards.forEach(card => {
+                    card.classList.remove('active');
+                });
+                
+                // Deactivate sidebar indicators
+                dbNames.forEach(dbName => {
+                    const indicator = document.querySelector(`.db-indicator[data-db="${dbName}"]`);
+                    if (indicator) {
+                        indicator.classList.remove('active');
+                        indicator.querySelector('.pulse-dot').classList.remove('active');
+                    }
+                });
+            }
+            
+            updateTimeline(percent) {
+                const progress = document.getElementById('timelineProgress');
+                progress.style.width = `${percent}%`;
+                
+                // Update active timeline stage
+                const stageIndex = Math.floor((percent / 100) * this.stages.length);
+                document.querySelectorAll('.timeline-stage').forEach((label, index) => {
+                    label.classList.toggle('active', index === stageIndex);
+                });
+            }
+            
+            seekToPercent(percent) {
+                const stageIndex = Math.floor((percent / 100) * this.stages.length);
+                this.currentStage = Math.min(stageIndex, this.stages.length - 1);
+                
+                // Reset all stages
+                this.stages.forEach((stage, index) => {
+                    if (index < this.currentStage) {
+                        stage.classList.add('animate-in');
+                    } else {
+                        stage.classList.remove('animate-in', 'active');
+                    }
+                    this.deactivateDatabases(stage);
+                });
+                
+                this.updateTimeline(percent);
+                
+                // Scroll to current stage
+                if (this.stages[this.currentStage]) {
+                    this.stages[this.currentStage].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        }
+        
+        // Toggle details
+        function toggleDetails(button) {
+            const details = button.nextElementSibling;
+            const arrow = button.querySelector('span:last-child');
+            
+            details.classList.toggle('expanded');
+            arrow.textContent = details.classList.contains('expanded') ? '▲' : '▼';
+        }
+        
+        // Initialize navigator
+        const navigator = new DataJourneyNavigator();
+        
+        // Show first stage on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                navigator.goToStage(0);
+            }, 500);
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                navigator.nextStage();
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                navigator.previousStage();
+            }
+        });
+    </script>
+</body>
+</html>

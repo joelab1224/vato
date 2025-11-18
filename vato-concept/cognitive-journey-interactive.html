@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VATO - Viaje de Inteligencia Cognitiva</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Barlow', sans-serif;
+            background: linear-gradient(135deg, #0a0f1c 0%, #16213e 50%, #0f1729 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 3rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            animation: patternMove 20s linear infinite;
+        }
+        
+        @keyframes patternMove {
+            0% { transform: translateX(-60px); }
+            100% { transform: translateX(60px); }
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header h1 {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header .subtitle {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* User Input (Sticky) */
+        .user-input-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 23, 41, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem 0;
+        }
+        
+        .user-input-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .user-message-box {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            color: #e2e8f0;
+        }
+        
+        .navigation-controls {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        
+        .nav-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 600;
+            font-family: 'Barlow', sans-serif;
+        }
+        
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .stage-counter {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            font-weight: 600;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        /* Cognitive Feature Sidebar */
+        .cognitive-sidebar {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 90;
+            background: rgba(30, 41, 59, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1rem;
+            width: 200px;
+        }
+        
+        .cognitive-sidebar-title {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .cognitive-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .cognitive-indicator:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .cognitive-indicator.active {
+            background: rgba(102, 126, 234, 0.2);
+            border-left: 3px solid #667eea;
+        }
+        
+        .cognitive-icon {
+            font-size: 1.3rem;
+        }
+        
+        .cognitive-info {
+            flex: 1;
+        }
+        
+        .cognitive-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            line-height: 1.2;
+        }
+        
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #64748b;
+            transition: all 0.3s ease;
+        }
+        
+        .pulse-dot.active {
+            background: #a78bfa;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.7); }
+            50% { opacity: 0.8; box-shadow: 0 0 0 10px rgba(167, 139, 250, 0); }
+        }
+        
+        /* Journey Stages */
+        .journey-stage {
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .journey-stage.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .stage-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stage-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .stage-title-container {
+            flex: 1;
+        }
+        
+        .stage-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stage-description {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+        
+        /* Cognitive Cards */
+        .cognitive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .cognitive-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.05));
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .journey-stage.animate-in .cognitive-card:nth-child(1) {
+            animation: fadeInScale 0.5s ease 0.2s forwards;
+        }
+        
+        .journey-stage.animate-in .cognitive-card:nth-child(2) {
+            animation: fadeInScale 0.5s ease 0.4s forwards;
+        }
+        
+        .journey-stage.animate-in .cognitive-card:nth-child(3) {
+            animation: fadeInScale 0.5s ease 0.6s forwards;
+        }
+        
+        @keyframes fadeInScale {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .cognitive-card.active {
+            border-color: rgba(102, 126, 234, 0.6);
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .cognitive-card.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            animation: shimmer 2s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.75rem;
+        }
+        
+        .card-description {
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-metrics {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .metric-item:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+        
+        .metric-value {
+            font-weight: 600;
+            color: #a78bfa;
+            font-size: 0.9rem;
+        }
+        
+        .card-details {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .cognitive-card.active .card-details {
+            max-height: 500px;
+        }
+        
+        /* Visual Memory Network */
+        .memory-network {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            min-height: 300px;
+        }
+        
+        .network-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .memory-nodes {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            position: relative;
+        }
+        
+        .memory-node {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.2));
+            border: 2px solid rgba(102, 126, 234, 0.5);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            min-width: 150px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .memory-node:hover {
+            transform: scale(1.05);
+            border-color: rgba(102, 126, 234, 0.8);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .node-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .node-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.25rem;
+        }
+        
+        .node-count {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+        
+        /* Learning Pattern Visualization */
+        .learning-pattern {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .pattern-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .pattern-icon {
+            font-size: 1.5rem;
+        }
+        
+        .pattern-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        
+        .pattern-bar {
+            background: rgba(0, 0, 0, 0.3);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+        
+        .pattern-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #a78bfa);
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+        
+        .pattern-label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+        
+        /* Insight Boxes */
+        .insight-box {
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.2), rgba(102, 126, 234, 0.1));
+            border-left: 4px solid #a78bfa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .insight-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .insight-icon {
+            font-size: 1.5rem;
+        }
+        
+        .insight-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        
+        .insight-content {
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .cognitive-sidebar {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header .subtitle {
+                font-size: 1rem;
+            }
+            
+            .user-input-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .navigation-controls {
+                justify-content: center;
+            }
+            
+            .stage-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .cognitive-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .memory-nodes {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1>🧠 Viaje de Inteligencia Cognitiva</h1>
+            <p class="subtitle">Cómo VATO aprende, recuerda, personaliza y razona con cada interacción</p>
+        </div>
+    </header>
+
+    <!-- Sticky User Input -->
+    <div class="user-input-sticky">
+        <div class="user-input-container">
+            <div class="user-avatar">👤</div>
+            <div class="user-message-box">
+                "Estoy trabajando en una nueva ranchera sobre el legado generacional, pero no encuentro el tono emocional correcto. Ayúdame a explorar este sentimiento de cargar con el patrimonio musical de mi familia mientras forjo mi propio camino."
+            </div>
+            <div class="navigation-controls">
+                <button class="nav-btn" id="prevBtn" title="Etapa Anterior">
+                    <span>⬅️</span>
+                    <span>Anterior</span>
+                </button>
+                <div class="stage-counter" id="stageCounter">Etapa 1 de 6</div>
+                <button class="nav-btn" id="nextBtn" title="Siguiente Etapa">
+                    <span>Siguiente</span>
+                    <span>➡️</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cognitive Feature Sidebar -->
+    <div class="cognitive-sidebar">
+        <div class="cognitive-sidebar-title">Actividad Cognitiva</div>
+        <div class="cognitive-indicator" data-feature="memory">
+            <div class="cognitive-icon">💾</div>
+            <div class="cognitive-info">
+                <div class="cognitive-name">Memoria</div>
+            </div>
+            <div class="pulse-dot"></div>
+        </div>
+        <div class="cognitive-indicator" data-feature="learning">
+            <div class="cognitive-icon">📚</div>
+            <div class="cognitive-info">
+                <div class="cognitive-name">Aprendizaje</div>
+            </div>
+            <div class="pulse-dot"></div>
+        </div>
+        <div class="cognitive-indicator" data-feature="personalization">
+            <div class="cognitive-icon">🎯</div>
+            <div class="cognitive-info">
+                <div class="cognitive-name">Personalización</div>
+            </div>
+            <div class="pulse-dot"></div>
+        </div>
+        <div class="cognitive-indicator" data-feature="reasoning">
+            <div class="cognitive-icon">🤔</div>
+            <div class="cognitive-info">
+                <div class="cognitive-name">Razonamiento</div>
+            </div>
+            <div class="pulse-dot"></div>
+        </div>
+        <div class="cognitive-indicator" data-feature="creativity">
+            <div class="cognitive-icon">💡</div>
+            <div class="cognitive-info">
+                <div class="cognitive-name">Creatividad</div>
+            </div>
+            <div class="pulse-dot"></div>
+        </div>
+        <div class="cognitive-indicator" data-feature="metacognition">
+            <div class="cognitive-icon">🎯</div>
+            <div class="cognitive-info">
+                <div class="cognitive-name">Metacognición</div>
+            </div>
+            <div class="pulse-dot"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Stage 1: Perception & Understanding -->
+        <div class="journey-stage" data-stage="0">
+            <div class="stage-header">
+                <div class="stage-number">1</div>
+                <div class="stage-title-container">
+                    <h2 class="stage-title">Percepción y Comprensión</h2>
+                    <p class="stage-description">El sistema percibe tu mensaje con una profunda comprensión semántica y emocional</p>
+                </div>
+            </div>
+
+            <div class="cognitive-grid">
+                <div class="cognitive-card" data-feature="memory">
+                    <span class="card-icon">🎯</span>
+                    <h3 class="card-title">Reconocimiento de Intención</h3>
+                    <p class="card-description">El análisis profundo de PLN identifica no solo lo que preguntaste, sino por qué lo preguntas y lo que realmente necesitas.</p>
+                    <div class="card-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">Intención Principal</span>
+                            <span class="metric-value">Exploración Emocional</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Confianza</span>
+                            <span class="metric-value">97%</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Sub-intenciones Detectadas</span>
+                            <span class="metric-value">4</span>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <strong>Detectado:</strong> Composición creativa + procesamiento emocional + exploración de identidad + honrar el legado. Buscas articular una dualidad emocional compleja: orgullo y presión, tradición e innovación.
+                    </div>
+                </div>
+
+                <div class="cognitive-card" data-feature="learning">
+                    <span class="card-icon">😊</span>
+                    <h3 class="card-title">Inteligencia Emocional</h3>
+                    <p class="card-description">Analiza tu estado emocional y estilo de comunicación para proporcionar respuestas empáticas y contextualmente apropiadas.</p>
+                    <div class="card-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">Tono Emocional</span>
+                            <span class="metric-value">Reflexivo y Vulnerable</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Estado Creativo</span>
+                            <span class="metric-value">Procesando Complejidad</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Apertura</span>
+                            <span class="metric-value">Alta Confianza</span>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <strong>Percepción:</strong> Vulnerabilidad emocional profunda detectada. Estás lidiando con el peso del legado—sintiéndote honrado y agobiado a la vez. Esto no es bloqueo creativo; es búsqueda de claridad emocional.
+                    </div>
+                </div>
+
+                <div class="cognitive-card" data-feature="personalization">
+                    <span class="card-icon">🔍</span>
+                    <h3 class="card-title">Comprensión Contextual</h3>
+                    <p class="card-description">Extrae entidades clave, conceptos y referencias para construir una rica comprensión contextual.</p>
+                    <div class="card-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">Temas Identificados</span>
+                            <span class="metric-value">5</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Capas Emocionales</span>
+                            <span class="metric-value">3</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Contexto Cultural</span>
+                            <span class="metric-value">Tradición Ranchera</span>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <strong>Extraído:</strong> Género: ranchera (profundamente arraigado), Temas: legado, identidad, honor, autonomía, continuidad. Dualidad emocional: reverencia vs. autoexpresión. Necesitas permiso para ser tú mismo mientras honras la tradición.
+                    </div>
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-header">
+                    <span class="insight-icon">💡</span>
+                    <h4 class="insight-title">Percepción Cognitiva</h4>
+                </div>
+                <div class="insight-content">
+                    El sistema no solo analiza palabras—comprende el <strong>paisaje emocional</strong> detrás de tu solicitud. Reconoce que estás en un <strong>estado creativo vulnerable</strong>, buscando articular sentimientos complejos sobre identidad, legado y autenticidad artística.
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage 2: Memory Activation -->
+        <div class="journey-stage" data-stage="1">
+            <div class="stage-header">
+                <div class="stage-number">2</div>
+                <div class="stage-title-container">
+                    <h2 class="stage-title">Activación y Recuperación de Memoria</h2>
+                    <p class="stage-description">Múltiples sistemas de memoria se activan para proporcionar contexto rico y personalizado</p>
+                </div>
+            </div>
+
+            <div class="memory-network">
+                <h3 class="network-title">🧠 Sistemas de Memoria Activados</h3>
+                <div class="memory-nodes">
+                    <div class="memory-node">
+                        <div class="node-icon">📖</div>
+                        <div class="node-label">Episódica</div>
+                        <div class="node-count">5 conversaciones pasadas</div>
+                    </div>
+                    <div class="memory-node">
+                        <div class="node-icon">🗂️</div>
+                        <div class="node-label">Semántica</div>
+                        <div class="node-count">Tu contexto personal</div>
+                    </div>
+                    <div class="memory-node">
+                        <div class="node-icon">🎯</div>
+                        <div class="node-label">Trabajo</div>
+                        <div class="node-count">Enfoque actual</div>
+                    </div>
+                    <div class="memory-node">
+                        <div class="node-icon">🔧</div>
+                        <div class="node-label">Procedimental</div>
+                        <div class="node-count">Métodos de análisis</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cognitive-grid">
+                <div class="cognitive-card" data-feature="memory">
+                    <span class="card-icon">📖</span>
+                    <h3 class="card-title">Memoria Episódica</h3>
+                    <p class="card-description">Recuerda interacciones pasadas específicas contigo, incluyendo qué funcionó bien y qué no.</p>
+                    <div class="card-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">Sesiones Creativas</span>
+                            <span class="metric-value">27</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Período</span>
+                            <span class="metric-value">Últimos 8 meses</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Puntaje de Relevancia</span>
+                            <span class="metric-value">0.93</span>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <strong>Recordado:</strong> Conversación previa sobre la influencia de tu padre Antonio, el peso emocional de presentarte en Madison Square Garden como él lo hizo, el creciente éxito de tu hija Ángela, y la presión de tres generaciones de excelencia.
+                    </div>
+                </div>
+
+                <div class="cognitive-card" data-feature="memory">
+                    <span class="card-icon">🗂️</span>
+                    <h3 class="card-title">Memoria Semántica</h3>
+                    <p class="card-description">Accede a tu perfil artístico, influencias y patrones emocionales construidos con el tiempo.</p>
+                    <div class="card-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">Identidad Artística</span>
+                            <span class="metric-value">Legado Ranchera/Mariachi</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Generacional</span>
+                            <span class="metric-value">3ra Gen (Antonio→Tú→Ángela)</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Tensión Principal</span>
+                            <span class="metric-value">Tradición vs. Innovación</span>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <strong>Contexto:</strong> Eres Pepe Aguilar—hijo de las leyendas Antonio Aguilar y Flor Silvestre, padre de las estrellas emergentes Leonardo y Ángela. Fusionas la ranchera tradicional con producción contemporánea. Tu tema recurrente: honrar las raíces mientras evolucionas el género.
+                    </div>
+                </div>
+
+                <div class="cognitive-card" data-feature="memory">
+                    <span class="card-icon">📄</span>
+                    <h3 class="card-title">Memoria de Documentos</h3>
+                    <p class="card-description">Encuentra letras relevantes, notas de voz y fragmentos creativos mediante búsqueda semántica.</p>
+                    <div class="card-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">Artefactos Creativos</span>
+                            <span class="metric-value">11</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Mejor Coincidencia</span>
+                            <span class="metric-value">Nota de voz: "Peso del nombre" (0.94)</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Tiempo de Búsqueda</span>
+                            <span class="metric-value">31ms</span>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <strong>Recuperado:</strong> Memo de voz sobre "cargar con el apellido familiar", letras inacabadas "hijos del viento", entrada de diario después de la nominación al Grammy de Ángela, fotos del último concierto de tu padre, transcripción de entrevista sobre la presión del legado.
+                    </div>
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-header">
+                    <span class="insight-icon">🎯</span>
+                    <h4 class="insight-title">Inteligencia de Memoria</h4>
+                </div>
+                <div class="insight-content">
+                    La memoria no es solo almacenamiento—es <strong>ensamblaje de contexto emocional</strong>. El sistema sabe que procesas el legado a través de metáforas, recuerda que las notas de voz capturan tus emociones más crudas, y reconoce que tus canciones más exitosas siempre comienzan con vulnerabilidad personal, no con conceptos grandiosos.
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage 3: Learning & Pattern Recognition -->
+        <div class="journey-stage" data-stage="2">
+            <div class="stage-header">
+                <div class="stage-number">3</div>
+                <div class="stage-title-container">
+                    <h2 class="stage-title">Aprendizaje y Reconocimiento de Patrones</h2>
+                    <p class="stage-description">El sistema aprende de patrones y se adapta a tus necesidades cambiantes</p>
+                </div>
+            </div>
+
+            <div class="cognitive-grid">
+                <div class="cognitive-card" data-feature="learning">
+                    <span class="card-icon">📊</span>
+                    <h3 class="card-title">Patrones de Comportamiento</h3>
+                    <p class="card-description">Identifica qué estilos de respuesta, formatos y enfoques funcionan mejor para ti.</p>
+                    
+                    <div class="learning-pattern">
+                        <div class="pattern-header">
+                            <span class="pattern-icon">📈</span>
+                            <span class="pattern-title">Prompts Metafóricos</span>
+                        </div>
+                        <div class="pattern-bar">
+                            <div class="pattern-fill" style="width: 96%;"></div>
+                        </div>
+                        <div class="pattern-label">96% avance emocional</div>
+                    </div>
+
+                    <div class="learning-pattern">
+                        <div class="pattern-header">
+                            <span class="pattern-icon">✅</span>
+                            <span class="pattern-title">Prompts de Historia Personal</span>
+                        </div>
+                        <div class="pattern-bar">
+                            <div class="pattern-fill" style="width: 91%;"></div>
+                        </div>
+                        <div class="pattern-label">91% flujo creativo</div>
+                    </div>
+
+                    <div class="learning-pattern">
+                        <div class="pattern-header">
+                            <span class="pattern-icon">🔬</span>
+                            <span class="pattern-title">Consejos Directos de Composición</span>
+                        </div>
+                        <div class="pattern-bar">
+                            <div class="pattern-fill" style="width: 34%;"></div>
+                        </div>
+                        <div class="pattern-label">34% se sintió inauténtico</div>
+                    </div>
+                </div>
+
+                <div class="cognitive-card" data-feature="learning">
+                    <span class="card-icon">🎓</span>
+                    <h3 class="card-title">Aprendizaje Adaptativo</h3>
+                    <p class="card-description">Refina continuamente la comprensión de tus preferencias y estilo de comunicación.</p>
+                    <div class="card-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">Sesiones Analizadas</span>
+                            <span class="metric-value">89</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Patrones Emocionales</span>
+                            <span class="metric-value">12</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Precisión Creativa</span>
+                            <span class="metric-value">93%</span>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <strong>Aprendizaje:</strong> Creas mejor cuando exploras paradojas emocionales mediante preguntas. Resistes fórmulas prescriptivas. Sesiones nocturnas (9 PM-1 AM) producen tu trabajo más auténtico. Las historias familiares desbloquean letras más profundas.
+                    </div>
+                </div>
+
+                <div class="cognitive-card" data-feature="learning">
+                    <span class="card-icon">🔄</span>
+                    <h3 class="card-title">Integración de Retroalimentación</h3>
+                    <p class="card-description">Aprende de retroalimentación explícita (👍/👎) y señales implícitas (tiempo dedicado, seguimientos).</p>
+                    <div class="card-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">Notas de Voz Grabadas</span>
+                            <span class="metric-value">34 durante sesiones</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Duración Promedio</span>
+                            <span class="metric-value">47 minutos</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Tasa de Avance</span>
+                            <span class="metric-value">78%</span>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <strong>Señales:</strong> Grabar notas de voz durante la sesión indica resonancia emocional. Pausas largas (2-5 min) después de prompts específicos señalan reflexión profunda. Guardas preguntas que te hacen sentir, no solo pensar.
+                    </div>
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-header">
+                    <span class="insight-icon">🧠</span>
+                    <h4 class="insight-title">Meta-Aprendizaje</h4>
+                </div>
+                <div class="insight-content">
+                    El sistema no solo aprende <em>qué</em> te gusta—aprende <strong>cómo sientes y creas</strong>. Reconoce cuando evitas la profundidad emocional con humor, redirigiéndote suavemente hacia la vulnerabilidad. Conoce tu ritmo creativo: explorar ampliamente primero, luego enfocarte intensamente.
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage 4: Personalization Engine -->
+        <div class="journey-stage" data-stage="3">
+            <div class="stage-header">
+                <div class="stage-number">4</div>
+                <div class="stage-title-container">
+                    <h2 class="stage-title">Motor de Personalización</h2>
+                    <p class="stage-description">Creando una respuesta únicamente adaptada a ti</p>
+                </div>
+            </div>
+
+            <div class="cognitive-grid">
+                <div class="cognitive-card" data-feature="personalization">
+                    <span class="card-icon">🎨</span>
+                    <h3 class="card-title">Adaptación de Estilo de Comunicación</h3>
+                    <p class="card-description">Ajusta tono, formalidad y nivel de detalle para coincidir con tus preferencias.</p>
+                    <div class="card-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">Tono</span>
+                            <span class="metric-value">Íntimo y Reflexivo</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Enfoque</span>
+                            <span class="metric-value">Escucha Profunda</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Formato</span>
+                            <span class="metric-value">Preguntas Abiertas + Historias</span>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <strong>Plantilla Seleccionada:</strong> "Compañero Creativo" - usa preguntas profundas, refleja tu estado emocional, comparte historias relevantes de otros artistas (José Alfredo Jiménez, Chavela Vargas), crea espacio para la vulnerabilidad.
+                    </div>
+                </div>
+
+                <div class="cognitive-card" data-feature="personalization">
+                    <span class="card-icon">⏰</span>
+                    <h3 class="card-title">Personalización Temporal</h3>
+                    <p class="card-description">Considera hora del día, día de la semana y tu modo creativo actual.</p>
+                    <div class="card-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">Contexto Temporal</span>
+                            <span class="metric-value">11:20 PM Sábado</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Estado Creativo</span>
+                            <span class="metric-value">Soledad Reflexiva</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Apertura Emocional</span>
+                            <span class="metric-value">Máxima</span>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <strong>Percepción:</strong> Tarde de sábado por la noche, familia probablemente dormida. Este es tu tiempo creativo sagrado—cuando procesas las emociones de la semana a través de la música. El sistema no te apresurará. Honrará el espacio contemplativo.
+                    </div>
+                </div>
+
+                <div class="cognitive-card" data-feature="personalization">
+                    <span class="card-icon">🎯</span>
+                    <h3 class="card-title">Personalización Contextual</h3>
+                    <p class="card-description">Adapta el contenido según tu experiencia creativa y proyecto actual.</p>
+                    <div class="card-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">Maestría Musical</span>
+                            <span class="metric-value">Clase Mundial</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Necesidad Actual</span>
+                            <span class="metric-value">Claridad Emocional</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Puntos de Referencia</span>
+                            <span class="metric-value">Dinastía Aguilar</span>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <strong>Enfoque:</strong> Sin consejos básicos de composición—eres un maestro. Enfoque en arqueología emocional: excavar el sentimiento bajo el concepto. Referenciar el viaje artístico de tu familia, la crudeza emocional de José Alfredo, la presencia escénica de tu padre.
+                    </div>
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-header">
+                    <span class="insight-icon">✨</span>
+                    <h4 class="insight-title">Personalización Auténtica</h4>
+                </div>
+                <div class="insight-content">
+                    Esto no es personalización cosmética—es <strong>sintonía emocional</strong>. Las preguntas, reflexiones e historias están calibradas a tu corazón, no solo a tu mente. Te encuentra en el espacio liminal entre orgullo y vulnerabilidad, tradición y autoexpresión.
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage 5: Reasoning & Problem Solving -->
+        <div class="journey-stage" data-stage="4">
+            <div class="stage-header">
+                <div class="stage-number">5</div>
+                <div class="stage-title-container">
+                    <h2 class="stage-title">Razonamiento y Resolución de Problemas</h2>
+                    <p class="stage-description">Razonamiento multimodal para generar percepciones inteligentes</p>
+                </div>
+            </div>
+
+            <div class="cognitive-grid">
+                <div class="cognitive-card" data-feature="reasoning">
+                    <span class="card-icon">🔍</span>
+                    <h3 class="card-title">Razonamiento Deductivo</h3>
+                    <p class="card-description">Identifica la estructura emocional y temática de tu desafío creativo.</p>
+                    <div class="card-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">Emoción Central</span>
+                            <span class="metric-value">Orgullo Agridulce</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Tensión Central</span>
+                            <span class="metric-value">Honor vs. Autonomía</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Resolución</span>
+                            <span class="metric-value">Integración, no elección</span>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <strong>Conclusión:</strong> Te sientes agradecido y agobiado por el legado. La canción no se trata de elegir entre tradición O innovación—se trata del dolor de sostener ambas. Esa es tu verdad emocional.
+                    </div>
+                </div>
+
+                <div class="cognitive-card" data-feature="reasoning">
+                    <span class="card-icon">📈</span>
+                    <h3 class="card-title">Razonamiento Inductivo</h3>
+                    <p class="card-description">Identifica patrones en tu historia creativa y familiar.</p>
+                    <div class="card-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">Patrón Generacional</span>
+                            <span class="metric-value">3 generaciones analizadas</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Tema Recurrente</span>
+                            <span class="metric-value">Evolución dentro de la tradición</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Confianza</span>
+                            <span class="metric-value">94%</span>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <strong>Patrón:</strong> Antonio modernizó la ranchera en los '60s-'80s (añadiendo producción, teatralidad). Tú la modernizaste nuevamente (influencias R&B, colaboraciones). Ángela lo está haciendo ahora (sensibilidad Gen Z). Cada generación honra Y evoluciona. Esto ES la tradición familiar.
+                    </div>
+                </div>
+
+                <div class="cognitive-card" data-feature="reasoning">
+                    <span class="card-icon">💡</span>
+                    <h3 class="card-title">Razonamiento Abductivo</h3>
+                    <p class="card-description">Genera posibilidades narrativas y emocionales para tu canción.</p>
+                    <div class="card-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">Ángulos Líricos</span>
+                            <span class="metric-value">5</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Núcleo Resonante</span>
+                            <span class="metric-value">"La cuerda que eleva y ata"</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Verdad Emocional</span>
+                            <span class="metric-value">Paradoja, no resolución</span>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <strong>Hipótesis:</strong> La canción funciona si sostiene la paradoja: el legado es regalo y peso, libertad y obligación. Como una cuerda—te conecta con tu padre e hijos, pero también te constriñe. La tensión ES la belleza.
+                    </div>
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-header">
+                    <span class="insight-icon">🧩</span>
+                    <h4 class="insight-title">Cognición Multimodal</h4>
+                </div>
+                <div class="insight-content">
+                    El sistema no usa solo un tipo de razonamiento—<strong>orquesta razonamiento emocional, histórico y creativo</strong>. El razonamiento deductivo clarifica tu emoción central, el inductivo encuentra patrones familiares, y el pensamiento abductivo genera posibilidades líricas. Resultado: dirección creativa emocionalmente auténtica.
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage 6: Response Generation & Memory Formation -->
+        <div class="journey-stage" data-stage="5">
+            <div class="stage-header">
+                <div class="stage-number">6</div>
+                <div class="stage-title-container">
+                    <h2 class="stage-title">Respuesta y Aprendizaje Continuo</h2>
+                    <p class="stage-description">Entregando respuesta personalizada y formando memorias duraderas</p>
+                </div>
+            </div>
+
+            <div class="cognitive-grid">
+                <div class="cognitive-card" data-feature="creativity">
+                    <span class="card-icon">✨</span>
+                    <h3 class="card-title">Síntesis Creativa</h3>
+                    <p class="card-description">Combina percepciones de formas novedosas para proporcionar valor único más allá de lo obvio.</p>
+                    <div class="card-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">Percepciones Entrelazadas</span>
+                            <span class="metric-value">6</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Ángulos Inesperados</span>
+                            <span class="metric-value">2</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Puntaje de Resonancia</span>
+                            <span class="metric-value">0.91</span>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <strong>Innovación:</strong> Conectaste tu nota de voz "peso del nombre" con el momento Grammy de Ángela → marco sugerido: Una vez cargaste lo que tu padre construyó. Ahora cargas lo que estás construyendo PARA tus hijos. El peso se desplaza pero no se aligera.
+                    </div>
+                </div>
+
+                <div class="cognitive-card" data-feature="memory">
+                    <span class="card-icon">💾</span>
+                    <h3 class="card-title">Formación de Memoria Episódica</h3>
+                    <p class="card-description">Crea memoria rica de esta interacción para referencia futura y aprendizaje.</p>
+                    <div class="card-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">Episodio Creado</span>
+                            <span class="metric-value">Avance_cancion_legado_nov2024</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Puntaje de Importancia</span>
+                            <span class="metric-value">9/10</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Valencia Emocional</span>
+                            <span class="metric-value">Catártica</span>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <strong>Memoria:</strong> Almacena contexto (noche tardía, reflexión generacional), momento de avance ("la cuerda que eleva y ata"), tu larga pausa antes de grabar nota de voz, el cambio de buscar permiso a reclamar verdad.
+                    </div>
+                </div>
+
+                <div class="cognitive-card" data-feature="metacognition">
+                    <span class="card-icon">🎯</span>
+                    <h3 class="card-title">Reflexión Metacognitiva</h3>
+                    <p class="card-description">El sistema evalúa su propio desempeño e identifica oportunidades de mejora.</p>
+                    <div class="card-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">Calidad de Respuesta</span>
+                            <span class="metric-value">0.92</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Efectividad de Estrategia</span>
+                            <span class="metric-value">Alta</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Confianza Calibrada</span>
+                            <span class="metric-value">Sí</span>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <strong>Autoevaluación:</strong> Alta confianza en diagnóstico emocional (capturó la paradoja con precisión). Alta confianza en resonancia de metáfora (imagen de "cuerda" funcionó). Confianza media en momento—¿este avance se sostendrá o necesita más procesamiento? El enfoque de honrar vulnerabilidad funcionó perfectamente.
+                    </div>
+                </div>
+            </div>
+
+            <div class="memory-network">
+                <h3 class="network-title">🔄 Ciclo de Aprendizaje Continuo</h3>
+                <div style="padding: 2rem; text-align: center;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin: 2rem 0;">
+                        <div style="background: rgba(102, 126, 234, 0.2); padding: 1.5rem; border-radius: 12px;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📊</div>
+                            <div style="font-weight: 600; color: #ffffff; margin-bottom: 0.5rem;">Rastrear Interacción</div>
+                            <div style="font-size: 0.85rem; color: #cbd5e1;">Monitorear tiempo de lectura, profundidad de scroll, clics en citas</div>
+                        </div>
+                        <div style="background: rgba(102, 126, 234, 0.2); padding: 1.5rem; border-radius: 12px;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🧠</div>
+                            <div style="font-weight: 600; color: #ffffff; margin-bottom: 0.5rem;">Actualizar Modelos</div>
+                            <div style="font-size: 0.85rem; color: #cbd5e1;">Refinar modelos de personalización y preferencias</div>
+                        </div>
+                        <div style="background: rgba(102, 126, 234, 0.2); padding: 1.5rem; border-radius: 12px;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">💡</div>
+                            <div style="font-weight: 600; color: #ffffff; margin-bottom: 0.5rem;">Fortalecer Patrones</div>
+                            <div style="font-size: 0.85rem; color: #cbd5e1;">Reforzar estrategias de respuesta exitosas</div>
+                        </div>
+                        <div style="background: rgba(102, 126, 234, 0.2); padding: 1.5rem; border-radius: 12px;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎯</div>
+                            <div style="font-weight: 600; color: #ffffff; margin-bottom: 0.5rem;">Mejorar la Próxima Vez</div>
+                            <div style="font-size: 0.85rem; color: #cbd5e1;">Aplicar aprendizaje a interacciones futuras</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-header">
+                    <span class="insight-icon">♾️</span>
+                    <h4 class="insight-title">Evolución, No Solo Interacción</h4>
+                </div>
+                <div class="insight-content">
+                    Cada interacción no está aislada—es una <strong>relación que se profundiza</strong>. El sistema se convierte en un compañero creativo más sintonizado con cada intercambio, aprendiendo tu lenguaje emocional, valores artísticos y ritmos creativos. Esto es <em>compañerismo creativo</em>, no solo asistencia de IA.
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Section -->
+        <div style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.1)); border: 1px solid rgba(102, 126, 234, 0.3); border-radius: 20px; padding: 3rem; text-align: center; margin-top: 4rem;">
+            <h2 style="font-family: 'Barlow Condensed', sans-serif; font-size: 2.5rem; color: #ffffff; margin-bottom: 1rem;">
+                🧠 Inteligencia Cognitiva en Acción
+            </h2>
+            <p style="font-size: 1.2rem; color: #cbd5e1; margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+                De un solo mensaje a una respuesta inteligente y personalizada—impulsada por memoria, aprendizaje, razonamiento y adaptación continua.
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 3rem;">
+                <div>
+                    <div style="font-size: 3rem; color: #a78bfa; font-weight: 700;">4</div>
+                    <div style="color: #94a3b8;">Sistemas de Memoria</div>
+                </div>
+                <div>
+                    <div style="font-size: 3rem; color: #a78bfa; font-weight: 700;">15+</div>
+                    <div style="color: #94a3b8;">Patrones de Aprendizaje</div>
+                </div>
+                <div>
+                    <div style="font-size: 3rem; color: #a78bfa; font-weight: 700;">3</div>
+                    <div style="color: #94a3b8;">Modos de Razonamiento</div>
+                </div>
+                <div>
+                    <div style="font-size: 3rem; color: #a78bfa; font-weight: 700;">∞</div>
+                    <div style="color: #94a3b8;">Aprendizaje Continuo</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Navigation Controller
+        class CognitiveJourneyNavigator {
+            constructor() {
+                this.stages = document.querySelectorAll('.journey-stage');
+                this.currentStage = 0;
+                this.totalStages = this.stages.length;
+                
+                this.initControls();
+                this.updateUI();
+            }
+            
+            initControls() {
+                document.getElementById('prevBtn').addEventListener('click', () => this.previousStage());
+                document.getElementById('nextBtn').addEventListener('click', () => this.nextStage());
+            }
+            
+            nextStage() {
+                if (this.currentStage < this.totalStages - 1) {
+                    this.currentStage++;
+                    this.goToStage(this.currentStage);
+                }
+            }
+            
+            previousStage() {
+                if (this.currentStage > 0) {
+                    this.currentStage--;
+                    this.goToStage(this.currentStage);
+                }
+            }
+            
+            goToStage(index) {
+                // Deactivate all stages
+                this.stages.forEach((stage, i) => {
+                    if (i <= index) {
+                        stage.classList.add('animate-in');
+                    } else {
+                        stage.classList.remove('animate-in');
+                    }
+                    this.deactivateFeatures(stage);
+                });
+                
+                // Activate current stage
+                const currentStageElement = this.stages[index];
+                currentStageElement.classList.add('animate-in');
+                this.activateFeatures(currentStageElement);
+                
+                // Update UI
+                this.updateUI();
+                
+                // Scroll to stage
+                currentStageElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            activateFeatures(stage) {
+                const cards = stage.querySelectorAll('.cognitive-card');
+                const features = Array.from(cards).map(card => card.dataset.feature).filter(Boolean);
+                
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('active');
+                    }, index * 300);
+                });
+                
+                // Activate sidebar indicators
+                features.forEach(feature => {
+                    const indicator = document.querySelector(`.cognitive-indicator[data-feature="${feature}"]`);
+                    if (indicator) {
+                        indicator.classList.add('active');
+                        indicator.querySelector('.pulse-dot').classList.add('active');
+                    }
+                });
+            }
+            
+            deactivateFeatures(stage) {
+                const cards = stage.querySelectorAll('.cognitive-card');
+                const features = Array.from(cards).map(card => card.dataset.feature).filter(Boolean);
+                
+                cards.forEach(card => {
+                    card.classList.remove('active');
+                });
+                
+                // Deactivate sidebar indicators
+                features.forEach(feature => {
+                    const indicator = document.querySelector(`.cognitive-indicator[data-feature="${feature}"]`);
+                    if (indicator) {
+                        indicator.classList.remove('active');
+                        indicator.querySelector('.pulse-dot').classList.remove('active');
+                    }
+                });
+            }
+            
+            updateUI() {
+                // Update stage counter
+                document.getElementById('stageCounter').textContent = `Etapa ${this.currentStage + 1} de ${this.totalStages}`;
+                
+                // Update button states
+                document.getElementById('prevBtn').disabled = this.currentStage === 0;
+                document.getElementById('nextBtn').disabled = this.currentStage === this.totalStages - 1;
+            }
+        }
+        
+        // Initialize navigator
+        const navigator = new CognitiveJourneyNavigator();
+        
+        // Show first stage on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                navigator.goToStage(0);
+            }, 500);
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                navigator.nextStage();
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                navigator.previousStage();
+            }
+        });
+    </script>
+</body>
+</html>

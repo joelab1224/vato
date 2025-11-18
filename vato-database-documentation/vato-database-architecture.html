@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VATO - Arquitectura de Base de Datos Multitipo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Barlow', sans-serif;
+            background: #0a0f1c;
+            min-height: 100vh;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a1f2e 0%, #2563eb 100%);
+            padding: 3rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-logos {
+            position: absolute;
+            top: 1rem;
+            right: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            z-index: 10;
+        }
+        
+        .company-logo {
+            height: 48px;
+            width: auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .company-logo:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logo-divider {
+            width: 2px;
+            height: 32px;
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.3), transparent);
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'%3E%3Cpath d='m0 40l40-40h-40v40zm40-40v40h-40l40-40z'/%3E%3C/g%3E%3C/svg%3E");
+            animation: patternMove 20s linear infinite;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header h1 {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #94a3b8);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header .subtitle {
+            font-size: 1.5rem;
+            color: #cbd5e1;
+            font-weight: 400;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        .project-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            background: rgba(255,255,255,0.1);
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            font-weight: 500;
+        }
+        
+        /* Navigation */
+        .nav-tabs {
+            background: rgba(15, 23, 41, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 0;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+        }
+        
+        .nav-tab {
+            padding: 1rem 2rem;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-family: 'Barlow', sans-serif;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            border-radius: 8px;
+        }
+        
+        .nav-tab:hover {
+            color: #e2e8f0;
+            background: rgba(37, 99, 235, 0.1);
+        }
+        
+        .nav-tab.active {
+            color: #ffffff;
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+        }
+        
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid #2563eb;
+        }
+        
+        /* Content Sections */
+        .content {
+            padding: 4rem 0;
+            min-height: 600px;
+        }
+        
+        .content-section {
+            display: none;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+        
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Cards and Grids */
+        .database-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .database-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 41, 0.9));
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .database-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .database-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(37, 99, 235, 0.5);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.1);
+        }
+        
+        .database-card:hover::before {
+            left: 100%;
+        }
+        
+        .database-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+        
+        .database-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+        
+        .database-port {
+            color: #2563eb;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .database-description {
+            color: #cbd5e1;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+        
+        /* Architecture Diagram */
+        .architecture-diagram {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+        
+        .domain-layer {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.2), rgba(30, 64, 175, 0.1));
+            border: 2px solid rgba(37, 99, 235, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .domain-layer:hover {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.3), rgba(30, 64, 175, 0.2));
+            border-color: rgba(37, 99, 235, 0.6);
+            transform: scale(1.02);
+        }
+        
+        .domain-number {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #2563eb;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .domain-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+        
+        .domain-subtitle {
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+        
+        .flow-arrow {
+            text-align: center;
+            color: #2563eb;
+            font-size: 2rem;
+            margin: 0.5rem 0;
+        }
+        
+        /* Entity Count */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+        
+        .stat-card {
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid rgba(37, 99, 235, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            background: rgba(37, 99, 235, 0.2);
+            border-color: rgba(37, 99, 235, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .stat-number {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #2563eb;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #cbd5e1;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* Technical Specs */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .tech-section {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .tech-section h3 {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 1.25rem;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #2563eb;
+        }
+        
+        .tech-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tech-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: #cbd5e1;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        
+        .tech-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #2563eb;
+            font-weight: bold;
+        }
+        
+        .tech-list li:last-child {
+            border-bottom: none;
+        }
+        
+        /* Call to Action */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.2), rgba(30, 64, 175, 0.1));
+            border: 1px solid rgba(37, 99, 235, 0.3);
+            border-radius: 20px;
+            padding: 4rem;
+            text-align: center;
+            margin: 4rem 0;
+        }
+        
+        .cta-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 2.5rem;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-description {
+            font-size: 1.25rem;
+            color: #cbd5e1;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            background: rgba(255,255,255,0.1);
+            height: 4px;
+            border-radius: 2px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #2563eb, #1e40af);
+            border-radius: 2px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes patternMove {
+            0% { transform: translateX(-40px); }
+            100% { transform: translateX(40px); }
+        }
+        
+        .animate-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .header .subtitle {
+                font-size: 1.25rem;
+            }
+            
+            .nav-container {
+                flex-wrap: wrap;
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+            
+            .nav-tab {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.9rem;
+                white-space: nowrap;
+            }
+            
+            .database-grid, .tech-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .project-meta {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .header-logos {
+                position: static;
+                justify-content: center;
+                margin-bottom: 1rem;
+            }
+            
+            .company-logo {
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-logos">
+            <img src="logo_sintheria.png" alt="Sintheria Logo" class="company-logo">
+            <div class="logo-divider"></div>
+            <img src="../vato-concept/logo_cody.png" alt="Cody Logo" class="company-logo">
+            <div class="logo-divider"></div>
+            <img src="../vato-concept/logo_eugenia.png" alt="Eugenia Logo" class="company-logo">
+        </div>
+        <div class="header-content">
+            <div class="container">
+                <h1>VATO Database</h1>
+                <p class="subtitle">Arquitectura Multi-Base de Datos con Persistencia Poliglota</p>
+                <div class="project-meta">
+                    <div class="meta-item">6 Tecnologías</div>
+                    <div class="meta-item">8 Dominios</div>
+                    <div class="meta-item">48 Tablas</div>
+                    <div class="meta-item">150+ Entidades</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav-tabs">
+        <div class="container">
+            <div class="nav-container">
+                <button class="nav-tab active" data-section="overview">Visión General</button>
+                <button class="nav-tab" data-section="databases">Bases de Datos</button>
+                <button class="nav-tab" data-section="domains">Dominios</button>
+                <button class="nav-tab" data-section="architecture">Arquitectura</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Progress Bar -->
+    <div class="container">
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <main class="content">
+        <div class="container">
+            <!-- Overview Section -->
+            <section id="overview" class="content-section active">
+                <div class="section-header">
+                    <h2 class="section-title">Persistencia Polímata Avanzada</h2>
+                    <p class="section-subtitle">Arquitectura multi-base de datos que aprovecha las fortalezas de cada tecnología para datos específicos</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">6</div>
+                        <div class="stat-label">Bases de Datos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Dominios</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">48</div>
+                        <div class="stat-label">Tablas PostgreSQL</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">27</div>
+                        <div class="stat-label">Tipos de Nodos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">57</div>
+                        <div class="stat-label">Relaciones Neo4j</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">Colecciones Vector</div>
+                    </div>
+                </div>
+
+                <div class="architecture-diagram">
+                    <h3 style="color: #ffffff; font-size: 1.5rem; margin-bottom: 2rem;">Arquitectura de Capas</h3>
+                    
+                    <div class="domain-layer">
+                        <div class="domain-title">CAPA DE APLICACIÓN</div>
+                        <div class="domain-subtitle">Next.js Frontend + APIs</div>
+                    </div>
+                    
+                    <div class="flow-arrow">↓</div>
+                    
+                    <div class="domain-layer">
+                        <div class="domain-title">CAPA DE ABSTRACCIÓN</div>
+                        <div class="domain-subtitle">DatabaseService (Factory Pattern) - Interfaces Unificadas</div>
+                    </div>
+                    
+                    <div class="flow-arrow">↓</div>
+                    
+                    <div class="domain-layer">
+                        <div class="domain-title">CAPA DE IMPLEMENTACIÓN</div>
+                        <div class="domain-subtitle">PostgreSQL | Neo4j | Qdrant | Redis | MongoDB | MinIO</div>
+                    </div>
+                </div>
+
+                <div class="cta-section">
+                    <h3 class="cta-title">Diseño Modular y Escalable</h3>
+                    <p class="cta-description">Cada base de datos opera de forma independiente, permitiendo escalamiento horizontal y optimización específica por tipo de dato.</p>
+                </div>
+            </section>
+
+            <!-- Databases Section -->
+            <section id="databases" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Stack de Bases de Datos</h2>
+                    <p class="section-subtitle">Seis tecnologías especializadas trabajando en conjunto</p>
+                </div>
+
+                <div class="database-grid">
+                    <div class="database-card">
+                        <div class="database-icon">🐘</div>
+                        <h3 class="database-title">PostgreSQL</h3>
+                        <div class="database-port">Puerto: 5432</div>
+                        <p class="database-description">Base de datos relacional principal con 48 tablas organizadas en 8 esquemas. Almacena datos estructurados, transacciones ACID y relaciones complejas. Backbone del sistema para identidad, conversaciones, tareas y configuración.</p>
+                    </div>
+
+                    <div class="database-card">
+                        <div class="database-icon">🕸️</div>
+                        <h3 class="database-title">Neo4j</h3>
+                        <div class="database-port">Puertos: 7474 (HTTP), 7687 (Bolt)</div>
+                        <p class="database-description">Base de datos de grafos con 27 tipos de nodos y 57 tipos de relaciones. Gestiona redes de conocimiento, mapeo de relaciones complejas, memoria asociativa, y patrones de interacción multi-agente.</p>
+                    </div>
+
+                    <div class="database-card">
+                        <div class="database-icon">🔍</div>
+                        <h3 class="database-title">Qdrant</h3>
+                        <div class="database-port">Puerto: 6333</div>
+                        <p class="database-description">Base de datos vectorial con 3 colecciones para búsqueda semántica. Almacena embeddings de memoria, documentos y mensajes. Habilita RAG, recuperación contextual y búsqueda por similitud.</p>
+                    </div>
+
+                    <div class="database-card">
+                        <div class="database-icon">⚡</div>
+                        <h3 class="database-title">Redis</h3>
+                        <div class="database-port">Puerto: 6379</div>
+                        <p class="database-description">Caché en memoria con 8 patrones de keys. Gestiona sesiones, memoria de trabajo, colas de tareas, estado de agentes y rate limiting. Respuestas en milisegundos para operaciones críticas.</p>
+                    </div>
+
+                    <div class="database-card">
+                        <div class="database-icon">🍃</div>
+                        <h3 class="database-title">MongoDB</h3>
+                        <div class="database-port">Puerto: 27017</div>
+                        <p class="database-description">Base de datos documental con 4 colecciones. Almacena logs de ejecución, trazas de decisión de agentes, mensajes completos y errores detallados. Schema flexible para datos en evolución.</p>
+                    </div>
+
+                    <div class="database-card">
+                        <div class="database-icon">📦</div>
+                        <h3 class="database-title">MinIO</h3>
+                        <div class="database-port">Puertos: 9000 (API), 9001 (Console)</div>
+                        <p class="database-description">Almacenamiento de objetos compatible con S3. Tres buckets para documentos, audio e imágenes. Maneja archivos grandes, versionado, políticas de acceso y cifrado.</p>
+                    </div>
+                </div>
+
+                <div class="tech-grid">
+                    <div class="tech-section">
+                        <h3>Decisiones de Diseño</h3>
+                        <ul class="tech-list">
+                            <li>Factory Pattern para abstracción</li>
+                            <li>Adapter Pattern por base de datos</li>
+                            <li>Desacoplamiento completo</li>
+                            <li>Type-safe con TypeScript</li>
+                            <li>Testeable y mockeable</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-section">
+                        <h3>Capacidades de Escala</h3>
+                        <ul class="tech-list">
+                            <li>Read replicas (PostgreSQL)</li>
+                            <li>Clustering (Neo4j Enterprise)</li>
+                            <li>Modo distribuido (Qdrant)</li>
+                            <li>Sharding (Redis, MongoDB)</li>
+                            <li>Erasure coding (MinIO)</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-section">
+                        <h3>Seguridad</h3>
+                        <ul class="tech-list">
+                            <li>TLS/SSL en todas las conexiones</li>
+                            <li>Variables de entorno para credenciales</li>
+                            <li>Row-level security (PostgreSQL)</li>
+                            <li>API key authentication (Qdrant)</li>
+                            <li>IAM policies (MinIO)</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Domains Section -->
+            <section id="domains" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">8 Dominios de Negocio</h2>
+                    <p class="section-subtitle">Diseño dirigido por dominios con separación clara de responsabilidades</p>
+                </div>
+
+                <div class="architecture-diagram">
+                    <div class="domain-layer">
+                        <div class="domain-number">1</div>
+                        <div class="domain-title">Identity Domain</div>
+                        <div class="domain-subtitle">Usuarios, autenticación, perfiles y preferencias • 4 tablas PostgreSQL</div>
+                    </div>
+                    
+                    <div class="domain-layer">
+                        <div class="domain-number">2</div>
+                        <div class="domain-title">Conversation Domain</div>
+                        <div class="domain-subtitle">Diálogos interactivos, mensajes y contexto • 5 tablas + MongoDB</div>
+                    </div>
+                    
+                    <div class="domain-layer">
+                        <div class="domain-number">3</div>
+                        <div class="domain-title">Memory Domain</div>
+                        <div class="domain-subtitle">Sistema cognitivo de memoria (episódica, semántica, procedimental) • Neo4j + Qdrant</div>
+                    </div>
+                    
+                    <div class="domain-layer">
+                        <div class="domain-number">4</div>
+                        <div class="domain-title">Knowledge Domain</div>
+                        <div class="domain-subtitle">Gestión documental y base de conocimiento • 8 tablas + MinIO + Qdrant</div>
+                    </div>
+                    
+                    <div class="domain-layer">
+                        <div class="domain-number">5</div>
+                        <div class="domain-title">Cognition Domain</div>
+                        <div class="domain-subtitle">Agentes, tareas, razonamiento y herramientas • 9 tablas + Neo4j + MongoDB</div>
+                    </div>
+                    
+                    <div class="domain-layer">
+                        <div class="domain-number">6</div>
+                        <div class="domain-title">Persona Domain</div>
+                        <div class="domain-subtitle">Modos adaptativos y perfiles de comportamiento • 6 tablas + Neo4j</div>
+                    </div>
+                    
+                    <div class="domain-layer">
+                        <div class="domain-number">7</div>
+                        <div class="domain-title">Provenance Domain</div>
+                        <div class="domain-subtitle">Trazabilidad, citaciones y transparencia • 5 tablas + Neo4j</div>
+                    </div>
+                    
+                    <div class="domain-layer">
+                        <div class="domain-number">8</div>
+                        <div class="domain-title">System Domain</div>
+                        <div class="domain-subtitle">Configuración, auditoría y monitoreo • 9 tablas + MongoDB</div>
+                    </div>
+                </div>
+
+                <div class="database-grid">
+                    <div class="database-card">
+                        <div class="database-icon">🔐</div>
+                        <h3 class="database-title">Identity Domain</h3>
+                        <p class="database-description">Gestión de usuarios con OAuth, sesiones JWT, preferencias granulares y tiers de cuenta. Base para control de acceso y personalización.</p>
+                    </div>
+
+                    <div class="database-card">
+                        <div class="database-icon">💬</div>
+                        <h3 class="database-title">Conversation Domain</h3>
+                        <p class="database-description">Conversaciones con threading, detección de intenciones, análisis emocional y metadata rica. Mantiene contexto y flujo de diálogo.</p>
+                    </div>
+
+                    <div class="database-card">
+                        <div class="database-icon">🧠</div>
+                        <h3 class="database-title">Memory Domain</h3>
+                        <p class="database-description">Sistema de memoria multi-nivel con consolidación automática, scoring de importancia, decay temporal y asociaciones contextuales.</p>
+                    </div>
+
+                    <div class="database-card">
+                        <div class="database-icon">📚</div>
+                        <h3 class="database-title">Knowledge Domain</h3>
+                        <p class="database-description">Procesamiento multi-formato (PDF, audio, imágenes), chunking inteligente, búsqueda híbrida y colecciones organizadas.</p>
+                    </div>
+
+                    <div class="database-card">
+                        <div class="database-icon">🤖</div>
+                        <h3 class="database-title">Cognition Domain</h3>
+                        <p class="database-description">Orquestación multi-agente, cadenas de razonamiento, registro de herramientas y tracking de ejecución con métricas detalladas.</p>
+                    </div>
+
+                    <div class="database-card">
+                        <div class="database-icon">🎭</div>
+                        <h3 class="database-title">Persona Domain</h3>
+                        <p class="database-description">Modos contextuales (investigación, creatividad, análisis), detección automática, perfiles de comportamiento y estilos de comunicación.</p>
+                    </div>
+
+                    <div class="database-card">
+                        <div class="database-icon">🔗</div>
+                        <h3 class="database-title">Provenance Domain</h3>
+                        <p class="database-description">Citaciones verificables, cadenas de proveniencia, verificación de claims y tracking de influencia para transparencia total.</p>
+                    </div>
+
+                    <div class="database-card">
+                        <div class="database-icon">⚙️</div>
+                        <h3 class="database-title">System Domain</h3>
+                        <p class="database-description">Configuración dinámica, feature flags, audit logs completos, métricas de uso, rate limiting y gestión de versiones de modelos.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Architecture Section -->
+            <section id="architecture" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Patrones Arquitectónicos</h2>
+                    <p class="section-subtitle">Principios de diseño que garantizan escalabilidad y mantenibilidad</p>
+                </div>
+
+                <div class="database-grid">
+                    <div class="database-card">
+                        <div class="database-icon">🏭</div>
+                        <h3 class="database-title">Factory Pattern</h3>
+                        <p class="database-description">DatabaseFactory crea instancias apropiadas de cada adaptador. Centraliza lógica de inicialización, configuración y gestión de conexiones.</p>
+                    </div>
+
+                    <div class="database-card">
+                        <div class="database-icon">🔌</div>
+                        <h3 class="database-title">Adapter Pattern</h3>
+                        <p class="database-description">Cada base de datos tiene su adaptador que implementa interfaces comunes. Traduce operaciones genéricas a sintaxis específica.</p>
+                    </div>
+
+                    <div class="database-card">
+                        <div class="database-icon">🎯</div>
+                        <h3 class="database-title">Strategy Pattern</h3>
+                        <p class="database-description">Bases de datos intercambiables sin cambios en código de aplicación. Permite migración y A/B testing de tecnologías.</p>
+                    </div>
+
+                    <div class="database-card">
+                        <div class="database-icon">💉</div>
+                        <h3 class="database-title">Dependency Injection</h3>
+                        <p class="database-description">Instancias de base de datos inyectadas en servicios. Facilita testing con mocks y reduce acoplamiento.</p>
+                    </div>
+                </div>
+
+                <div class="tech-grid">
+                    <div class="tech-section">
+                        <h3>Flujos de Datos Típicos</h3>
+                        <ul class="tech-list">
+                            <li>Usuario envía mensaje → PostgreSQL + Qdrant + MongoDB + Redis</li>
+                            <li>Búsqueda semántica → Qdrant (vector) → PostgreSQL (metadata) → Neo4j (relaciones)</li>
+                            <li>Upload documento → MinIO → PostgreSQL → Qdrant (chunks) → Neo4j (entities)</li>
+                            <li>Ejecución agente → PostgreSQL (task) → MongoDB (logs) → Neo4j (reasoning)</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-section">
+                        <h3>Cross-Domain Integration</h3>
+                        <ul class="tech-list">
+                            <li>User → Conversations → Memory</li>
+                            <li>Conversation → Tasks → Agents</li>
+                            <li>Message → Citations → Sources</li>
+                            <li>Document → Memory → Knowledge</li>
+                            <li>Task → Provenance → Reasoning</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-section">
+                        <h3>Garantías de Consistencia</h3>
+                        <ul class="tech-list">
+                            <li>Foreign keys en PostgreSQL</li>
+                            <li>Transacciones ACID para crítico</li>
+                            <li>Eventual consistency para logs</li>
+                            <li>Reconciliación periódica</li>
+                            <li>Idempotencia en escrituras</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer style="background: rgba(15, 23, 41, 0.95); border-top: 1px solid rgba(255,255,255,0.1); padding: 2rem 0; text-align: center; color: #94a3b8;">
+        <div class="container">
+            <p style="margin: 0; font-size: 0.9rem;">Arquitectura de Base de Datos VATO • Diseño Domain-Driven con Persistencia Polímata</p>
+            <p style="margin: 0.5rem 0 0 0; font-size: 0.8rem; opacity: 0.7;">6 Tecnologías • 8 Dominios • 150+ Entidades Totales</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation functionality
+        const navTabs = document.querySelectorAll('.nav-tab');
+        const contentSections = document.querySelectorAll('.content-section');
+        const progressBar = document.getElementById('progressBar');
+        
+        let currentSection = 0;
+        const totalSections = navTabs.length;
+
+        function updateProgress() {
+            const progress = ((currentSection + 1) / totalSections) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function showSection(sectionId) {
+            // Hide all sections
+            contentSections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show target section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                targetSection.classList.add('animate-in');
+            }
+            
+            // Update nav tabs
+            navTabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Find and activate current tab
+            const activeTab = document.querySelector(`[data-section="${sectionId}"]`);
+            if (activeTab) {
+                activeTab.classList.add('active');
+                currentSection = Array.from(navTabs).indexOf(activeTab);
+                updateProgress();
+            }
+        }
+
+        // Add click listeners to nav tabs
+        navTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const sectionId = tab.getAttribute('data-section');
+                showSection(sectionId);
+            });
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' && currentSection < totalSections - 1) {
+                const nextSection = navTabs[currentSection + 1].getAttribute('data-section');
+                showSection(nextSection);
+            } else if (e.key === 'ArrowLeft' && currentSection > 0) {
+                const prevSection = navTabs[currentSection - 1].getAttribute('data-section');
+                showSection(prevSection);
+            }
+        });
+
+        // Initialize progress
+        updateProgress();
+
+        // Add intersection observer for automatic section detection
+        const observerOptions = {
+            root: null,
+            rootMargin: '-50% 0px -50% 0px',
+            threshold: 0
+        };
+
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && entry.target.classList.contains('active')) {
+                    const sectionId = entry.target.id;
+                    const tabIndex = Array.from(navTabs).findIndex(tab => 
+                        tab.getAttribute('data-section') === sectionId
+                    );
+                    if (tabIndex !== -1) {
+                        currentSection = tabIndex;
+                        updateProgress();
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Observe all content sections
+        contentSections.forEach(section => {
+            sectionObserver.observe(section);
+        });
+
+        // Animate layers on hover
+        document.querySelectorAll('.domain-layer').forEach(layer => {
+            layer.addEventListener('mouseenter', () => {
+                layer.style.transform = 'scale(1.02) translateX(10px)';
+            });
+            
+            layer.addEventListener('mouseleave', () => {
+                layer.style.transform = 'scale(1) translateX(0)';
+            });
+        });
+
+        // Add subtle parallax effect to header
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const header = document.querySelector('.header');
+            if (header) {
+                header.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+    </script>
+</body>
+</html>
