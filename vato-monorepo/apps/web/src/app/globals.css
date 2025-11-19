@@ -1,26 +1,142 @@
 @import "tailwindcss";
 
+/* VATO Unified Design System - Light Theme */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Background Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #fafafa;
+  --bg-elevated: rgba(255, 255, 255, 0.7);
+  --bg-glass: rgba(139, 92, 246, 0.05);
+  
+  /* Text Hierarchy */
+  --text-primary: #18181b;
+  --text-secondary: #52525b;
+  --text-tertiary: #a1a1aa;
+  
+  /* VATO Accent Colors */
+  --accent-violet: #8b5cf6;
+  --accent-purple: #9333ea;
+  --accent-pink: #ec4899;
+  
+  /* Emotional State Colors */
+  --emotion-curious: #8b5cf6;
+  --emotion-thoughtful: #9333ea;
+  --emotion-excited: #ec4899;
+  --emotion-intimate: rgba(139, 92, 246, 0.15);
+  --emotion-connected: rgba(147, 51, 234, 0.15);
+  --emotion-wonder: rgba(236, 72, 153, 0.15);
+  
+  /* Glassmorphism Variables */
+  --glass-blur: 20px;
+  --glass-border: rgba(0, 0, 0, 0.08);
+  
+  /* Spacing Scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  
+  /* Border Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 30px rgba(139, 92, 246, 0.25);
+  --shadow-glass: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg-primary);
+  --color-foreground: var(--text-primary);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-space-grotesk);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Global styles */
+body {
+  background: linear-gradient(135deg, #fafafa 0%, #ffffff 50%, #f5f0ff 100%);
+  color: var(--text-primary);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  min-height: 100vh;
+}
+
+/* Typography classes */
+.font-display {
+  font-family: var(--font-space-grotesk), system-ui, sans-serif;
+}
+
+.font-body {
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Glassmorphism utilities */
+.glass {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-glass);
+}
+
+.glass-violet {
+  background: rgba(139, 92, 246, 0.08);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  box-shadow: 0 4px 16px rgba(139, 92, 246, 0.1);
+}
+
+.glass-purple {
+  background: rgba(147, 51, 234, 0.08);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid rgba(147, 51, 234, 0.15);
+  box-shadow: 0 4px 16px rgba(147, 51, 234, 0.1);
+}
+
+.glass-pink {
+  background: rgba(236, 72, 153, 0.08);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid rgba(236, 72, 153, 0.15);
+  box-shadow: 0 4px 16px rgba(236, 72, 153, 0.1);
+}
+
+/* Text shadow utility */
+.text-shadow-lg {
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Smooth transitions */
+.transition-consciousness {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Animation utilities */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.animate-fadeInUp {
+  animation: fadeInUp 400ms ease-out;
 }
