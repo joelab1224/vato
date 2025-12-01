@@ -4,6 +4,8 @@ import * as React from 'react'
 import { useTheme } from '@/contexts/theme-context'
 import { Message } from '@/components/ui/message'
 import { ChatInput } from '@/components/ui/input'
+import { FloatingControls } from '@/components/layout/floating-controls'
+import { useAutoHideNav } from '@/contexts/auto-hide-nav-context'
 import { ModeSwitcher } from '@/components/ui/mode-switcher'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, FileText, Search, Brain } from 'lucide-react'
@@ -25,7 +27,6 @@ interface ChatMessage {
 interface ChatInterfaceProps {
   onSendMessage?: (message: string) => void
   onFileUpload?: () => void
-  onVoiceRecord?: () => void
   isLoading?: boolean
   className?: string
 }
@@ -95,14 +96,13 @@ const demoMessages: ChatMessage[] = [
 export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   onSendMessage,
   onFileUpload,
-  onVoiceRecord,
   isLoading = false,
   className
 }) => {
   const { currentTheme } = useTheme()
+  const { isNavVisible, isAutoHideEnabled } = useAutoHideNav()
   const [messages, setMessages] = React.useState<ChatMessage[]>(demoMessages)
   const [selectedCitation, setSelectedCitation] = React.useState<any>(null)
-  const [isRecording, setIsRecording] = React.useState(false)
   const messagesEndRef = React.useRef<HTMLDivElement>(null)
 
   // Auto-scroll to bottom when new messages arrive
@@ -137,44 +137,54 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
     setSelectedCitation(citation)
   }
 
-  const handleVoiceStart = () => {
-    setIsRecording(true)
-    onVoiceRecord?.()
-  }
 
-  const handleVoiceStop = () => {
-    setIsRecording(false)
-    // Simulate voice message processing
-    setTimeout(() => {
-      const voiceMessage: ChatMessage = {
-        id: Date.now().toString(),
-        role: 'user',
-        content: '[Voice Message] - Audio transcribed automatically',
-        timestamp: new Date(),
-      }
-      setMessages(prev => [...prev, voiceMessage])
-      onSendMessage?.('[Voice Message] - Audio transcribed automatically')
-    }, 500)
-  }
+  // Dynamic padding calculation for message area - should match FloatingControls spacing
+  const messageAreaPaddingBottom = React.useMemo(() => {
+    if (!isAutoHideEnabled) {
+      // Normal spacing when auto-hide is disabled - match FloatingControls
+      return `calc(env(safe-area-inset-bottom) + var(--spacing-bottomNavHeight, ${currentTheme.spacing.bottomNavHeight}) + var(--spacing-lg, ${currentTheme.spacing.lg}))`
+    }
+    
+    if (isNavVisible) {
+      // Full spacing when nav is visible - match FloatingControls exactly
+      return `calc(env(safe-area-inset-bottom) + var(--spacing-bottomNavHeight, ${currentTheme.spacing.bottomNavHeight}) + var(--spacing-lg, ${currentTheme.spacing.lg}))`
+    } else {
+      // Minimal spacing when nav is hidden - match FloatingControls exactly
+      return `calc(env(safe-area-inset-bottom) + var(--spacing-3xl, ${currentTheme.spacing['3xl']}))`
+    }
+  }, [isAutoHideEnabled, isNavVisible, currentTheme])
+
 
   return (
     <div 
       className="flex flex-col h-screen transition-colors duration-300 relative"
-      style={{ backgroundColor: currentTheme.colors.background }}
+      style={{ backgroundColor: 'transparent' }}  // Allow AnimatedBackground to show through
     >
-      {/* Animated background */}
+      {/* Animated Background Layer (z-0) */}
       <AnimatedBackground />
 
-      {/* Main container bounded by main app header and potential footer */}
+      {/* Messages Area - Scrollable Container (z-10 - same plane as BottomNav) */}
       <div 
-        className="flex-1 relative overflow-hidden"
-        style={{ backgroundColor: currentTheme.colors.background }}
+        className="flex-1 relative overflow-hidden z-10"
+        style={{ 
+          backgroundColor: 'transparent',  // Allow AnimatedBackground to show through
+          // Use dynamic viewport height for mobile browser compatibility
+          height: '100dvh',
+        }}
       >
-        {/* Messages Area - can scroll behind floating components */}
         <div 
+          key={`messages-${isNavVisible}-${isAutoHideEnabled}`}
           className="absolute inset-0 overflow-y-auto"
-          style={{ 
-            padding: currentTheme.spacing.containerPadding,
+          style={{
+            // Dynamic padding based on floating controls and nav visibility
+            paddingTop: `calc(var(--spacing-headerHeight, ${currentTheme.spacing.headerHeight}) + var(--spacing-lg, ${currentTheme.spacing.lg}) + var(--spacing-2xl, ${currentTheme.spacing['2xl']}))`,
+            paddingBottom: messageAreaPaddingBottom,
+            paddingLeft: currentTheme.spacing.containerPadding,
+            paddingRight: currentTheme.spacing.containerPadding,
+            // Scroll behavior optimization
+            scrollBehavior: 'smooth',
+            // Match nav animation timing for smooth movement
+            transition: 'padding-bottom 300ms cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         >
           <div className="max-w-4xl mx-auto">
@@ -205,47 +215,48 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
             <div ref={messagesEndRef} />
           </div>
         </div>
-
-        {/* Floating Mode Switcher - fixed to viewport but bounded */}
-        <div className="fixed left-1/2 transform -translate-x-1/2 z-[110]" style={{ top: '72px' }}>
-          <ModeSwitcher />
-        </div>
-
-        {/* Floating Input Area - fixed to viewport but bounded */}
-        <div className="fixed left-4 right-4 z-[100] lg:bottom-4" style={{ bottom: '88px' /* 72px footer + 16px margin */ }}>
-          <div className="max-w-4xl mx-auto">
-            <ChatInput
-              onSend={handleSendMessage}
-              onFileAttach={onFileUpload}
-              onVoiceRecord={handleVoiceStart}
-              onVoiceStop={handleVoiceStop}
-              isLoading={isLoading}
-              isRecording={isRecording}
-            />
-          </div>
-        </div>
       </div>
 
-      {/* Citation Panel */}
+      {/* ModeSwitcher Layer (z-20) - Above Messages Area */}
+      <div 
+        className="fixed left-1/2 transform -translate-x-1/2 z-20 pointer-events-auto"
+        style={{
+          top: `calc(var(--spacing-headerHeight, ${currentTheme.spacing.headerHeight}) + var(--spacing-lg, ${currentTheme.spacing.lg}))`,
+        }}
+      >
+        <ModeSwitcher />
+      </div>
+
+      {/* Floating Controls Layer (z-10) - ChatInput only */}
+      <FloatingControls
+        key={`floating-controls-${isNavVisible}-${isAutoHideEnabled}`}
+        onSendMessage={handleSendMessage}
+        onFileUpload={onFileUpload}
+        isLoading={isLoading}
+        isNavVisible={isNavVisible}
+        isAutoHideEnabled={isAutoHideEnabled}
+      />
+
+      {/* Overlays Layer (z-30) - Citation level */}
       <AnimatePresence>
         {selectedCitation && (
           <>
-            {/* Backdrop */}
+            {/* Citation Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedCitation(null)}
-              className="fixed inset-0 bg-black/50 z-40"
+              className="fixed inset-0 bg-black/50 z-30"
             />
 
-            {/* Citation Detail */}
+            {/* Citation Panel */}
             <motion.div
               initial={{ opacity: 0, x: 300 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 300 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="fixed right-0 top-0 h-full w-96 z-50 overflow-hidden shadow-2xl backdrop-blur-xl"
+              className="fixed right-0 top-0 h-full w-96 z-30 overflow-hidden shadow-2xl backdrop-blur-xl"
               style={{
                 backgroundColor: currentTheme.colors.surface,
                 borderLeft: `1px solid ${currentTheme.colors.border}`,

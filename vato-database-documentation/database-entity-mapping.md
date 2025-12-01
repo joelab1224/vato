@@ -704,9 +704,9 @@ System Domain (1)
 ### Knowledge Domain
 
 **Buckets (3):**
-1. `vato-documents`
-2. `vato-audio-files`
-3. `vato-images`
+1. `documents`
+2. `audio-files`
+3. `images`
 
 ---
 

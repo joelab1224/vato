@@ -3,6 +3,20 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 import { useTheme } from '@/contexts/theme-context'
 
+// Professional gray colors (fixed across all themes)
+const professionalGray = {
+  50: '#f9fafb',
+  100: '#f3f4f6', 
+  200: '#e5e7eb',
+  300: '#d1d5db',
+  400: '#9ca3af',
+  500: '#6b7280',
+  600: '#4b5563',
+  700: '#374151',
+  800: '#1f2937',
+  900: '#111827',
+}
+
 const messageVariants = cva(
   'relative max-w-[85%] break-words transition-all duration-200',
   {
@@ -77,8 +91,8 @@ const Message = React.forwardRef<HTMLDivElement, MessageProps>(
       if (role === 'user') {
         return {
           ...baseStyles,
-          backgroundColor: currentTheme.colors.userMessage,
-          color: currentTheme.colors.textInverse,  // Perfect contrast for user messages
+          backgroundColor: professionalGray[700],
+          color: '#ffffff',  // White text on gray background
           padding: currentTheme.spacing.messagePadding,
           borderRadius: currentTheme.spacing.borderRadius,
           boxShadow: currentTheme.effects.shadow,
@@ -134,20 +148,20 @@ const Message = React.forwardRef<HTMLDivElement, MessageProps>(
             onClick={() => onCitationClick?.(citation)}
             className="inline-flex items-center justify-center min-w-[20px] h-5 px-1 mx-1 text-xs font-medium rounded-sm cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95"
             style={{
-              backgroundColor: currentTheme.colors.citation,
-              color: currentTheme.colors.textInverse, // Perfect contrast
+              backgroundColor: professionalGray[700],
+              color: '#ffffff', // White text on gray background
               fontSize: currentTheme.typography.sizes.xs,
               fontWeight: '600', // Bold for better visibility
               boxShadow: currentTheme.effects.shadow,
-              border: `1px solid ${currentTheme.colors.citation}`,
+              border: `1px solid ${professionalGray[700]}`,
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = currentTheme.colors.citationHover
-              e.currentTarget.style.borderColor = currentTheme.colors.citationHover
+              e.currentTarget.style.backgroundColor = professionalGray[800]
+              e.currentTarget.style.borderColor = professionalGray[800]
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = currentTheme.colors.citation
-              e.currentTarget.style.borderColor = currentTheme.colors.citation
+              e.currentTarget.style.backgroundColor = professionalGray[700]
+              e.currentTarget.style.borderColor = professionalGray[700]
             }}
           >
             {index + 1}

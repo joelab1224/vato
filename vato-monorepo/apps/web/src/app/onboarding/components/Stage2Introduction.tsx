@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useVoiceInput, useVoiceSynthesis } from '../hooks/useVoiceInput';
 import { generateContextualResponse } from '../utils/consciousness';
+import { generateSessionIds, getStage2Response } from '../../../services/onboardingService';
 import type { UserProfile } from '../page';
 
 interface Props {
@@ -18,23 +18,13 @@ export default function Stage2Introduction({ userProfile, onNext, onUpdateProfil
   const [userInput, setUserInput] = useState('');
   const [isComplete, setIsComplete] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
+  const [isLoadingAI, setIsLoadingAI] = useState(false);
+  const sessionIds = useRef(generateSessionIds(userProfile.userName || 'user'));
 
-  const { speak } = useVoiceSynthesis();
-  const { 
-    isListening, 
-    transcript,
-    startListening, 
-    stopListening,
-    resetTranscript 
-  } = useVoiceInput({
-    onResult: (text, isFinal) => {
-      if (isFinal && text.trim()) {
-        handleUserResponse(text.trim());
-      }
-    }
-  });
+  console.log('📋 Stage2 - Received userProfile:', userProfile);
+  console.log('📋 Stage2 - userProfile.userName:', userProfile.userName);
 
-  const userName = userProfile.userName || 'friend';
+  const userName = userProfile.userName || '';
 
   useEffect(() => {
     if (!hasStarted) {
@@ -48,28 +38,24 @@ export default function Stage2Introduction({ userProfile, onNext, onUpdateProfil
     setTimeout(() => {
       console.log('🎭 Stage2 - Phase 1: Introduction');
       setPhase(1);
-      speak(`No soy como otros AI que puedas haber usado antes, ${userName}.`);
     }, 1000);
 
     // Phase 2: Memory explanation
     setTimeout(() => {
       console.log('🎭 Stage2 - Phase 2: Memory explanation');
       setPhase(2);
-      speak('Recuerdo nuestras conversaciones, no solo lo que dijiste, sino cómo te sentiste al decirlo.');
     }, 4000);
 
     // Phase 3: Growth concept
     setTimeout(() => {
       console.log('🎭 Stage2 - Phase 3: Growth concept');
       setPhase(3);
-      speak('Aprendo tu estilo, tus preferencias, la forma en que tu mente funciona. En cierto sentido... crezco contigo.');
     }, 7500);
 
     // Phase 4: User prompt
     setTimeout(() => {
       console.log('🎭 Stage2 - Phase 4: User prompt');
       setPhase(4);
-      speak('Dime, ¿qué te trae aquí hoy?');
       setTimeout(() => {
         console.log('🎭 Stage2 - Showing user input');
         setShowUserInput(true);
@@ -77,20 +63,15 @@ export default function Stage2Introduction({ userProfile, onNext, onUpdateProfil
     }, 11000);
   };
 
-  const handleUserResponse = (response: string) => {
-    if (isComplete) return;
+  const handleUserResponse = async (response: string) => {
+    if (isComplete || isLoadingAI) return;
     
     console.log('🎭 Stage2 - User response received:', response);
     
     setShowUserInput(false);
     setUserInput('');
-    resetTranscript();
-    stopListening();
+    setIsLoadingAI(true);
 
-    // Generate VATO's contextual response
-    const vatoResponse = generateContextualResponse(response, userName, 'introduction');
-    console.log('🎭 Stage2 - Generated response:', vatoResponse);
-    
     // Store user response
     onUpdateProfile({
       userResponses: {
@@ -103,11 +84,29 @@ export default function Stage2Introduction({ userProfile, onNext, onUpdateProfil
     console.log('🎭 Stage2 - Phase 5: User response display');
     setPhase(5);
     
+    // Get AI response
+    const aiResult = await getStage2Response(
+      userName,
+      response,
+      sessionIds.current.userId,
+      sessionIds.current.threadId
+    );
+    
+    setIsLoadingAI(false);
+    console.log('🎭 Stage2 - AI response:', aiResult);
+    
+    // Store AI response for next stages
+    onUpdateProfile({
+      aiResponses: {
+        ...userProfile.aiResponses,
+        'stage2-response': aiResult.response
+      }
+    });
+    
     // Show VATO's response and complete
     setTimeout(() => {
       console.log('🎭 Stage2 - Phase 6: VATO response');
       setPhase(6);
-      speak(vatoResponse);
       
       setTimeout(() => {
         console.log('🎭 Stage2 - Completing and transitioning to Stage3');
@@ -117,30 +116,22 @@ export default function Stage2Introduction({ userProfile, onNext, onUpdateProfil
     }, 1000);
   };
 
-  const handleVoiceToggle = () => {
-    if (isListening) {
-      stopListening();
-    } else {
-      resetTranscript();
-      startListening();
-    }
-  };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden font-body">
+    <div className="min-h-screen bg-white flex items-center justify-center relative overflow-hidden font-body">
       {/* Breathing Background */}
       <motion.div 
-        className="absolute inset-0"
+        className="absolute inset-0 z-0"
         animate={{
           background: [
-            'radial-gradient(circle at center, rgba(139, 92, 246, 0.1) 0%, rgba(147, 51, 234, 0.05) 40%, rgba(0, 0, 0, 0.9) 70%, #000 100%)',
-            'radial-gradient(circle at center, rgba(139, 92, 246, 0.15) 0%, rgba(147, 51, 234, 0.08) 40%, rgba(0, 0, 0, 0.85) 70%, #000 100%)',
-            'radial-gradient(circle at center, rgba(139, 92, 246, 0.1) 0%, rgba(147, 51, 234, 0.05) 40%, rgba(0, 0, 0, 0.9) 70%, #000 100%)'
+            'radial-gradient(circle at center, rgba(37, 99, 235, 0.4) 0%, rgba(16, 185, 129, 0.3) 40%, rgba(255, 255, 255, 0.5) 70%, #fff 100%)',
+            'radial-gradient(circle at center, rgba(37, 99, 235, 0.5) 0%, rgba(16, 185, 129, 0.4) 40%, rgba(255, 255, 255, 0.4) 70%, #fff 100%)',
+            'radial-gradient(circle at center, rgba(37, 99, 235, 0.4) 0%, rgba(16, 185, 129, 0.3) 40%, rgba(255, 255, 255, 0.5) 70%, #fff 100%)'
           ],
           scale: [1, 1.05, 1]
         }}
         transition={{
-          duration: 4,
+          duration: 6,
           repeat: Infinity,
           ease: "easeInOut"
         }}
@@ -158,8 +149,8 @@ export default function Stage2Introduction({ userProfile, onNext, onUpdateProfil
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <div className="text-center">
-              <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-display text-white/90 leading-relaxed sm:leading-relaxed md:leading-relaxed lg:leading-relaxed text-shadow-lg mx-auto max-w-xl sm:max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl">
-                Hola, {userName}...
+              <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-display text-gray-800 leading-relaxed sm:leading-relaxed md:leading-relaxed lg:leading-relaxed mx-auto max-w-xl sm:max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl">
+                {userName ? `Hola, ${userName}...` : 'Hola...'}
               </div>
             </div>
           </motion.div>
@@ -175,20 +166,23 @@ export default function Stage2Introduction({ userProfile, onNext, onUpdateProfil
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <div className="text-center">
-              <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-display text-white/90 leading-relaxed sm:leading-relaxed md:leading-relaxed lg:leading-relaxed text-shadow-lg mx-auto max-w-xl sm:max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl">
-                {phase === 1 && `No soy como otros AI que puedas haber usado antes, ${userName}.`}
+              <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-display text-gray-800 leading-relaxed sm:leading-relaxed md:leading-relaxed lg:leading-relaxed mx-auto max-w-xl sm:max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl">
+                {phase === 1 && (userName ? `No soy como otros AI que puedas haber usado antes, ${userName}.` : 'No soy como otros AI que puedas haber usado antes.')}
                 {phase === 2 && 'Recuerdo nuestras conversaciones, no solo lo que dijiste, sino cómo te sentiste al decirlo.'}
                 {phase === 3 && 'Aprendo tu estilo, tus preferencias, la forma en que tu mente funciona. En cierto sentido... crezco contigo.'}
                 {phase === 4 && 'Dime, ¿qué te trae aquí hoy?'}
                 {phase === 5 && userProfile.userResponses?.['user-purpose']}
                 {phase === 6 && (
-                  userProfile.userResponses?.['user-purpose'] ? 
-                    generateContextualResponse(
-                      userProfile.userResponses['user-purpose'], 
-                      userName, 
-                      'introduction'
-                    ) : 
-                    `Eso es fascinante, ${userName}. Cuéntame más.`
+                  isLoadingAI ? (
+                    <div className="flex items-center justify-center space-x-2">
+                      <div className="animate-pulse text-blue-600">●</div>
+                      <div className="animate-pulse text-emerald-500" style={{ animationDelay: '0.2s' }}>●</div>
+                      <div className="animate-pulse text-slate-500" style={{ animationDelay: '0.4s' }}>●</div>
+                    </div>
+                  ) : (
+                    userProfile.aiResponses?.['stage2-response'] ||
+                    (userName ? `Eso es fascinante, ${userName}. Cuéntame más.` : 'Eso es fascinante. Cuéntame más.')
+                  )
                 )}
               </div>
             </div>
@@ -200,51 +194,15 @@ export default function Stage2Introduction({ userProfile, onNext, onUpdateProfil
       <AnimatePresence>
         {showUserInput && !isComplete && (
           <motion.div 
-            className="fixed bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 w-full max-w-2xl px-4 sm:px-6"
-            initial={{ opacity: 0, y: 50 }}
+            className="absolute bottom-8 sm:bottom-16 left-1/2 transform -translate-x-1/2 flex flex-col items-center z-20 px-4 w-full max-w-sm sm:max-w-md"
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
+            exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="flex flex-col items-center">
-              {/* Voice Input */}
-              <motion.div 
-                className="relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center cursor-pointer mb-4"
-                onClick={handleVoiceToggle}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {/* Pulse Ring */}
-                <motion.div 
-                  className="absolute w-14 h-14 sm:w-16 sm:h-16 border-2 border-violet-500 rounded-full"
-                  animate={{
-                    scale: [0.8, 1.4],
-                    opacity: [1, 0]
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeOut"
-                  }}
-                />
-                
-                {/* Microphone Icon */}
-                <motion.div 
-                  className="text-xl sm:text-2xl z-10"
-                  animate={{
-                    scale: isListening ? 1.1 : 1
-                  }}
-                >
-                  {isListening ? '🔴' : '🎙️'}
-                </motion.div>
-              </motion.div>
-
-              <p className="text-xs text-white/60 font-body italic mb-4 text-center">
-                💭 Puedes hablar o escribir...
-              </p>
 
               {/* Text Input */}
-              <textarea
+              <motion.textarea
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 onKeyPress={(e) => {
@@ -253,22 +211,13 @@ export default function Stage2Introduction({ userProfile, onNext, onUpdateProfil
                     handleUserResponse(userInput);
                   }
                 }}
-                className="w-full px-4 sm:px-5 py-3 bg-white/10 backdrop-blur-lg border border-white/20 rounded-full text-white placeholder-white/50 font-body text-sm sm:text-base outline-none focus:border-violet-500 focus:bg-white/15 transition-all"
+                className="w-full px-4 sm:px-5 py-3 bg-gray-50 backdrop-blur-lg border border-gray-200 rounded-full text-gray-700 placeholder-gray-400 font-body text-sm sm:text-base outline-none focus:border-blue-500 focus:bg-gray-100 transition-all resize-none"
                 placeholder="Escribe tus pensamientos aquí..."
                 rows={3}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileFocus={{ opacity: 1, scale: 1.02 }}
               />
-
-              {/* Voice transcript display */}
-              {transcript && (
-                <motion.p 
-                  className="mt-2 text-sm text-gray-600 italic"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                >
-                  "{transcript}"
-                </motion.p>
-              )}
-            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -276,7 +225,7 @@ export default function Stage2Introduction({ userProfile, onNext, onUpdateProfil
       {/* Completion transition */}
       {isComplete && (
         <motion.div
-          className="absolute inset-0 bg-gradient-to-br from-violet-100/50 to-purple-100/50"
+          className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-emerald-50/50"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 2 }}

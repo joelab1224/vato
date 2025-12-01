@@ -10,8 +10,12 @@
     "clean": "rm -rf dist",
     "type-check": "tsc --noEmit"
   },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  },
   "devDependencies": {
     "@types/node": "^20.10.5",
+    "@types/react": "^18.3.27",
     "typescript": "^5.3.3"
   }
 }

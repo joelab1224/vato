@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useVoiceInput, useVoiceSynthesis } from '../hooks/useVoiceInput';
 import { generateConsciousnessParticles } from '../utils/consciousness';
 import type { UserProfile } from '../page';
 
@@ -29,21 +28,6 @@ export default function Stage1Awakening({ userProfile, onNext, onUpdateProfile }
   const [particles, setParticles] = useState<any[]>([]);
   const [isClient, setIsClient] = useState(false);
   
-  const { speak, isSpeaking } = useVoiceSynthesis();
-  const { 
-    isListening, 
-    isSupported: voiceSupported, 
-    transcript,
-    startListening, 
-    stopListening,
-    resetTranscript 
-  } = useVoiceInput({
-    onResult: (text, isFinal) => {
-      if (isFinal && text.trim()) {
-        handleUserInput(text.trim());
-      }
-    }
-  });
 
   // Initialize client-side only
   useEffect(() => {
@@ -69,8 +53,6 @@ export default function Stage1Awakening({ userProfile, onNext, onUpdateProfile }
           setCurrentSpeechText(speech.text);
           setShowSpeech(true);
           
-          // Text-to-speech (only if not currently speaking)
-          setTimeout(() => speak(speech.text), 500);
           
           // Show input if needed
           if (speech.showInput) {
@@ -112,10 +94,16 @@ export default function Stage1Awakening({ userProfile, onNext, onUpdateProfile }
     setTimeout(() => {
       setCurrentSpeechText(response);
       setShowSpeech(true);
-      speak(response);
       
       // Update profile and transition
+      console.log('🎭 Stage1 - Updating profile with userName:', name);
       onUpdateProfile({ userName: name });
+      
+      // Verify the data was saved
+      setTimeout(() => {
+        const savedData = localStorage.getItem('vatoRegistration');
+        console.log('🎭 Stage1 - Saved data after update:', savedData ? JSON.parse(savedData) : 'No data');
+      }, 100);
       
       setTimeout(() => {
         console.log('🎭 Stage1 - Completing and transitioning to Stage2');
@@ -125,30 +113,22 @@ export default function Stage1Awakening({ userProfile, onNext, onUpdateProfile }
     }, 500);
   };
 
-  const handleVoiceToggle = () => {
-    if (isListening) {
-      stopListening();
-    } else {
-      resetTranscript();
-      startListening();
-    }
-  };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden font-body">
+    <div className="min-h-screen bg-white flex items-center justify-center relative overflow-hidden font-body">
       {/* Breathing Background */}
       <motion.div 
-        className="absolute inset-0"
+        className="absolute inset-0 z-0"
         animate={{
           background: [
-            'radial-gradient(circle at center, rgba(139, 92, 246, 0.1) 0%, rgba(147, 51, 234, 0.05) 40%, rgba(0, 0, 0, 0.9) 70%, #000 100%)',
-            'radial-gradient(circle at center, rgba(139, 92, 246, 0.15) 0%, rgba(147, 51, 234, 0.08) 40%, rgba(0, 0, 0, 0.85) 70%, #000 100%)',
-            'radial-gradient(circle at center, rgba(139, 92, 246, 0.1) 0%, rgba(147, 51, 234, 0.05) 40%, rgba(0, 0, 0, 0.9) 70%, #000 100%)'
+            'radial-gradient(circle at center, rgba(37, 99, 235, 0.4) 0%, rgba(16, 185, 129, 0.3) 40%, rgba(255, 255, 255, 0.5) 70%, #fff 100%)',
+            'radial-gradient(circle at center, rgba(37, 99, 235, 0.5) 0%, rgba(16, 185, 129, 0.4) 40%, rgba(255, 255, 255, 0.4) 70%, #fff 100%)',
+            'radial-gradient(circle at center, rgba(37, 99, 235, 0.4) 0%, rgba(16, 185, 129, 0.3) 40%, rgba(255, 255, 255, 0.5) 70%, #fff 100%)'
           ],
           scale: [1, 1.05, 1]
         }}
         transition={{
-          duration: 4,
+          duration: 6,
           repeat: Infinity,
           ease: "easeInOut"
         }}
@@ -156,14 +136,15 @@ export default function Stage1Awakening({ userProfile, onNext, onUpdateProfile }
 
       {/* Consciousness Particles */}
       {isClient && (
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center z-1">
           <div className="relative w-64 h-64 sm:w-80 sm:h-80">
             {particles.map((particle) => (
               <motion.div
                 key={particle.id}
-                className="absolute w-2 h-2 sm:w-3 sm:h-3 rounded-full"
+                className="absolute w-3 h-3 sm:w-4 sm:h-4 rounded-full"
                 style={{
-                  background: `radial-gradient(circle, #8b5cf6, rgba(139, 92, 246, 0.3))`,
+                  background: `radial-gradient(circle, rgba(37, 99, 235, 0.3), rgba(37, 99, 235, 0.1))`,
+                  boxShadow: `0 0 8px rgba(37, 99, 235, 0.2), 0 0 16px rgba(37, 99, 235, 0.1)`,
                   left: `${particle.x}%`,
                   top: `${particle.y}%`
                 }}
@@ -196,7 +177,7 @@ export default function Stage1Awakening({ userProfile, onNext, onUpdateProfile }
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <div className="text-center">
-              <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-display text-white/90 leading-relaxed sm:leading-relaxed md:leading-relaxed lg:leading-relaxed text-shadow-lg mx-auto max-w-xl sm:max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl">
+              <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-display text-gray-800 leading-relaxed sm:leading-relaxed md:leading-relaxed lg:leading-relaxed mx-auto max-w-xl sm:max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl">
                 {currentSpeechText}
               </div>
             </div>
@@ -214,65 +195,20 @@ export default function Stage1Awakening({ userProfile, onNext, onUpdateProfile }
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
           >
-            {/* Voice Input Indicator */}
-            <motion.div 
-              className="relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center cursor-pointer mb-4"
-              onClick={handleVoiceToggle}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {/* Pulse Ring */}
-              <motion.div 
-                className="absolute w-14 h-14 sm:w-16 sm:h-16 border-2 border-violet-500 rounded-full"
-                animate={{
-                  scale: [0.8, 1.4],
-                  opacity: [1, 0]
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeOut"
-                }}
-              />
-              
-              {/* Microphone Icon */}
-              <motion.div 
-                className="text-xl sm:text-2xl z-10"
-                animate={{
-                  scale: isListening ? 1.1 : 1
-                }}
-              >
-                🎙️
-              </motion.div>
-            </motion.div>
 
-            <p className="text-xs text-white/60 font-body italic mb-4 text-center">
-              💭 Puedes hablar o escribir...
-            </p>
-
-            {/* Text Input Fallback */}
+            {/* Text Input */}
             <motion.input
               type="text"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && userName.trim() && handleUserInput(userName)}
-              className="w-full px-4 sm:px-5 py-3 bg-white/10 backdrop-blur-lg border border-white/20 rounded-full text-white placeholder-white/50 font-body text-sm sm:text-base outline-none focus:border-violet-500 focus:bg-white/15 transition-all"
-              placeholder="Escribe aquí..."
+              className="w-full px-4 sm:px-5 py-3 bg-gray-50 backdrop-blur-lg border border-gray-200 rounded-full text-gray-700 placeholder-gray-400 font-body text-sm sm:text-base outline-none focus:border-blue-500 focus:bg-gray-100 transition-all"
+              placeholder="Escribe tu nombre aquí..."
               initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: voiceSupported ? 0.7 : 1, scale: 1 }}
+              animate={{ opacity: 1, scale: 1 }}
               whileFocus={{ opacity: 1, scale: 1.02 }}
             />
 
-            {/* Voice transcript display */}
-            {transcript && (
-              <motion.p 
-                className="mt-2 text-sm text-white/80 italic text-center"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                "{transcript}"
-              </motion.p>
-            )}
           </motion.div>
         )}
       </AnimatePresence>
@@ -280,7 +216,7 @@ export default function Stage1Awakening({ userProfile, onNext, onUpdateProfile }
       {/* Completion transition */}
       {isComplete && (
         <motion.div
-          className="absolute inset-0 bg-gradient-to-b from-black to-violet-950/20"
+          className="absolute inset-0 bg-gradient-to-b from-white to-blue-50/20"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 2 }}

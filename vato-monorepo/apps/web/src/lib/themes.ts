@@ -2,6 +2,19 @@ export type ThemeId = 'clean' | 'warm' | 'dark'
 
 // Base color palette following vato-unified-design-system-light.html
 const baseColors = {
+  // Professional design system gray scale (for fixed components)
+  professional: {
+    gray50: '#f9fafb',   // Professional gray-50
+    gray100: '#f3f4f6',  // Professional gray-100  
+    gray200: '#e5e7eb',  // Professional gray-200
+    gray300: '#d1d5db',  // Professional gray-300
+    gray400: '#9ca3af',  // Professional gray-400
+    gray500: '#6b7280',  // Professional gray-500
+    gray600: '#4b5563',  // Professional gray-600
+    gray700: '#374151',  // Professional gray-700
+    gray800: '#1f2937',  // Professional gray-800
+    gray900: '#111827',  // Professional gray-900
+  },
   // Light theme foundation (warm backgrounds for cognitive rest)
   light: {
     50: '#fafafa',    // Ultra light gray
@@ -119,11 +132,27 @@ export interface Theme {
     }
   }
   spacing: {
+    // Systematic spacing scale based on 4px foundation
+    xs: string      // 4px - micro spacing
+    sm: string      // 8px - small spacing
+    md: string      // 12px - medium spacing
+    lg: string      // 16px - large spacing
+    xl: string      // 24px - extra large spacing
+    '2xl': string   // 32px - 2x large spacing
+    '3xl': string   // 48px - 3x large spacing
+    '4xl': string   // 64px - 4x large spacing
+    
+    // Semantic spacing values
     containerPadding: string
     messagePadding: string
     inputPadding: string
     borderRadius: string
     borderRadiusLarge: string
+    
+    // Layout-specific spacing
+    headerHeight: string
+    bottomNavHeight: string
+    floatingOffset: string
   }
   effects: {
     shadow: string
@@ -177,7 +206,7 @@ export const themes: Record<ThemeId, Theme> = {
       citationBackground: baseColors.violet[50] || '#f3f4ff', // Light violet background
       
       // Glass morphism effects (matching design system)
-      glassBackground: 'rgba(255, 255, 255, 0.6)',
+      glassBackground: 'rgba(255, 255, 255, 0.3)',
       glassBorder: 'rgba(0, 0, 0, 0.08)',
       glassViolet: 'rgba(139, 92, 246, 0.08)',
       glassPurple: 'rgba(147, 51, 234, 0.08)',
@@ -202,11 +231,27 @@ export const themes: Record<ThemeId, Theme> = {
       },
     },
     spacing: {
+      // Systematic spacing scale (4px base unit)
+      xs: '0.25rem',          // 4px
+      sm: '0.5rem',           // 8px
+      md: '0.75rem',          // 12px
+      lg: '1rem',             // 16px
+      xl: '1.5rem',           // 24px
+      '2xl': '2rem',          // 32px
+      '3xl': '3rem',          // 48px
+      '4xl': '4rem',          // 64px
+      
+      // Semantic spacing values
       containerPadding: '1.5rem',
       messagePadding: '1rem 1.25rem',
       inputPadding: '0.75rem 1rem',
       borderRadius: '0.375rem',
       borderRadiusLarge: '0.5rem',
+      
+      // Layout-specific spacing
+      headerHeight: '3.5rem',        // 56px - header height
+      bottomNavHeight: '4.5rem',     // 72px - bottom nav height
+      floatingOffset: '1rem',        // 16px - gap between floating elements
     },
     effects: {
       shadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
@@ -259,7 +304,7 @@ export const themes: Record<ThemeId, Theme> = {
       citationBackground: baseColors.pink[50] || '#fdf2f8', // Light pink background
       
       // Glass morphism effects - warmer tinting
-      glassBackground: 'rgba(255, 247, 237, 0.7)',
+      glassBackground: 'rgba(255, 247, 237, 0.3)',
       glassBorder: 'rgba(168, 85, 247, 0.1)',    // Purple tinted border
       glassViolet: 'rgba(167, 139, 250, 0.12)',
       glassPurple: 'rgba(168, 85, 247, 0.12)',
@@ -284,11 +329,27 @@ export const themes: Record<ThemeId, Theme> = {
       },
     },
     spacing: {
+      // Systematic spacing scale (4px base unit)
+      xs: '0.25rem',          // 4px
+      sm: '0.5rem',           // 8px
+      md: '0.75rem',          // 12px
+      lg: '1rem',             // 16px
+      xl: '1.5rem',           // 24px
+      '2xl': '2rem',          // 32px
+      '3xl': '3rem',          // 48px
+      '4xl': '4rem',          // 64px
+      
+      // Semantic spacing values (larger for warm theme)
       containerPadding: '2rem',
       messagePadding: '1.25rem 1.5rem',
       inputPadding: '1rem 1.25rem',
       borderRadius: '1rem',
       borderRadiusLarge: '1.25rem',
+      
+      // Layout-specific spacing
+      headerHeight: '3.5rem',        // 56px - header height
+      bottomNavHeight: '4.5rem',     // 72px - bottom nav height
+      floatingOffset: '1.5rem',      // 24px - larger gap for warm theme
     },
     effects: {
       shadow: '0 4px 12px 0 rgba(251, 146, 60, 0.15)',
@@ -341,7 +402,7 @@ export const themes: Record<ThemeId, Theme> = {
       citationBackground: 'rgba(34, 211, 238, 0.08)', // Light cyan background
       
       // Glass morphism effects - warm background compatible
-      glassBackground: 'rgba(255, 255, 255, 0.7)', // Light glass on warm background
+      glassBackground: 'rgba(255, 255, 255, 0.3)', // Light glass on warm background
       glassBorder: 'rgba(0, 0, 0, 0.08)',       // Subtle dark border
       glassViolet: 'rgba(139, 92, 246, 0.08)',  // Light violet tint
       glassPurple: 'rgba(168, 85, 247, 0.08)',  // Light purple tint
@@ -366,11 +427,27 @@ export const themes: Record<ThemeId, Theme> = {
       },
     },
     spacing: {
+      // Systematic spacing scale (4px base unit)
+      xs: '0.25rem',          // 4px
+      sm: '0.5rem',           // 8px
+      md: '0.75rem',          // 12px
+      lg: '1rem',             // 16px
+      xl: '1.5rem',           // 24px
+      '2xl': '2rem',          // 32px
+      '3xl': '3rem',          // 48px
+      '4xl': '4rem',          // 64px
+      
+      // Semantic spacing values
       containerPadding: '1.5rem',                // Standard container padding
       messagePadding: '1rem 1.25rem',            // Comfortable message padding
       inputPadding: '0.75rem 1rem',              // Input padding
       borderRadius: '1.25rem',                   // 20px - organic river stone radius
       borderRadiusLarge: '1.5rem',               // 24px - larger organic radius
+      
+      // Layout-specific spacing
+      headerHeight: '3.5rem',        // 56px - header height
+      bottomNavHeight: '4.5rem',     // 72px - bottom nav height
+      floatingOffset: '1rem',        // 16px - compact spacing for technical feel
     },
     effects: {
       shadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',   // Subtle shadow for light background

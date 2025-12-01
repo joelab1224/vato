@@ -2,8 +2,9 @@ import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 import { useTheme } from '@/contexts/theme-context'
-import { Send, Mic, MicOff, Paperclip, Type, Upload } from 'lucide-react'
+import { Send, Paperclip, Upload } from 'lucide-react'
 import { Button } from './button'
+
 
 const inputVariants = cva(
   'flex w-full bg-transparent transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none',
@@ -31,12 +32,9 @@ export interface ChatInputProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement>,
     VariantProps<typeof inputVariants> {
   onSend?: (message: string) => void
-  onVoiceRecord?: () => void
-  onVoiceStop?: () => void
   onFileAttach?: () => void
   isLoading?: boolean
   maxLength?: number
-  isRecording?: boolean
 }
 
 const ChatInput = React.forwardRef<HTMLTextAreaElement, ChatInputProps>(
@@ -45,30 +43,26 @@ const ChatInput = React.forwardRef<HTMLTextAreaElement, ChatInputProps>(
     variant, 
     size, 
     onSend, 
-    onVoiceRecord,
-    onVoiceStop, 
     onFileAttach, 
     isLoading, 
-    isRecording = false,
     maxLength = 4000, 
     style, 
     ...props 
   }, ref) => {
-    const { currentTheme } = useTheme()
-    const [value, setValue] = React.useState('')
-    const [mode, setMode] = React.useState<'text' | 'audio'>('text')
-    const textareaRef = React.useRef<HTMLTextAreaElement>(null)
-    const fileInputRef = React.useRef<HTMLInputElement>(null)
+  const { currentTheme } = useTheme()
+  const [value, setValue] = React.useState('')
+  const textareaRef = React.useRef<HTMLTextAreaElement>(null)
+  const fileInputRef = React.useRef<HTMLInputElement>(null)
 
     // Auto-resize textarea
     React.useEffect(() => {
       const textarea = textareaRef.current || (ref as React.RefObject<HTMLTextAreaElement>)?.current
-      if (textarea && mode === 'text') {
+      if (textarea) {
         textarea.style.height = 'auto'
         const newHeight = Math.min(textarea.scrollHeight, 120) // Reduced max height for lean design
         textarea.style.height = `${newHeight}px`
       }
-    }, [value, ref, mode])
+    }, [value, ref])
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (e.key === 'Enter' && !e.shiftKey && !isLoading) {
@@ -106,41 +100,33 @@ const ChatInput = React.forwardRef<HTMLTextAreaElement, ChatInputProps>(
       }
     }
 
-    const handleVoiceToggle = () => {
-      if (isRecording) {
-        onVoiceStop?.()
-      } else {
-        onVoiceRecord?.()
-      }
-    }
 
-    const toggleMode = () => {
-      setMode(prev => prev === 'text' ? 'audio' : 'text')
-      if (mode === 'text') {
-        setValue('')
-      }
-    }
-
-    // Dynamic styles based on current theme - matching mobile nav glassmorphism
+    // Dynamic styles based on current theme - using theme-based spacing and glassmorphism
     const containerStyles: React.CSSProperties = {
-      backgroundColor: 'rgba(232, 228, 220, 0.25)',
-      borderTopColor: 'rgba(255, 255, 255, 0.4)',
+      backgroundColor: currentTheme.colors.glassBackground,
+      borderTopColor: currentTheme.colors.glassBorder,
       backdropFilter: 'blur(20px) saturate(180%)',
       WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-      boxShadow: '0 -4px 24px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
-      borderRadius: '20px',
+      boxShadow: currentTheme.effects.shadowLarge,
+      borderRadius: currentTheme.spacing.borderRadiusLarge,
+      // Remove fixed positioning - handled by FloatingControls
     }
 
     const inputStyles: React.CSSProperties = {
       borderRadius: currentTheme.spacing.borderRadius,
       borderColor: currentTheme.colors.border,
-      backgroundColor: currentTheme.colors.background,
-      color: currentTheme.colors.text,
+      backgroundColor: 'transparent',  // Allow glassmorphism to show through
+      color: '#2A2A2A',                // Professional design system charcoal
       fontFamily: currentTheme.typography.fontFamily,
       fontSize: currentTheme.typography.sizes.sm,
       transition: currentTheme.effects.transition,
       lineHeight: '1.4',
       fontWeight: '400',
+      // Add padding to prevent cursor cutoff
+      paddingTop: currentTheme.spacing.xs,
+      paddingBottom: currentTheme.spacing.xs,
+      paddingLeft: currentTheme.spacing.sm,
+      paddingRight: currentTheme.spacing.sm,
       ...style,
     }
 
@@ -163,55 +149,36 @@ const ChatInput = React.forwardRef<HTMLTextAreaElement, ChatInputProps>(
         />
         
         <div 
-          className="relative flex items-center gap-3 px-4 py-3 border-t backdrop-blur-md"
-          style={containerStyles}
+          className="relative flex items-center backdrop-blur-md border-t"
+          style={{
+            ...containerStyles,
+            gap: currentTheme.spacing.md,
+            paddingLeft: currentTheme.spacing.lg,
+            paddingRight: currentTheme.spacing.lg,
+            paddingTop: currentTheme.spacing.md,
+            paddingBottom: currentTheme.spacing.md,
+          }}
         >
           {/* Main input area */}
           <div className="flex-1 relative">
-            {mode === 'text' ? (
-              <textarea
-                ref={textareaRef}
-                className={cn(
-                  'w-full bg-transparent border-0 focus:outline-none resize-none placeholder:text-sm',
-                  className
-                )}
-                style={inputStyles}
-                value={value}
-                onChange={handleChange}
-                onKeyDown={handleKeyDown}
-                placeholder="Message VATO..."
-                disabled={isLoading}
-                rows={1}
-                {...props}
-              />
-            ) : (
-              <div 
-                className="flex items-center justify-center h-10 rounded-lg border-2 border-dashed transition-colors"
-                style={{
-                  borderColor: isRecording ? currentTheme.colors.primary : currentTheme.colors.border,
-                  backgroundColor: isRecording ? `${currentTheme.colors.primary}10` : currentTheme.colors.background,
-                }}
-              >
-                <span 
-                  className="text-sm font-medium flex items-center gap-2"
-                  style={{ 
-                    color: isRecording ? currentTheme.colors.primary : currentTheme.colors.textSecondary 
-                  }}
-                >
-                  {isRecording ? (
-                    <>
-                      <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                      Recording...
-                    </>
-                  ) : (
-                    'Tap to record audio message'
-                  )}
-                </span>
-              </div>
-            )}
+            <textarea
+              ref={textareaRef}
+              className={cn(
+                'w-full bg-transparent border-0 focus:outline-none resize-none placeholder:text-sm',
+                className
+              )}
+              style={inputStyles}
+              value={value}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+              placeholder="Message VATO..."
+              disabled={isLoading}
+              rows={1}
+              {...props}
+            />
             
-            {/* Character count for text mode */}
-            {mode === 'text' && maxLength && value.length > maxLength * 0.8 && (
+            {/* Character count */}
+            {maxLength && value.length > maxLength * 0.8 && (
               <div 
                 className="absolute -top-5 right-0 text-xs font-medium"
                 style={{ 
@@ -226,86 +193,65 @@ const ChatInput = React.forwardRef<HTMLTextAreaElement, ChatInputProps>(
           </div>
 
           {/* Right side controls */}
-          <div className="flex items-center gap-1">
-            {/* Mode toggle */}
-            <button
-              onClick={toggleMode}
-              className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95"
-              style={{
-                backgroundColor: currentTheme.colors.backgroundElevated,
-                color: currentTheme.colors.textSecondary,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = currentTheme.colors.primary
-                e.currentTarget.style.color = currentTheme.colors.textInverse
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = currentTheme.colors.backgroundElevated
-                e.currentTarget.style.color = currentTheme.colors.textSecondary
-              }}
-              title={mode === 'text' ? 'Switch to audio mode' : 'Switch to text mode'}
-            >
-              {mode === 'text' ? <Mic className="w-4 h-4" /> : <Type className="w-4 h-4" />}
-            </button>
+          <div 
+            className="flex items-center"
+            style={{ gap: currentTheme.spacing.xs }}
+          >
 
             {/* File upload */}
             <button
               onClick={handleFileSelect}
               disabled={isLoading}
-              className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-50"
+              className="rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-50"
               style={{
+                minWidth: '44px',
+                minHeight: '44px',
+                width: '44px',
+                height: '44px',
                 backgroundColor: currentTheme.colors.backgroundElevated,
                 color: currentTheme.colors.textSecondary,
+                border: '2px solid transparent',
+                transition: 'all 200ms ease-in-out',
               }}
               onMouseEnter={(e) => {
                 if (!isLoading) {
-                  e.currentTarget.style.backgroundColor = currentTheme.colors.primary
-                  e.currentTarget.style.color = currentTheme.colors.textInverse
+                  e.currentTarget.style.borderColor = '#22d3ee'
+                  e.currentTarget.style.boxShadow = '0 0 0 1px rgba(34, 211, 238, 0.3), 0 0 8px rgba(34, 211, 238, 0.2)'
                 }
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = currentTheme.colors.backgroundElevated
-                e.currentTarget.style.color = currentTheme.colors.textSecondary
+                e.currentTarget.style.borderColor = 'transparent'
+                e.currentTarget.style.boxShadow = 'none'
               }}
               title="Upload file"
             >
               <Upload className="w-4 h-4" />
             </button>
 
-            {/* Voice control (audio mode) or Send (text mode) */}
-            {mode === 'audio' ? (
-              <button
-                onClick={handleVoiceToggle}
-                disabled={isLoading}
-                className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95"
-                style={{
-                  backgroundColor: isRecording ? currentTheme.colors.accent : currentTheme.colors.primary,
-                  color: currentTheme.colors.textInverse,
-                  boxShadow: currentTheme.effects.shadow,
-                }}
-                title={isRecording ? 'Stop recording' : 'Start recording'}
-              >
-                {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-              </button>
-            ) : (
-              <button
-                onClick={handleSend}
-                disabled={!value.trim() || isLoading}
-                className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-50"
-                style={{
-                  backgroundColor: (!value.trim() || isLoading) 
-                    ? currentTheme.colors.backgroundElevated 
-                    : currentTheme.colors.primary,
-                  color: (!value.trim() || isLoading) 
-                    ? currentTheme.colors.textSecondary 
-                    : currentTheme.colors.textInverse,
-                  boxShadow: (!value.trim() || isLoading) ? 'none' : currentTheme.effects.shadow,
-                }}
-                title="Send message"
-              >
-                <Send className="w-4 h-4" />
-              </button>
-            )}
+            {/* Send button */}
+            <button
+              onClick={handleSend}
+              disabled={!value.trim() || isLoading}
+              className="rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-50"
+              style={{
+                minWidth: '44px',
+                minHeight: '44px',
+                width: '44px',
+                height: '44px',
+                backgroundColor: currentTheme.colors.backgroundElevated,
+                color: currentTheme.colors.textSecondary,
+                border: (!value.trim() || isLoading) 
+                  ? '2px solid transparent' 
+                  : '2px solid #22d3ee',
+                boxShadow: (!value.trim() || isLoading) 
+                  ? 'none' 
+                  : '0 0 0 1px rgba(34, 211, 238, 0.3), 0 0 8px rgba(34, 211, 238, 0.2)',
+                transition: 'all 200ms ease-in-out',
+              }}
+              title="Send message"
+            >
+              <Send className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </>

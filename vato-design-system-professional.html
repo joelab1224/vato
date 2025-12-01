@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VATO Design System - Professional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/tt-neoris" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Space Grotesk', 'sans-serif'],
+                        body: ['TT Neoris', 'Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        vato: {
+                            blue: {
+                                50: '#f0f9ff',
+                                100: '#e0f2fe',
+                                200: '#bae6fd',
+                                300: '#7dd3fc',
+                                400: '#38bdf8',
+                                500: '#0891b2',
+                                600: '#0e7490',
+                                700: '#155e75',
+                            },
+                            gray: {
+                                25: '#fcfcfd',
+                                50: '#f8f9fa',
+                                100: '#f1f3f4',
+                                200: '#e8eaed',
+                                300: '#dadce0',
+                                400: '#bdc1c6',
+                                500: '#9aa0a6',
+                                600: '#80868b',
+                                700: '#5f6368',
+                                800: '#3c4043',
+                                900: '#202124',
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* === DESIGN TOKENS === */
+        :root {
+            /* Colors - Unified Glassmorphism Theme */
+            --bg-primary: linear-gradient(135deg, #ddd6fe 0%, #e0e7ff 25%, #ffffff 50%, #f0f9ff 75%, #dbeafe 100%);
+            --bg-glass: rgba(255, 255, 255, 0.3);
+            --bg-glass-strong: rgba(255, 255, 255, 0.5);
+            --bg-glass-subtle: rgba(255, 255, 255, 0.2);
+            
+            --accent-gradient: linear-gradient(135deg, #0891b2 0%, #38bdf8 100%);
+            --accent-gradient-light: linear-gradient(135deg, #7dd3fc 0%, #bae6fd 100%);
+            --accent-glass: rgba(8, 145, 178, 0.1);
+            --accent-border: rgba(8, 145, 178, 0.2);
+            
+            --border-glass: rgba(255, 255, 255, 0.3);
+            --border-strong: rgba(255, 255, 255, 0.5);
+            
+            --text-primary: #374151;
+            --text-secondary: #6b7280;
+            --text-tertiary: #9ca3af;
+            --text-accent: #0891b2;
+            
+            /* Typography */
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'TT Neoris', 'Inter', sans-serif;
+            
+            /* Spacing - Professional 8px system */
+            --space-1: 0.25rem;  /* 4px */
+            --space-2: 0.5rem;   /* 8px */
+            --space-3: 0.75rem;  /* 12px */
+            --space-4: 1rem;     /* 16px */
+            --space-5: 1.25rem;  /* 20px */
+            --space-6: 1.5rem;   /* 24px */
+            --space-8: 2rem;     /* 32px */
+            --space-10: 2.5rem;  /* 40px */
+            --space-12: 3rem;    /* 48px */
+            
+            /* Border Radius - Subtle */
+            --radius-sm: 0.375rem;  /* 6px */
+            --radius-md: 0.5rem;    /* 8px */
+            --radius-lg: 0.75rem;   /* 12px */
+            --radius-xl: 1rem;      /* 16px */
+            
+            /* Professional Glass shadows */
+            --shadow-glass: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-glass-strong: 0 8px 32px rgba(0, 0, 0, 0.12);
+            --shadow-floating: 0 12px 40px rgba(0, 0, 0, 0.15);
+            --shadow-accent: 0 8px 32px rgba(8, 145, 178, 0.2);
+        }
+        
+        /* === GLOBAL STYLES === */
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            font-weight: 100;
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-display);
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        
+        /* === COMPONENT CLASSES === */
+        
+        /* Professional Glass Cards */
+        .card-professional {
+            background: rgba(248, 250, 252, 0.7);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-glass);
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-professional:hover {
+            background: rgba(248, 250, 252, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: var(--shadow-floating);
+            transform: translateY(-3px);
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background: var(--bg-elevated);
+            border-right: 1px solid var(--border-light);
+            width: 240px;
+            min-height: 100vh;
+        }
+        
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: var(--radius-md);
+            margin: var(--space-1) var(--space-3);
+            transition: all 150ms ease-out;
+        }
+        
+        .sidebar-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        
+        .sidebar-item.active {
+            background: var(--accent-subtle);
+            color: var(--accent-primary);
+            border: 1px solid var(--accent-light);
+        }
+        
+        /* Buttons */
+        .btn-professional {
+            font-family: var(--font-body);
+            font-weight: 100;
+            height: 40px;
+            padding: 0 var(--space-4);
+            border-radius: var(--radius-md);
+            transition: all 150ms ease-out;
+            cursor: pointer;
+            border: 1px solid transparent;
+            font-size: 0.875rem;
+        }
+        
+        .btn-primary-professional {
+            background: linear-gradient(135deg, rgba(32, 33, 36, 0.8) 0%, rgba(60, 64, 67, 0.7) 50%, rgba(95, 99, 104, 0.6) 100%);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            color: white;
+            border: 1px solid rgba(60, 64, 67, 0.4);
+            box-shadow: var(--shadow-glass), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+        
+        .btn-primary-professional:hover {
+            background: linear-gradient(135deg, rgba(32, 33, 36, 0.9) 0%, rgba(60, 64, 67, 0.8) 30%, rgba(95, 99, 104, 0.7) 70%, rgba(128, 134, 139, 0.6) 100%);
+            box-shadow: var(--shadow-glass-strong), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            transform: scale(1.02) translateY(-1px);
+            border-color: rgba(95, 99, 104, 0.6);
+        }
+        
+        .btn-secondary-professional {
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.5) 0%, rgba(241, 245, 249, 0.4) 100%);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            color: var(--text-primary);
+            border: 1px solid rgba(203, 213, 225, 0.3);
+            box-shadow: var(--shadow-glass), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+        
+        .btn-secondary-professional:hover {
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.7) 0%, rgba(186, 230, 253, 0.5) 100%);
+            border: 1px solid rgba(8, 145, 178, 0.35);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-glass-strong), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+        }
+        
+        .btn-ghost-professional {
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.2) 0%, rgba(226, 232, 240, 0.15) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: var(--text-secondary);
+            border: 1px solid rgba(203, 213, 225, 0.2);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-ghost-professional:hover {
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.4) 0%, rgba(186, 230, 253, 0.3) 100%);
+            color: var(--text-primary);
+            border: 1px solid rgba(8, 145, 178, 0.2);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-glass), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Form Elements */
+        .input-professional {
+            font-family: var(--font-body);
+            height: 40px;
+            padding: 0 var(--space-3);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-md);
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            transition: all 150ms ease-out;
+        }
+        
+        .input-professional:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--accent-subtle);
+        }
+        
+        /* Badges - Unified Glassmorphism System */
+        .badge-professional,
+        .badge-primary,
+        .badge-secondary,
+        .badge-neutral {
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            font-weight: 100;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            border: 1px solid transparent;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            box-shadow: var(--shadow-glass), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 150ms ease-out;
+        }
+        
+        .badge-professional:hover,
+        .badge-primary:hover,
+        .badge-secondary:hover,
+        .badge-neutral:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-glass-strong), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+        
+        .badge-primary {
+            background: linear-gradient(135deg, rgba(32, 33, 36, 0.85) 0%, rgba(60, 64, 67, 0.7) 50%, rgba(95, 99, 104, 0.6) 100%);
+            color: white;
+            border-color: rgba(60, 64, 67, 0.4);
+        }
+        
+        .badge-secondary {
+            background: linear-gradient(135deg, rgba(154, 160, 166, 0.25) 0%, rgba(189, 193, 198, 0.2) 50%, rgba(218, 220, 224, 0.15) 100%);
+            color: var(--text-secondary);
+            border-color: rgba(154, 160, 166, 0.25);
+        }
+        
+        .badge-neutral {
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.7) 0%, rgba(241, 245, 249, 0.5) 50%, rgba(226, 232, 240, 0.4) 100%);
+            color: var(--text-primary);
+            border-color: rgba(203, 213, 225, 0.25);
+        }
+        
+        /* Primary Metric Display Component */
+        .metric-primary {
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(241, 245, 249, 0.7) 100%);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(203, 213, 225, 0.25);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8) var(--space-6);
+            text-align: center;
+            box-shadow: var(--shadow-glass), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            margin-bottom: var(--space-8);
+        }
+        
+        .metric-number {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: var(--space-2);
+            letter-spacing: -0.02em;
+        }
+        
+        .metric-label {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 100;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* Line Chart Component */
+        .chart-container {
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.6) 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(203, 213, 225, 0.3);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-glass), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            margin-bottom: var(--space-8);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .chart-title {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .chart-dropdown {
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.6) 0%, rgba(241, 245, 249, 0.4) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(203, 213, 225, 0.25);
+            border-radius: var(--radius-md);
+            padding: var(--space-2) var(--space-3);
+            font-family: var(--font-body);
+            font-weight: 100;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        
+        .chart-area {
+            height: 240px;
+            position: relative;
+            margin-bottom: var(--space-4);
+            padding: var(--space-4);
+        }
+        
+        .chart-line {
+            position: absolute;
+            top: var(--space-4);
+            left: var(--space-4);
+            right: var(--space-4);
+            bottom: var(--space-4);
+            background: url('data:image/svg+xml,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:%2360a5fa;stop-opacity:1" /><stop offset="100%" style="stop-color:%230ea5e9;stop-opacity:1" /></linearGradient><linearGradient id="fillGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:%2360a5fa;stop-opacity:0.1" /><stop offset="100%" style="stop-color:%230ea5e9;stop-opacity:0.05" /></linearGradient></defs><path d="M0,75 Q12.5,60 25,65 T50,55 T75,35 T100,60" stroke="url(%23grad)" stroke-width="2" fill="none" opacity="0.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M0,75 Q12.5,60 25,65 T50,55 T75,35 T100,60 L100,100 L0,100 Z" fill="url(%23fillGrad)" opacity="0.3"/></svg>') no-repeat;
+            background-size: 100% 100%;
+        }
+        
+        .chart-peak {
+            position: absolute;
+            top: calc(var(--space-4) + 35%);
+            left: calc(var(--space-4) + 75%);
+            transform: translate(-50%, -100%);
+            background: linear-gradient(135deg, rgba(32, 33, 36, 0.95) 0%, rgba(60, 64, 67, 0.8) 100%);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            color: white;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-weight: 100;
+            font-size: 0.75rem;
+            box-shadow: var(--shadow-glass), 0 2px 8px rgba(0, 0, 0, 0.15);
+            white-space: nowrap;
+            z-index: 2;
+        }
+        
+        .chart-peak::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: calc(65% - var(--space-4));
+            background: linear-gradient(to bottom, rgba(14, 165, 233, 0.8), rgba(14, 165, 233, 0.3), transparent);
+            border-radius: 1px;
+        }
+        
+        .chart-peak::after {
+            content: '';
+            position: absolute;
+            top: calc(100% + 65% - var(--space-4) - 4px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(135deg, #0ea5e9, #60a5fa);
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chart-labels {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-tertiary);
+            font-family: var(--font-body);
+            font-weight: 100;
+            font-size: 0.75rem;
+        }
+        
+        /* Circular Progress Card Grid */
+        .progress-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-6);
+        }
+        
+        .progress-card {
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.6) 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(203, 213, 225, 0.3);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            text-align: center;
+            box-shadow: var(--shadow-glass), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .progress-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-glass-strong), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+        
+        .circular-progress {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto var(--space-4);
+            position: relative;
+        }
+        
+        .progress-ring {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: conic-gradient(
+                from -90deg,
+                #0ea5e9 0deg,
+                #0ea5e9 var(--progress-deg, 280deg),
+                rgba(203, 213, 225, 0.15) var(--progress-deg, 280deg),
+                rgba(203, 213, 225, 0.15) 360deg
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 6px;
+        }
+        
+        .progress-ring::before {
+            content: '';
+            width: 108px;
+            height: 108px;
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.98) 0%, rgba(241, 245, 249, 0.95) 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        
+        .progress-percentage {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .progress-card-title {
+            font-family: var(--font-display);
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+        
+        .progress-card-subtitle {
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 100;
+            color: var(--text-secondary);
+        }
+        
+        /* Progress variations */
+        .progress-card.variant-secondary .progress-ring {
+            background: conic-gradient(
+                from -90deg,
+                #10b981 0deg,
+                #10b981 var(--progress-deg, 205deg),
+                rgba(203, 213, 225, 0.15) var(--progress-deg, 205deg),
+                rgba(203, 213, 225, 0.15) 360deg
+            );
+        }
+        
+        /* Progress ring enhancements */
+        .progress-ring {
+            transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .progress-card:hover .progress-ring {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+        
+        .progress-card:hover .progress-ring::before {
+            background: linear-gradient(135deg, rgba(248, 250, 252, 1) 0%, rgba(241, 245, 249, 0.98) 100%);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+        
+        
+        /* File Content */
+        .file-content {
+            padding: var(--space-8) var(--space-6) var(--space-6);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: white;
+            opacity: 0;
+            transition: opacity 250ms ease-out;
+        }
+        
+        .file-folder.active .file-content {
+            opacity: 1;
+        }
+        
+        .file-status {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--space-2);
+        }
+        
+        .file-date {
+            position: absolute;
+            top: var(--space-4);
+            right: var(--space-4);
+            background: linear-gradient(135deg, rgba(32, 33, 36, 0.9) 0%, rgba(60, 64, 67, 0.8) 100%);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            color: white;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-weight: 100;
+            font-size: 0.75rem;
+            border: 1px solid rgba(60, 64, 67, 0.4);
+            box-shadow: var(--shadow-glass), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        .file-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-4);
+            margin-top: auto;
+        }
+        
+        .metric-item {
+            text-align: center;
+        }
+        
+        .metric-label {
+            font-family: var(--font-body);
+            font-weight: 100;
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-bottom: var(--space-1);
+        }
+        
+        .metric-value {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        /* Animation #1: File Pull-Forward */
+        .file-tab:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-glass-strong);
+        }
+        
+        .file-tab.active {
+            transform: translateY(-5px) scale(1.08);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .file-folder:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+        }
+        
+        /* Status Badge Variants - Professional Glassmorphism */
+        .badge-success,
+        .badge-warning,
+        .badge-error {
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            font-weight: 100;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            border: 1px solid transparent;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            box-shadow: var(--shadow-glass), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 150ms ease-out;
+        }
+        
+        .badge-success:hover,
+        .badge-warning:hover,
+        .badge-error:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-glass-strong), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+        
+        .badge-success {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(21, 128, 61, 0.1) 100%);
+            color: #15803d;
+            border-color: rgba(34, 197, 94, 0.2);
+        }
+        
+        .badge-warning {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(217, 119, 6, 0.1) 100%);
+            color: #d97706;
+            border-color: rgba(251, 191, 36, 0.2);
+        }
+        
+        .badge-error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(185, 28, 28, 0.1) 100%);
+            color: #b91c1c;
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+        
+        /* Table */
+        .table-professional {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        
+        .table-professional th {
+            text-align: left;
+            padding: var(--space-3) var(--space-4);
+            border-bottom: 1px solid var(--border-medium);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .table-professional td {
+            padding: var(--space-3) var(--space-4);
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-primary);
+        }
+        
+        .table-professional tr:hover {
+            background: var(--bg-tertiary);
+        }
+        
+        /* Status Indicators */
+        .status-professional {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-6);
+        }
+        
+        /* Animations */
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .animate-slideInRight {
+            animation: slideInRight 300ms ease-out;
+        }
+        
+        /* Container */
+        .container-professional {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-6);
+        }
+        
+        /* Professional Card Variants */
+        .card-primary {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-glass);
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-elevated {
+            background: rgba(248, 250, 252, 0.8);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-floating);
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-elevated:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 64px rgba(0, 0, 0, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        
+        /* Professional Pill Toggle Switches */
+        .toggle-professional {
+            width: 52px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            position: relative;
+            cursor: pointer;
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .toggle-professional.active {
+            background: linear-gradient(135deg, rgba(32, 33, 36, 0.85) 0%, rgba(60, 64, 67, 0.75) 100%);
+            border: 1px solid rgba(60, 64, 67, 0.3);
+            box-shadow: 0 4px 16px rgba(32, 33, 36, 0.2);
+        }
+        
+        .toggle-professional::after {
+            content: '';
+            width: 22px;
+            height: 22px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), 0 1px 4px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        
+        .toggle-professional.active::after {
+            transform: translateX(24px);
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Accordions */
+        .accordion-professional {
+            background: var(--bg-glass);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .accordion-header {
+            padding: var(--space-4) var(--space-5);
+            cursor: pointer;
+            transition: all 200ms ease-out;
+            border-bottom: 1px solid rgba(203, 213, 225, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .accordion-header:hover {
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.4) 0%, rgba(241, 245, 249, 0.3) 100%);
+        }
+        
+        .accordion-icon {
+            width: 20px;
+            height: 20px;
+            transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-secondary);
+        }
+        
+        .accordion-professional.active .accordion-icon {
+            transform: rotate(180deg);
+            color: var(--text-primary);
+        }
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 400ms cubic-bezier(0.4, 0, 0.2, 1), padding 300ms ease-out;
+            padding: 0 var(--space-5);
+        }
+        
+        .accordion-professional.active .accordion-content {
+            max-height: 200px;
+            padding: var(--space-4) var(--space-5);
+        }
+        
+        /* Progress Indicators */
+        .progress-professional {
+            height: 8px;
+            background: linear-gradient(135deg, rgba(189, 193, 198, 0.3) 0%, rgba(203, 213, 225, 0.2) 100%);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, rgba(32, 33, 36, 0.8) 0%, rgba(60, 64, 67, 0.6) 100%);
+            border-radius: var(--radius-full);
+            transition: width 800ms cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+            animation: shimmer 2s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* Status Dots */
+        .status-professional {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            position: relative;
+            animation: pulse-professional 2s ease-in-out infinite;
+        }
+        
+        .status-active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+        }
+        
+        .status-warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+        }
+        
+        .status-inactive {
+            background: linear-gradient(135deg, rgba(154, 160, 166, 0.8) 0%, rgba(128, 134, 139, 0.6) 100%);
+            box-shadow: 0 0 8px rgba(154, 160, 166, 0.3);
+        }
+        
+        @keyframes pulse-professional {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.1);
+            }
+        }
+        
+        /* Input Fields */
+        .input-professional {
+            width: 100%;
+            height: 44px;
+            padding: 0 var(--space-4);
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.6) 0%, rgba(241, 245, 249, 0.4) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(203, 213, 225, 0.3);
+            border-radius: var(--radius-lg);
+            font-family: var(--font-body);
+            font-weight: 100;
+            color: var(--text-primary);
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .input-professional:focus {
+            outline: none;
+            border-color: rgba(60, 64, 67, 0.4);
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.6) 100%);
+            box-shadow: 0 0 0 3px rgba(60, 64, 67, 0.1);
+        }
+        
+        .input-professional::placeholder {
+            color: var(--text-tertiary);
+            font-weight: 100;
+        }
+        
+        /* Animations */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-slide-in {
+            animation: slideInUp 400ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .animate-fade-scale {
+            animation: fadeInScale 500ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Professional Footer Navigation - Ultra Glassmorphism */
+        .footer-nav-professional {
+            position: fixed;
+            bottom: var(--space-6);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            padding: var(--space-3) var(--space-6);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.15),
+                0 4px 16px rgba(0, 0, 0, 0.10),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+        
+        .footer-nav-items {
+            display: flex;
+            align-items: center;
+            gap: var(--space-8);
+        }
+        
+        .footer-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-1);
+            color: rgba(32, 33, 36, 0.7);
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            padding: var(--space-2);
+            border-radius: var(--radius-md);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        
+        .footer-nav-item:hover {
+            color: rgba(32, 33, 36, 0.9);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px) scale(1.05);
+        }
+        
+        .footer-nav-item.active {
+            color: rgba(32, 33, 36, 1);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                0 2px 8px rgba(32, 33, 36, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .footer-nav-icon {
+            width: 24px;
+            height: 24px;
+            transition: all 200ms ease-out;
+        }
+        
+        .footer-nav-item.active .footer-nav-icon {
+            transform: scale(1.1);
+        }
+        
+        .footer-nav-label {
+            font-size: 0.7rem;
+            font-weight: 100;
+            font-family: var(--font-body);
+        }
+        
+        /* Professional Tab Navigation */
+        .tab-nav-professional {
+            display: flex;
+            gap: var(--space-3);
+            margin-bottom: var(--space-6);
+        }
+        
+        .tab-item-professional {
+            padding: var(--space-3) var(--space-5);
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-family: var(--font-body);
+            font-weight: 100;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        
+        .tab-item-professional.active {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: var(--text-primary);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            transform: translateY(-1px);
+        }
+        
+        .tab-item-professional:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            transform: translateY(-1px);
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .container-professional {
+                max-width: 428px;
+                padding: var(--space-4);
+                padding-bottom: 120px; /* Account for footer nav */
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-4);
+            }
+            
+            .footer-nav-items {
+                gap: var(--space-6);
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Main Container -->
+    <div class="container-professional min-h-screen">
+        
+        <!-- Header Section -->
+        <header class="mb-8 animate-slideInRight">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h1 class="text-3xl font-display font-semibold text-gray-900 mb-1">
+                        VATO Professional
+                    </h1>
+                    <p class="text-gray-600 font-body">
+                        Enterprise design system - Professional theme
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="badge-primary">
+                        Professional v1.0
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="status-professional status-active"></div>
+                        <span class="text-sm text-gray-600">Operational</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Professional Tab Navigation -->
+            <div class="tab-nav-professional">
+                <div class="tab-item-professional active">Dashboard</div>
+                <div class="tab-item-professional">Projects</div>
+                <div class="tab-item-professional">Components</div>
+                <div class="tab-item-professional">Analytics</div>
+            </div>
+            
+            <!-- Quick Actions Bar -->
+            <div class="card-professional p-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <button class="btn-professional btn-primary-professional">
+                        New Project
+                    </button>
+                    <button class="btn-professional btn-secondary-professional">
+                        Import
+                    </button>
+                    <button class="btn-professional btn-ghost-professional">
+                        Settings
+                    </button>
+                </div>
+                <input 
+                    type="text" 
+                    placeholder="Search components..." 
+                    class="input-professional w-64"
+                >
+            </div>
+        </header>
+        
+        <!-- Color System -->
+        <section class="mb-8 animate-slideInRight" style="animation-delay: 100ms">
+            <h2 class="text-xl font-display font-semibold mb-4 text-gray-900">Color Palette</h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <!-- Blue Primary -->
+                <div class="card-professional p-4">
+                    <div class="w-12 h-12 rounded-lg bg-cyan-600 mb-3"></div>
+                    <h3 class="font-display font-medium text-cyan-700 mb-1 text-sm">Cyan</h3>
+                    <p class="text-xs text-gray-500 font-mono">#0891b2</p>
+                </div>
+                
+                <!-- Gray -->
+                <div class="card-professional p-4">
+                    <div class="w-12 h-12 rounded-lg bg-gray-400 mb-3"></div>
+                    <h3 class="font-display font-medium text-gray-600 mb-1 text-sm">Gray</h3>
+                    <p class="text-xs text-gray-500 font-mono">#9aa0a6</p>
+                </div>
+                
+                <!-- White -->
+                <div class="card-professional p-4">
+                    <div class="w-12 h-12 rounded-lg bg-white border border-gray-200 mb-3"></div>
+                    <h3 class="font-display font-medium text-gray-600 mb-1 text-sm">White</h3>
+                    <p class="text-xs text-gray-500 font-mono">#ffffff</p>
+                </div>
+                
+                <!-- Dark -->
+                <div class="card-professional p-4">
+                    <div class="w-12 h-12 rounded-lg bg-gray-900 mb-3"></div>
+                    <h3 class="font-display font-medium text-gray-600 mb-1 text-sm">Dark</h3>
+                    <p class="text-xs text-gray-500 font-mono">#202124</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Typography System -->
+        <section class="mb-8 animate-slideInRight" style="animation-delay: 200ms">
+            <h2 class="text-xl font-display font-semibold mb-4 text-gray-900">Typography</h2>
+            
+            <div class="card-professional p-6 space-y-5">
+                <div>
+                    <p class="text-xs text-gray-500 mb-2 uppercase tracking-wide">Display - Space Grotesk</p>
+                    <h1 class="text-2xl font-display font-semibold text-gray-900">Large Heading</h1>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 mb-2 uppercase tracking-wide">Subtitle - Space Grotesk</p>
+                    <h2 class="text-lg font-display font-medium text-gray-800">Medium Heading</h2>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 mb-2 uppercase tracking-wide">Body - TT Neoris</p>
+                    <p class="text-base font-body text-gray-700">Regular body text for content and descriptions</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 mb-2 uppercase tracking-wide">Code - TT Neoris</p>
+                    <code class="text-sm text-gray-800 bg-gray-100 px-2 py-1 rounded" style="font-family: var(--font-body);">const variable = 'value';</code>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Component Library -->
+        <section class="mb-8 animate-slideInRight" style="animation-delay: 300ms">
+            <h2 class="text-xl font-display font-semibold mb-4 text-gray-900">Professional Components</h2>
+            
+            <div class="dashboard-grid">
+                <!-- Buttons -->
+                <div class="card-professional p-6 animate-fade-scale">
+                    <h3 class="font-display font-medium text-lg text-gray-900 mb-4">Buttons</h3>
+                    <div class="space-y-3">
+                        <button class="btn-professional btn-primary-professional w-full">
+                            Primary Button
+                        </button>
+                        <button class="btn-professional btn-secondary-professional w-full">
+                            Secondary Button
+                        </button>
+                        <button class="btn-professional btn-ghost-professional w-full">
+                            Ghost Button
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Card Variants -->
+                <div class="card-elevated p-6 animate-fade-scale" style="animation-delay: 100ms">
+                    <h3 class="font-display font-medium text-lg text-gray-900 mb-4">Elevated Card</h3>
+                    <p class="text-gray-600 mb-4">
+                        Enhanced glassmorphism with stronger blur and elevated shadows.
+                    </p>
+                    <div class="flex gap-2">
+                        <span class="badge-primary">Primary</span>
+                        <span class="badge-secondary">Secondary</span>
+                        <span class="badge-neutral">Neutral</span>
+                    </div>
+                </div>
+                
+                <!-- Toggle Controls -->
+                <div class="card-primary p-6 animate-slide-in" style="animation-delay: 200ms">
+                    <h3 class="font-display font-medium text-lg text-gray-800 mb-4">Toggle Controls</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-700">Notifications</span>
+                            <div class="toggle-professional active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-700">Auto Save</span>
+                            <div class="toggle-professional" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-700">Dark Mode</span>
+                            <div class="toggle-professional active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form Elements -->
+                <div class="card-professional p-6 animate-slide-in" style="animation-delay: 300ms">
+                    <h3 class="font-display font-medium text-lg text-gray-900 mb-4">Form Elements</h3>
+                    <div class="space-y-3">
+                        <input 
+                            type="text" 
+                            placeholder="Enter your name" 
+                            class="input-professional"
+                        >
+                        <input 
+                            type="email" 
+                            placeholder="Enter your email" 
+                            class="input-professional"
+                        >
+                        <div class="flex gap-2">
+                            <button class="btn-professional btn-primary-professional flex-1">
+                                Submit
+                            </button>
+                            <button class="btn-professional btn-secondary-professional flex-1">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Accordions -->
+                <div class="md:col-span-2">
+                    <h3 class="font-display font-medium text-lg text-gray-900 mb-4">Accordion Components</h3>
+                    <div class="space-y-4">
+                        <div class="accordion-professional" onclick="this.classList.toggle('active')">
+                            <div class="accordion-header">
+                                <h4 class="font-display font-medium text-gray-800">Project Settings</h4>
+                                <svg class="accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                            <div class="accordion-content">
+                                <p class="text-gray-600 mb-3">Configure your project settings, including team permissions, deployment options, and integrations.</p>
+                                <div class="flex gap-2">
+                                    <span class="badge-secondary">Beta</span>
+                                    <span class="badge-neutral">Updated</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-professional" onclick="this.classList.toggle('active')">
+                            <div class="accordion-header">
+                                <h4 class="font-display font-medium text-gray-800">Security & Privacy</h4>
+                                <svg class="accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                            <div class="accordion-content">
+                                <p class="text-gray-600 mb-3">Manage security settings, two-factor authentication, and privacy preferences for your account.</p>
+                                <div class="flex items-center gap-3">
+                                    <div class="status-professional status-active"></div>
+                                    <span class="text-sm text-gray-600">All security checks passed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Progress & Status -->
+                <div class="card-professional p-6 animate-fade-scale" style="animation-delay: 400ms">
+                    <h3 class="font-display font-medium text-lg text-gray-900 mb-4">Progress Indicators</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-sm text-gray-600 mb-2">
+                                <span>Project Completion</span>
+                                <span>75%</span>
+                            </div>
+                            <div class="progress-professional">
+                                <div class="progress-fill" style="width: 75%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between text-sm text-gray-600 mb-2">
+                                <span>Team Performance</span>
+                                <span>92%</span>
+                            </div>
+                            <div class="progress-professional">
+                                <div class="progress-fill" style="width: 92%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2 pt-2">
+                            <div class="flex items-center gap-3">
+                                <div class="status-professional status-active"></div>
+                                <span class="text-sm text-gray-700">Services Online</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="status-professional status-warning"></div>
+                                <span class="text-sm text-gray-700">Maintenance Scheduled</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="status-professional status-inactive"></div>
+                                <span class="text-sm text-gray-700">Backup Service</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Data Overview -->
+                <div class="card-elevated p-6 animate-slide-in" style="animation-delay: 500ms">
+                    <h3 class="font-display font-medium text-lg text-gray-900 mb-4">System Overview</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Active Users</span>
+                            <span class="font-display font-semibold text-xl text-gray-800">2,847</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Total Projects</span>
+                            <span class="font-display font-semibold text-xl text-gray-800">156</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">System Load</span>
+                            <div class="flex items-center gap-2">
+                                <span class="font-display font-semibold text-xl text-gray-800">67%</span>
+                                <div class="status-professional status-active"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-3 border-t border-gray-200">
+                            <div class="flex gap-2">
+                                <span class="badge-primary">Production</span>
+                                <span class="badge-neutral">Stable</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Status & Badges -->
+        <section class="mb-8 animate-slideInRight" style="animation-delay: 400ms">
+            <h2 class="text-xl font-display font-semibold mb-4 text-gray-900">Status & Indicators</h2>
+            
+            <div class="card-professional p-6">
+                <div class="mb-6">
+                    <h3 class="font-display font-medium text-base text-gray-900 mb-3">Badge Variants</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="badge-primary">Primary</span>
+                        <span class="badge-success">Success</span>
+                        <span class="badge-warning">Warning</span>
+                        <span class="badge-error">Error</span>
+                        <span class="badge-neutral">Neutral</span>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="font-display font-medium text-base text-gray-900 mb-3">Status Indicators</h3>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex items-center gap-2">
+                            <div class="status-professional bg-green-500"></div>
+                            <span class="text-sm text-gray-700">Online</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="status-professional bg-yellow-500"></div>
+                            <span class="text-sm text-gray-700">Busy</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="status-professional bg-red-500"></div>
+                            <span class="text-sm text-gray-700">Offline</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="status-professional bg-gray-400"></div>
+                            <span class="text-sm text-gray-700">Away</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Data Visualization Components -->
+        <section class="mb-8 animate-slideInRight" style="animation-delay: 500ms">
+            <h2 class="text-xl font-display font-semibold mb-6 text-gray-900">Data Visualization - Professional Analytics</h2>
+            
+            <!-- Primary Metric Display -->
+            <div class="metric-primary animate-fade-scale">
+                <div class="metric-number">32,847</div>
+                <div class="metric-label">Daily Performance</div>
+            </div>
+            
+            <!-- Line Chart Component -->
+            <div class="chart-container animate-slide-in" style="animation-delay: 100ms">
+                <div class="chart-header">
+                    <h3 class="chart-title">Performance Analytics</h3>
+                    <select class="chart-dropdown">
+                        <option>Today</option>
+                        <option>This Week</option>
+                        <option>This Month</option>
+                    </select>
+                </div>
+                
+                <div class="chart-area">
+                    <div class="chart-line"></div>
+                    <div class="chart-peak">17,245</div>
+                </div>
+                
+                <div class="chart-labels">
+                    <span>7:00</span>
+                    <span>10:00</span>
+                    <span>13:00</span>
+                    <span>16:00</span>
+                    <span>19:00</span>
+                </div>
+            </div>
+            
+            <!-- Circular Progress Card Grid -->
+            <div class="progress-card-grid">
+                <!-- Primary Progress Card -->
+                <div class="progress-card animate-fade-scale" style="animation-delay: 200ms">
+                    <div class="circular-progress">
+                        <div class="progress-ring" style="--progress-deg: 280deg;">
+                            <span class="progress-percentage">78%</span>
+                        </div>
+                    </div>
+                    <h4 class="progress-card-title">System Capacity</h4>
+                    <p class="progress-card-subtitle">8.2kW Active Load</p>
+                </div>
+                
+                <!-- Secondary Progress Card -->
+                <div class="progress-card variant-secondary animate-fade-scale" style="animation-delay: 300ms">
+                    <div class="circular-progress">
+                        <div class="progress-ring" style="--progress-deg: 205deg;">
+                            <span class="progress-percentage">57%</span>
+                        </div>
+                    </div>
+                    <h4 class="progress-card-title">Efficiency Score</h4>
+                    <p class="progress-card-subtitle">3.4 tons CO₂ saved</p>
+                </div>
+                
+                <!-- Tertiary Progress Card -->
+                <div class="progress-card animate-fade-scale" style="animation-delay: 400ms">
+                    <div class="circular-progress">
+                        <div class="progress-ring" style="--progress-deg: 324deg;">
+                            <span class="progress-percentage">90%</span>
+                        </div>
+                    </div>
+                    <h4 class="progress-card-title">Network Health</h4>
+                    <p class="progress-card-subtitle">All systems operational</p>
+                </div>
+            </div>
+        </section>
+        
+        
+    </div>
+    
+    <!-- Professional Footer Navigation -->
+    <nav class="footer-nav-professional">
+        <div class="footer-nav-items">
+            <div class="footer-nav-item active">
+                <svg class="footer-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+                <span class="footer-nav-label">Home</span>
+            </div>
+            
+            <div class="footer-nav-item">
+                <svg class="footer-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                </svg>
+                <span class="footer-nav-label">Projects</span>
+            </div>
+            
+            <div class="footer-nav-item">
+                <svg class="footer-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+                <span class="footer-nav-label">Analytics</span>
+            </div>
+            
+            <div class="footer-nav-item">
+                <svg class="footer-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <span class="footer-nav-label">Settings</span>
+            </div>
+        </div>
+    </nav>
+    
+    <script>
+        // Add interactivity to tab navigation
+        document.querySelectorAll('.tab-item-professional').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab-item-professional').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Add interactivity to footer navigation
+        document.querySelectorAll('.footer-nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.footer-nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+    </script>
+    
+</body>
+</html>

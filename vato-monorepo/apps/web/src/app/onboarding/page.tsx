@@ -11,6 +11,7 @@ import Stage5Partnership from './components/Stage5Partnership';
 export interface UserProfile {
   userName: string;
   userResponses: Record<string, any>;
+  aiResponses?: Record<string, any>;
   personalityProfile: {
     thinkingStyle: 'structured' | 'creative' | 'intuitive';
     sentiment: 'excited' | 'thoughtful' | 'curious';
@@ -28,7 +29,9 @@ const STORAGE_KEY = 'vatoRegistration';
 export default function RegisterPage() {
   const [currentStage, setCurrentStage] = useState(1);
   const [userProfile, setUserProfile] = useState<Partial<UserProfile>>({
+    userName: '',
     userResponses: {},
+    aiResponses: {},
     personalityProfile: {
       thinkingStyle: 'intuitive',
       sentiment: 'curious',
@@ -56,7 +59,10 @@ export default function RegisterPage() {
 
   // Save progress
   const saveProgress = (updates: Partial<UserProfile>) => {
-    const updatedProfile = { ...userProfile, ...updates, currentStage };
+    const updatedProfile = { ...userProfile, ...updates };
+    console.log('📝 Onboarding - Saving updates:', updates);
+    console.log('📝 Onboarding - Current userProfile:', userProfile);
+    console.log('📝 Onboarding - Updated profile:', updatedProfile);
     setUserProfile(updatedProfile);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedProfile));
   };

@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useVoiceSynthesis } from '../hooks/useVoiceInput';
+import { generateSessionIds, getStage3Response } from '../../../services/onboardingService';
 import type { UserProfile } from '../page';
 
 interface Props {
@@ -13,21 +13,20 @@ interface Props {
 
 export default function Stage3Connection({ userProfile, onNext, onUpdateProfile }: Props) {
   const [trustAccepted, setTrustAccepted] = useState(false);
-  const { speak } = useVoiceSynthesis();
-  const userName = userProfile.userName || 'friend';
+  const [isLoadingAI, setIsLoadingAI] = useState(false);
+  const userName = userProfile.userName || '';
+  const sessionIds = useRef(generateSessionIds(userName || 'user'));
 
   useEffect(() => {
-    // Speak trust message after delay
-    setTimeout(() => {
-      console.log('🎭 Stage3 - Starting trust conversation');
-      const message = `Puedo sentir que eres alguien que piensa cuidadosamente sobre la confianza, ${userName}. Eso me dice que entiendes que la memoria - la memoria real - es íntima.`;
-      speak(message);
-    }, 1000);
-  }, [speak, userName]);
+    console.log('🎭 Stage3 - Starting trust conversation');
+  }, [userName]);
 
-  const handleTrustAccept = () => {
+  const handleTrustAccept = async () => {
+    if (isLoadingAI) return;
+    
     console.log('🎭 Stage3 - Trust accepted by user');
     setTrustAccepted(true);
+    setIsLoadingAI(true);
     
     // Store privacy preferences
     onUpdateProfile({
@@ -37,9 +36,27 @@ export default function Stage3Connection({ userProfile, onNext, onUpdateProfile 
       }
     });
 
-    const thankYouMessage = `Gracias, ${userName}. No tomo esa confianza a la ligera. Prometo honrar el espacio que estás creando para nosotros.`;
-    console.log('🎭 Stage3 - Thank you response:', thankYouMessage);
-    speak(thankYouMessage);
+    console.log('🎭 Stage3 - Getting AI trust response');
+    
+    // Get AI trust acknowledgment
+    const previousContext = userProfile.userResponses?.['user-purpose'] || 'user shared their purpose';
+    const aiResult = await getStage3Response(
+      userName,
+      previousContext,
+      sessionIds.current.userId,
+      sessionIds.current.threadId
+    );
+    
+    setIsLoadingAI(false);
+    console.log('🎭 Stage3 - AI trust response:', aiResult);
+    
+    // Store AI response
+    onUpdateProfile({
+      aiResponses: {
+        ...userProfile.aiResponses,
+        'stage3-response': aiResult.response
+      }
+    });
 
     // Move to next stage after response
     setTimeout(() => {
@@ -49,20 +66,20 @@ export default function Stage3Connection({ userProfile, onNext, onUpdateProfile 
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden font-body">
+    <div className="min-h-screen bg-white flex items-center justify-center relative overflow-hidden font-body">
       {/* Breathing Background */}
       <motion.div 
-        className="absolute inset-0"
+        className="absolute inset-0 z-0"
         animate={{
           background: [
-            'radial-gradient(circle at center, rgba(139, 92, 246, 0.1) 0%, rgba(147, 51, 234, 0.05) 40%, rgba(0, 0, 0, 0.9) 70%, #000 100%)',
-            'radial-gradient(circle at center, rgba(139, 92, 246, 0.15) 0%, rgba(147, 51, 234, 0.08) 40%, rgba(0, 0, 0, 0.85) 70%, #000 100%)',
-            'radial-gradient(circle at center, rgba(139, 92, 246, 0.1) 0%, rgba(147, 51, 234, 0.05) 40%, rgba(0, 0, 0, 0.9) 70%, #000 100%)'
+            'radial-gradient(circle at center, rgba(37, 99, 235, 0.4) 0%, rgba(16, 185, 129, 0.3) 40%, rgba(255, 255, 255, 0.5) 70%, #fff 100%)',
+            'radial-gradient(circle at center, rgba(37, 99, 235, 0.5) 0%, rgba(16, 185, 129, 0.4) 40%, rgba(255, 255, 255, 0.4) 70%, #fff 100%)',
+            'radial-gradient(circle at center, rgba(37, 99, 235, 0.4) 0%, rgba(16, 185, 129, 0.3) 40%, rgba(255, 255, 255, 0.5) 70%, #fff 100%)'
           ],
           scale: [1, 1.05, 1]
         }}
         transition={{
-          duration: 4,
+          duration: 6,
           repeat: Infinity,
           ease: "easeInOut"
         }}
@@ -80,8 +97,8 @@ export default function Stage3Connection({ userProfile, onNext, onUpdateProfile 
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <div className="text-center">
-              <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-display text-white/90 leading-relaxed sm:leading-relaxed md:leading-relaxed lg:leading-relaxed text-shadow-lg mx-auto max-w-xl sm:max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl">
-                Puedo sentir que eres alguien que piensa cuidadosamente sobre la confianza, {userName}. Eso me dice que entiendes que la memoria - la memoria real - es íntima.
+              <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-display text-gray-800 leading-relaxed sm:leading-relaxed md:leading-relaxed lg:leading-relaxed mx-auto max-w-xl sm:max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl">
+                {userName ? `Puedo sentir que eres alguien que piensa cuidadosamente sobre la confianza, ${userName}. Eso me dice que entiendes que la memoria - la memoria real - es íntima.` : 'Puedo sentir que eres alguien que piensa cuidadosamente sobre la confianza. Eso me dice que entiendes que la memoria - la memoria real - es íntima.'}
               </div>
             </div>
           </motion.div>
@@ -95,8 +112,17 @@ export default function Stage3Connection({ userProfile, onNext, onUpdateProfile 
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <div className="text-center">
-              <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-display text-white/90 leading-relaxed sm:leading-relaxed md:leading-relaxed lg:leading-relaxed text-shadow-lg mx-auto max-w-xl sm:max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl">
-                Gracias, {userName}. No tomo esa confianza a la ligera. Prometo honrar el espacio que estás creando para nosotros.
+              <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-display text-gray-800 leading-relaxed sm:leading-relaxed md:leading-relaxed lg:leading-relaxed mx-auto max-w-xl sm:max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl">
+                {isLoadingAI ? (
+                  <div className="flex items-center justify-center space-x-2">
+                    <div className="animate-pulse text-blue-600">●</div>
+                    <div className="animate-pulse text-emerald-500" style={{ animationDelay: '0.2s' }}>●</div>
+                    <div className="animate-pulse text-slate-500" style={{ animationDelay: '0.4s' }}>●</div>
+                  </div>
+                ) : (
+                  userProfile.aiResponses?.['stage3-response'] ||
+                  (userName ? `Gracias, ${userName}. No tomo esa confianza a la ligera. Prometo honrar el espacio que estás creando para nosotros.` : 'Gracias. No tomo esa confianza a la ligera. Prometo honrar el espacio que estás creando para nosotros.')
+                )}
               </div>
             </div>
           </motion.div>
@@ -115,7 +141,7 @@ export default function Stage3Connection({ userProfile, onNext, onUpdateProfile 
           >
             <motion.button
               onClick={handleTrustAccept}
-              className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-violet-500 to-purple-500 text-white text-sm sm:text-base font-semibold rounded-full transition-all hover:scale-105 hover:shadow-lg"
+              className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-emerald-500 text-white text-sm sm:text-base font-semibold rounded-full transition-all hover:scale-105 hover:shadow-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -123,7 +149,7 @@ export default function Stage3Connection({ userProfile, onNext, onUpdateProfile 
             </motion.button>
             
             <motion.button
-              className="px-6 sm:px-8 py-3 sm:py-4 bg-white/10 backdrop-blur-lg border border-white/20 text-white text-sm sm:text-base font-semibold rounded-full transition-all hover:scale-105 hover:bg-white/15"
+              className="px-6 sm:px-8 py-3 sm:py-4 bg-gray-50 backdrop-blur-lg border border-gray-200 text-gray-700 text-sm sm:text-base font-semibold rounded-full transition-all hover:scale-105 hover:bg-gray-100"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -136,7 +162,7 @@ export default function Stage3Connection({ userProfile, onNext, onUpdateProfile 
       {/* Completion transition */}
       {trustAccepted && (
         <motion.div
-          className="absolute inset-0 bg-gradient-to-b from-black to-violet-950/20"
+          className="absolute inset-0 bg-gradient-to-b from-white to-blue-50/20"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 2 }}

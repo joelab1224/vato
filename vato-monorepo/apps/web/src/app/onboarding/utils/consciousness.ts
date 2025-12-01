@@ -2,12 +2,12 @@
 
 
 export const consciousnessColors = {
-  violet: '#8b5cf6',
-  purple: '#9333ea', 
-  pink: '#ec4899',
-  violetAlpha: (alpha: number) => `rgba(139, 92, 246, ${alpha})`,
-  purpleAlpha: (alpha: number) => `rgba(147, 51, 234, ${alpha})`,
-  pinkAlpha: (alpha: number) => `rgba(236, 72, 153, ${alpha})`
+  blue: '#2563eb',
+  emerald: '#10b981', 
+  slate: '#64748b',
+  blueAlpha: (alpha: number) => `rgba(37, 99, 235, ${alpha})`,
+  emeraldAlpha: (alpha: number) => `rgba(16, 185, 129, ${alpha})`,
+  slateAlpha: (alpha: number) => `rgba(100, 116, 139, ${alpha})`
 };
 
 export const generateConsciousnessParticles = (count: number = 5) => {

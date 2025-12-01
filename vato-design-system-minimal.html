@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VATO Design System - Minimal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/tt-neoris" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Space Grotesk', 'sans-serif'],
+                        body: ['TT Neoris', 'Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        vato: {
+                            gray: {
+                                50: '#f9fafb',
+                                100: '#f3f4f6',
+                                200: '#e5e7eb',
+                                300: '#d1d5db',
+                                400: '#9ca3af',
+                                500: '#6b7280',
+                                600: '#4b5563',
+                                700: '#374151',
+                                800: '#1f2937',
+                                900: '#111827',
+                            },
+                            blue: {
+                                400: '#60a5fa',
+                                500: '#3b82f6',
+                                600: '#2563eb',
+                                700: '#1d4ed8',
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* === DESIGN TOKENS === */
+        :root {
+            /* Colors - Unified Glassmorphism Theme */
+            --bg-primary: linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 25%, #ffffff 50%, #f8fafc 75%, #e0f2fe 100%);
+            --bg-glass: rgba(255, 255, 255, 0.25);
+            --bg-glass-strong: rgba(255, 255, 255, 0.4);
+            --bg-glass-subtle: rgba(255, 255, 255, 0.15);
+            
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            --accent-gradient-light: linear-gradient(135deg, #93c5fd 0%, #dbeafe 100%);
+            --accent-glass: rgba(59, 130, 246, 0.1);
+            --accent-border: rgba(59, 130, 246, 0.2);
+            
+            --text-primary: #374151;
+            --text-secondary: #6b7280;
+            --text-tertiary: #9ca3af;
+            
+            /* Typography */
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'TT Neoris', 'Inter', sans-serif;
+            
+            /* Spacing - Clean 4px base */
+            --space-1: 0.25rem;  /* 4px */
+            --space-2: 0.5rem;   /* 8px */
+            --space-3: 0.75rem;  /* 12px */
+            --space-4: 1rem;     /* 16px */
+            --space-5: 1.25rem;  /* 20px */
+            --space-6: 1.5rem;   /* 24px */
+            --space-8: 2rem;     /* 32px */
+            --space-10: 2.5rem;  /* 40px */
+            --space-12: 3rem;    /* 48px */
+            
+            /* Border Radius */
+            --radius-sm: 0.5rem;   /* 8px */
+            --radius-md: 0.75rem;  /* 12px */
+            --radius-lg: 1rem;     /* 16px */
+            --radius-xl: 1.5rem;   /* 24px */
+            --radius-full: 9999px;
+            
+            /* Glass shadows */
+            --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.08);
+            --shadow-glass-strong: 0 16px 64px rgba(0, 0, 0, 0.12);
+            --shadow-accent: 0 8px 32px rgba(59, 130, 246, 0.2);
+        }
+        
+        /* === GLOBAL STYLES === */
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            font-weight: 100;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-display);
+            font-weight: 600;
+        }
+        
+        /* === COMPONENT CLASSES === */
+        
+        /* Heavy Glassmorphism Cards */
+        .card-minimal {
+            background: var(--bg-glass);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-glass);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-minimal:hover {
+            background: var(--bg-glass-strong);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-glass-strong);
+        }
+        
+        /* Buttons */
+        .btn-minimal {
+            font-family: var(--font-body);
+            font-weight: 100;
+            height: 44px;
+            padding: 0 var(--space-6);
+            border-radius: var(--radius-lg);
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-primary-minimal {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 50%, #93c5fd 100%);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            color: white;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            box-shadow: var(--shadow-accent), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-primary-minimal:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 30%, #60a5fa 70%, #93c5fd 100%);
+            transform: scale(1.02) translateY(-1px);
+            box-shadow: var(--shadow-glass-strong), var(--shadow-accent), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border-color: rgba(59, 130, 246, 0.6);
+        }
+        
+        .btn-secondary-minimal {
+            background: linear-gradient(135deg, rgba(249, 250, 251, 0.5) 0%, rgba(243, 244, 246, 0.4) 100%);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            color: var(--text-primary);
+            border: 1px solid rgba(209, 213, 219, 0.3);
+            box-shadow: var(--shadow-glass), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-secondary-minimal:hover {
+            background: linear-gradient(135deg, rgba(249, 250, 251, 0.7) 0%, rgba(219, 234, 254, 0.5) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-glass-strong), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Badges */
+        .badge-minimal {
+            font-size: 0.75rem;
+            font-weight: 100;
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-full);
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+        
+        /* Status Indicators */
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.6;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fadeInUp {
+            animation: fadeInUp 300ms ease-out;
+        }
+        
+        /* Container */
+        .container-minimal {
+            max-width: 428px;
+            margin: 0 auto;
+            padding: var(--space-4);
+        }
+        
+        /* Gradient Text */
+        .gradient-text {
+            background: var(--accent-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Main Container -->
+    <div class="container-minimal min-h-screen">
+        
+        <!-- Header Section -->
+        <header class="py-8 animate-fadeInUp">
+            <div class="text-center mb-6">
+                <h1 class="text-4xl font-display font-semibold mb-2 gradient-text">
+                    VATO Minimal
+                </h1>
+                <p class="text-zinc-500 font-body">
+                    Clean design system - Minimal theme
+                </p>
+            </div>
+            
+            <!-- Status Bar -->
+            <div class="card-minimal p-4 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="status-dot bg-green-500"></div>
+                    <span class="text-sm text-zinc-600">System Active</span>
+                </div>
+                <div class="badge-minimal" style="background: var(--accent-glass); color: var(--text-primary); border: 1px solid var(--accent-border);">
+                    Glass v1.0
+                </div>
+            </div>
+        </header>
+        
+        <!-- Color System -->
+        <section class="mb-8 animate-fadeInUp" style="animation-delay: 100ms">
+            <h2 class="text-xl font-display font-medium mb-4 text-gray-700">Glass Elements</h2>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <!-- Blue Gradient -->
+                <div class="card-minimal p-4">
+                    <div class="w-10 h-10 rounded-lg mb-3" style="background: var(--accent-gradient);"></div>
+                    <h3 class="font-display font-medium text-gray-700 mb-1 text-sm">Blue Gradient</h3>
+                    <p class="text-xs text-gray-500">Primary Accent</p>
+                </div>
+                
+                <!-- Glass Strong -->
+                <div class="card-minimal p-4">
+                    <div class="w-10 h-10 rounded-lg border mb-3" style="background: var(--bg-glass-strong); border-color: rgba(255,255,255,0.4);"></div>
+                    <h3 class="font-display font-medium text-gray-700 mb-1 text-sm">Glass Strong</h3>
+                    <p class="text-xs text-gray-500">40% opacity</p>
+                </div>
+                
+                <!-- Glass Normal -->
+                <div class="card-minimal p-4">
+                    <div class="w-10 h-10 rounded-lg border mb-3" style="background: var(--bg-glass); border-color: rgba(255,255,255,0.3);"></div>
+                    <h3 class="font-display font-medium text-gray-700 mb-1 text-sm">Glass Normal</h3>
+                    <p class="text-xs text-gray-500">25% opacity</p>
+                </div>
+                
+                <!-- Glass Subtle -->
+                <div class="card-minimal p-4">
+                    <div class="w-10 h-10 rounded-lg border mb-3" style="background: var(--bg-glass-subtle); border-color: rgba(255,255,255,0.2);"></div>
+                    <h3 class="font-display font-medium text-gray-700 mb-1 text-sm">Glass Subtle</h3>
+                    <p class="text-xs text-gray-500">15% opacity</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Typography -->
+        <section class="mb-8 animate-fadeInUp" style="animation-delay: 200ms">
+            <h2 class="text-xl font-display font-medium mb-4 text-zinc-800">Typography</h2>
+            
+            <div class="card-minimal p-5 space-y-4">
+                <div>
+                    <p class="text-xs text-gray-500 mb-1">Display - Space Grotesk</p>
+                    <h1 class="text-2xl font-display font-semibold text-gray-700">Heading Large</h1>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 mb-1">Title - Space Grotesk</p>
+                    <h2 class="text-lg font-display font-medium text-gray-700">Heading Medium</h2>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 mb-1">Body - TT Neoris</p>
+                    <p class="text-base font-body text-gray-600">Body text with regular weight</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 mb-1">Caption - TT Neoris</p>
+                    <p class="text-sm font-body text-gray-500">Small caption text</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Buttons -->
+        <section class="mb-8 animate-fadeInUp" style="animation-delay: 300ms">
+            <h2 class="text-xl font-display font-medium mb-4 text-zinc-800">Buttons</h2>
+            
+            <div class="space-y-3">
+                <button class="btn-minimal btn-primary-minimal w-full">
+                    Primary Button
+                </button>
+                
+                <button class="btn-minimal btn-secondary-minimal w-full">
+                    Secondary Button
+                </button>
+                
+                <button class="btn-minimal btn-primary-minimal w-full flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                    </svg>
+                    Button with Icon
+                </button>
+            </div>
+        </section>
+        
+        <!-- Cards -->
+        <section class="mb-8 animate-fadeInUp" style="animation-delay: 400ms">
+            <h2 class="text-xl font-display font-medium mb-4 text-zinc-800">Cards</h2>
+            
+            <div class="space-y-4">
+                <!-- Basic Card -->
+                <div class="card-minimal p-5">
+                    <h3 class="font-display font-medium text-lg text-zinc-900 mb-2">Basic Card</h3>
+                    <p class="text-zinc-600 text-sm mb-3">
+                        Clean card with minimal styling and subtle shadows
+                    </p>
+                    <div class="badge-minimal" style="background: var(--accent-glass); color: var(--text-primary); border: 1px solid var(--accent-border);">
+                        Featured
+                    </div>
+                </div>
+                
+                <!-- Content Card -->
+                <div class="card-minimal p-5">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: var(--accent-gradient);">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <div class="status-dot bg-green-500"></div>
+                    </div>
+                    <h3 class="font-display font-medium text-lg text-zinc-800 mb-2">Content Card</h3>
+                    <p class="text-zinc-600 text-sm">
+                        Card with icon and status indicator for organized content
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Status & Badges -->
+        <section class="mb-8 animate-fadeInUp" style="animation-delay: 500ms">
+            <h2 class="text-xl font-display font-medium mb-4 text-zinc-800">Status & Badges</h2>
+            
+            <div class="card-minimal p-5 space-y-4">
+                <div class="flex flex-wrap gap-2">
+                    <span class="badge-minimal" style="background: var(--accent-glass); color: var(--text-primary); border: 1px solid var(--accent-border);">Active</span>
+                    <span class="badge-minimal" style="background: var(--bg-glass); color: var(--text-secondary); border: 1px solid rgba(255,255,255,0.3);">Processing</span>
+                    <span class="badge-minimal" style="background: var(--bg-glass-strong); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.4);">Complete</span>
+                    <span class="badge-minimal" style="background: var(--bg-glass-subtle); color: var(--text-tertiary); border: 1px solid rgba(255,255,255,0.2);">Neutral</span>
+                </div>
+                
+                <div class="flex flex-wrap gap-3">
+                    <div class="flex items-center gap-2">
+                        <div class="status-dot bg-green-500"></div>
+                        <span class="text-sm text-zinc-600">Online</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="status-dot bg-yellow-500"></div>
+                        <span class="text-sm text-zinc-600">Pending</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="status-dot bg-red-500"></div>
+                        <span class="text-sm text-zinc-600">Offline</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+    </div>
+    
+</body>
+</html>

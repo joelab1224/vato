@@ -5,6 +5,20 @@ import { ThemeId } from '@/lib/themes'
 import { Heart, Lightbulb, Search } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
+// Professional gray colors (fixed across all themes)
+const professionalGray = {
+  50: '#f9fafb',
+  100: '#f3f4f6', 
+  200: '#e5e7eb',
+  300: '#d1d5db',
+  400: '#9ca3af',
+  500: '#6b7280',
+  600: '#4b5563',
+  700: '#374151',
+  800: '#1f2937',
+  900: '#111827',
+}
+
 interface ModeOption {
   id: ThemeId
   label: string
@@ -46,20 +60,20 @@ export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ className, compact =
     <div 
       className={cn(
         'flex items-center rounded-full transition-all duration-200',
-        // Mobile: compact with minimal padding
-        'p-1 gap-1',
-        // Tablet and up: more spacious
-        'sm:p-1.5 sm:gap-0',
         // Ensure proper scaling
         'scale-100 hover:scale-[1.01]',
         className
       )}
       style={{ 
-        backgroundColor: 'rgba(232, 228, 220, 0.25)',
-        border: `1px solid rgba(255, 255, 255, 0.4)`,
+        backgroundColor: currentTheme.colors.glassBackground,
+        border: `1px solid ${currentTheme.colors.glassBorder}`,
         backdropFilter: 'blur(20px) saturate(180%)',
         WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-        boxShadow: '0 4px 24px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
+        boxShadow: currentTheme.effects.shadowLarge,
+        borderRadius: currentTheme.spacing.borderRadiusLarge,
+        // Theme-based spacing - mobile: compact, desktop: spacious
+        padding: currentTheme.spacing.xs,
+        gap: currentTheme.spacing.xs,
       }}
     >
       {modeOptions.map((mode) => {
@@ -73,12 +87,6 @@ export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ className, compact =
             className={cn(
               'relative flex items-center justify-center rounded-full transition-all duration-200',
               'text-xs font-medium min-w-0 flex-shrink-0',
-              // Mobile: icon-only with 44px touch target  
-              'w-10 h-10 p-0',
-              // Tablet and up: add padding and gap for labels (unless compact)
-              compact 
-                ? 'sm:w-10 sm:h-10 sm:p-0' 
-                : 'sm:w-auto sm:h-auto sm:px-3 sm:py-2 sm:gap-1.5',
               // Hover states - only for inactive buttons
               !isActive && 'hover:bg-black/5 hover:scale-[1.02]',
               // Focus states for accessibility
@@ -87,10 +95,20 @@ export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ className, compact =
               isActive && 'ring-1 ring-black/10'
             )}
             style={{
-              backgroundColor: isActive ? currentTheme.colors.primary : 'transparent',
-              color: isActive ? currentTheme.colors.textInverse : currentTheme.colors.textSecondary,
+              // Ensure 44px minimum touch target for mobile accessibility
+              minWidth: '44px',
+              minHeight: '44px',
+              // Theme-based padding
+              paddingLeft: compact ? '0' : currentTheme.spacing.md,
+              paddingRight: compact ? '0' : currentTheme.spacing.md,
+              paddingTop: currentTheme.spacing.sm,
+              paddingBottom: currentTheme.spacing.sm,
+              gap: compact ? '0' : currentTheme.spacing.xs,
+              // Professional gray colors (fixed across themes)
+              backgroundColor: isActive ? professionalGray[700] : 'transparent',
+              color: isActive ? '#ffffff' : professionalGray[600],
               boxShadow: isActive ? currentTheme.effects.shadow : 'none',
-              '--tw-ring-color': currentTheme.colors.primary,
+              '--tw-ring-color': professionalGray[700],
             } as React.CSSProperties}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -107,7 +125,7 @@ export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ className, compact =
                 'sm:w-3.5 sm:h-3.5'
               )}
               style={{ 
-                color: isActive ? currentTheme.colors.textInverse : currentTheme.colors.textSecondary
+                color: isActive ? '#ffffff' : professionalGray[600]
               }}
             />
             
@@ -116,7 +134,7 @@ export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ className, compact =
               <span 
                 className="hidden sm:inline whitespace-nowrap"
                 style={{ 
-                  color: isActive ? currentTheme.colors.textInverse : currentTheme.colors.textSecondary
+                  color: isActive ? '#ffffff' : professionalGray[600]
                 }}
               >
                 {mode.label}
@@ -128,7 +146,7 @@ export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ className, compact =
               <motion.div
                 layoutId="mode-indicator"
                 className="absolute inset-0 rounded-full -z-10"
-                style={{ backgroundColor: currentTheme.colors.primary }}
+                style={{ backgroundColor: professionalGray[700] }}
                 transition={{ type: 'spring', stiffness: 400, damping: 30 }}
               />
             )}

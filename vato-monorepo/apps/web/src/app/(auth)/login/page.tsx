@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import { AuthClient } from '@vato/api-client';
-import { Button } from '@/components/ui/button';
-import { useTheme } from '@/contexts/theme-context';
+import { Button, Card, CardContent, Input } from '@vato/ui-primitives';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff } from 'lucide-react';
@@ -17,7 +16,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
-  const { currentTheme } = useTheme();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,146 +33,142 @@ export default function LoginPage() {
   };
 
   return (
-    <div 
-      className="min-h-screen flex items-center justify-center px-5"
-      style={{
-        background: 'linear-gradient(135deg, #fafafa 0%, #ffffff 50%, #f5f0ff 100%)',
-      }}
-    >
+    <div className="min-h-screen flex items-center justify-center p-6">
+      {/* Professional Background Gradient */}
       <div 
-        className="w-full max-w-sm"
+        className="fixed inset-0 -z-10"
         style={{
-          background: 'rgba(255, 255, 255, 0.6)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          border: '1px solid rgba(0, 0, 0, 0.08)',
-          borderRadius: '16px',
-          padding: '32px 20px',
-          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
+          background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #cbd5e1 70%, #94a3b8 100%)',
         }}
+      />
+      
+      <Card 
+        variant="professional" 
+        className="w-full max-w-md"
+        style={{ padding: '2rem' }}
       >
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 
-            className="font-semibold mb-2"
-            style={{
-              fontSize: '28px',
-              lineHeight: '1.2',
-              color: '#18181b',
-              fontFamily: '"Space Grotesk", sans-serif',
-            }}
-          >
-            Welcome back
-          </h1>
-          <p 
-            className="text-sm"
-            style={{
-              color: '#52525b',
-              fontFamily: '"Inter", sans-serif',
-            }}
-          >
-            Sign in to continue to VATO
-          </p>
-        </div>
+        <CardContent>
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 
+              style={{
+                fontFamily: '"TT Neoris", "Space Grotesk", sans-serif',
+                fontSize: '1.75rem',
+                fontWeight: 600,
+                color: '#1e293b',
+                marginBottom: '0.5rem',
+                lineHeight: '1.2',
+              }}
+            >
+              Welcome back
+            </h1>
+            <p 
+              style={{
+                fontFamily: '"TT Neoris", "Inter", sans-serif',
+                fontSize: '0.875rem',
+                fontWeight: 100,
+                color: '#64748b',
+              }}
+            >
+              Sign in to continue to VATO
+            </p>
+          </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Email Input */}
-          <div>
-            <input
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Email Input */}
+            <Input
               type="email"
               placeholder="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-3 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-1 transition-all"
-              style={{
-                borderRadius: '12px',
-                fontSize: '15px',
-                fontFamily: '"Inter", sans-serif',
-                backgroundColor: '#FFFFFF',
-              }}
             />
-          </div>
 
-          {/* Password Input */}
-          <div className="relative">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full px-4 py-3 pr-10 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-1 transition-all"
-              style={{
-                borderRadius: '12px',
-                fontSize: '15px',
-                fontFamily: '"Inter", sans-serif',
-                backgroundColor: '#FFFFFF',
-              }}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-            >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
-          </div>
-
-          {/* Error Message */}
-          {error && (
-            <div 
-              className="text-sm p-3 rounded-lg"
-              style={{
-                color: '#ef4444',
-                backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                borderRadius: '12px',
-              }}
-            >
-              {error}
+            {/* Password Input */}
+            <div className="relative">
+              <Input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={{ paddingRight: '2.5rem' }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                style={{
+                  color: '#64748b',
+                  transition: 'color 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#0891b2';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#64748b';
+                }}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
-          )}
 
-          {/* Submit Button */}
-          <Button 
-            type="submit" 
-            disabled={loading} 
-            className="w-full mt-6"
-            style={{
-              height: '44px',
-              borderRadius: '12px',
-              background: loading ? '#999999' : 'linear-gradient(135deg, #8b5cf6 0%, #9333ea 100%)',
-              fontWeight: '600',
-              fontSize: '16px',
-              border: 'none',
-              color: 'white',
-            }}
-          >
-            {loading ? 'Signing in...' : 'Sign In'}
-          </Button>
-        </form>
+            {/* Error Message */}
+            {error && (
+              <div 
+                className="p-3 rounded-lg text-sm"
+                style={{
+                  background: 'rgba(239, 68, 68, 0.05)',
+                  border: '1px solid rgba(239, 68, 68, 0.2)',
+                  borderRadius: '0.75rem',
+                  color: '#dc2626',
+                }}
+              >
+                {error}
+              </div>
+            )}
 
-        {/* Footer */}
-        <div className="text-center mt-6">
-          <p 
-            className="text-sm"
-            style={{ 
-              color: '#52525b',
-              fontFamily: '"Inter", sans-serif',
-            }}
-          >
-            Don't have an account?{' '}
-            <Link 
-              href="/register" 
-              className="font-medium hover:underline"
-              style={{ color: '#8b5cf6' }}
+            {/* Submit Button */}
+            <div className="mt-6">
+              <Button 
+                type="submit" 
+                disabled={loading} 
+                variant="primary"
+                className="w-full"
+                style={{ minHeight: '44px' }}
+              >
+                {loading ? 'Signing in...' : 'Sign In'}
+              </Button>
+            </div>
+          </form>
+
+          {/* Footer */}
+          <div className="text-center mt-6">
+            <p 
+              style={{
+                fontSize: '0.875rem',
+                color: '#64748b',
+                fontFamily: '"TT Neoris", "Inter", sans-serif',
+                fontWeight: 100,
+              }}
             >
-              Create account
-            </Link>
-          </p>
-        </div>
-      </div>
+              Don't have an account?{' '}
+              <Link 
+                href="/register" 
+                className="font-medium hover:underline"
+                style={{
+                  color: '#0891b2',
+                  fontWeight: 600,
+                  transition: 'color 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
+              >
+                Create account
+              </Link>
+            </p>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

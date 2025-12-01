@@ -1,61 +1,66 @@
-import { tokens } from './tokens';
+import { tokens, createGlassStyle as _createGlassStyle, getComponentStyle } from './tokens';
 
 /**
- * Helper functions to apply the unified design system
+ * Professional Design System Helper Functions
  */
 
-// Glass morphism helper
-export const createGlassStyle = (variant: 'default' | 'violet' | 'purple' | 'pink' = 'default') => {
-  const glassConfig = tokens.components.glass[variant];
-  return {
-    background: glassConfig.background,
-    backdropFilter: glassConfig.backdropFilter,
-    WebkitBackdropFilter: glassConfig.backdropFilter,
-    border: glassConfig.border,
-    boxShadow: glassConfig.boxShadow,
-  };
-};
+// Re-export glass style helper from tokens (renamed to avoid conflict)
+export const createProfessionalGlassStyle = _createGlassStyle;
 
-// Button helper
-export const createButtonStyle = (variant: 'primary' | 'secondary' = 'primary') => {
+// Professional Button helper
+export const createButtonStyle = (variant: 'primary' | 'secondary' | 'ghost' = 'primary') => {
   const buttonConfig = tokens.components.button[variant];
   return {
-    borderRadius: buttonConfig.borderRadius,
-    padding: buttonConfig.padding,
-    background: buttonConfig.background,
-    color: buttonConfig.color,
-    height: buttonConfig.height,
-    fontWeight: variant === 'primary' ? '600' : '500',
-    border: buttonConfig.border,
-    fontFamily: tokens.typography.fontFamily.body,
+    ...buttonConfig,
     cursor: 'pointer',
-    transition: tokens.effects.transition,
+    fontFamily: tokens.typography.fontFamily.body,
   };
 };
 
-// Card helper
-export const createCardStyle = () => {
+// Professional Card helper
+export const createCardStyle = (variant: 'professional' | 'elevated' | 'primary' = 'professional') => {
+  const cardConfig = tokens.components.card[variant];
   return {
-    borderRadius: tokens.components.card.borderRadius,
-    padding: tokens.components.card.padding,
-    background: tokens.components.card.background,
-    backdropFilter: tokens.components.card.backdropFilter,
-    WebkitBackdropFilter: tokens.components.card.backdropFilter,
-    border: tokens.components.card.border,
-    boxShadow: tokens.components.card.boxShadow,
+    ...cardConfig,
+    WebkitBackdropFilter: cardConfig.backdropFilter,
   };
 };
 
-// Badge helper
-export const createBadgeStyle = () => {
+// Professional Badge helper
+export const createBadgeStyle = (variant: 'primary' | 'secondary' | 'neutral' | 'success' | 'warning' | 'error' = 'neutral') => {
+  const baseConfig = tokens.components.badge.base;
+  const variantConfig = tokens.components.badge[variant];
+  
   return {
-    borderRadius: tokens.components.badge.borderRadius,
-    padding: tokens.components.badge.padding,
-    fontSize: tokens.components.badge.fontSize,
-    fontWeight: tokens.components.badge.fontWeight,
-    display: tokens.components.badge.display,
-    alignItems: tokens.components.badge.alignItems,
-    gap: tokens.components.badge.gap,
+    ...baseConfig,
+    ...variantConfig,
+    WebkitBackdropFilter: baseConfig.backdropFilter,
+  };
+};
+
+// Professional Toggle helper
+export const createToggleStyle = (active: boolean = false) => {
+  const toggleConfig = tokens.components.toggle;
+  const activeConfig = active ? toggleConfig.active : {};
+  
+  return {
+    ...toggleConfig,
+    ...activeConfig,
+    WebkitBackdropFilter: toggleConfig.backdropFilter,
+    cursor: 'pointer',
+    position: 'relative' as const,
+  };
+};
+
+// Professional Input helper
+export const createInputStyle = (focused: boolean = false) => {
+  const inputConfig = tokens.components.input;
+  const focusConfig = focused ? inputConfig.focus : {};
+  
+  return {
+    ...inputConfig,
+    ...focusConfig,
+    WebkitBackdropFilter: inputConfig.backdropFilter,
   };
 };
 
@@ -68,31 +73,60 @@ export const createContainerStyle = () => {
   };
 };
 
-// Common CSS custom properties
+// Professional CSS custom properties
 export const cssVariables = {
-  // Colors
-  '--color-violet': tokens.colors.accent.violet,
-  '--color-purple': tokens.colors.accent.purple,  
-  '--color-pink': tokens.colors.accent.pink,
+  // Professional Colors
+  '--color-primary': tokens.colors.vato.blue[500],
+  '--color-primary-hover': tokens.colors.vato.blue[600],
+  '--color-accent': tokens.colors.vato.blue[400],
   '--color-text-primary': tokens.colors.text.primary,
   '--color-text-secondary': tokens.colors.text.secondary,
   '--color-text-tertiary': tokens.colors.text.tertiary,
+  '--color-text-accent': tokens.colors.text.accent,
   
-  // Fonts
+  // Professional Glass System
+  '--glass-background': tokens.colors.glass.background,
+  '--glass-background-strong': tokens.colors.glass.backgroundStrong,
+  '--glass-border': tokens.colors.glass.border,
+  '--glass-accent': tokens.colors.glass.accent,
+  
+  // Professional Typography
   '--font-display': tokens.typography.fontFamily.display,
   '--font-body': tokens.typography.fontFamily.body,
+  '--font-code': tokens.typography.fontFamily.code,
   
-  // Spacing
+  // Professional Spacing
   '--space-1': tokens.spacing[1],
   '--space-2': tokens.spacing[2],
+  '--space-3': tokens.spacing[3],
   '--space-4': tokens.spacing[4],
+  '--space-5': tokens.spacing[5],
   '--space-6': tokens.spacing[6],
   
-  // Radius
+  // Professional Radius
   '--radius-button': tokens.radius.button,
   '--radius-card': tokens.radius.card,
+  '--radius-input': tokens.radius.input,
+  '--radius-badge': tokens.radius.badge,
   
-  // Effects
-  '--shadow-card': tokens.shadows.card,
-  '--shadow-glow': tokens.shadows.glow,
+  // Professional Effects
+  '--shadow-glass': tokens.shadows.glass,
+  '--shadow-glass-strong': tokens.shadows.glassStrong,
+  '--shadow-floating': tokens.shadows.floating,
+  '--shadow-accent': tokens.shadows.accent,
+  '--blur': tokens.effects.blur,
+  '--blur-strong': tokens.effects.blurStrong,
+  '--transition': tokens.effects.transition,
 } as const;
+
+// Professional interaction state helpers
+export const getHoverState = (component: 'card' | 'button') => {
+  if (component === 'card') {
+    return tokens.states.glassHover;
+  }
+  return tokens.states.hover;
+};
+
+export const getActiveState = () => {
+  return tokens.states.active;
+};

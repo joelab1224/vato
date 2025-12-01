@@ -64,10 +64,14 @@ export function ThemeProvider({ children, defaultThemeId = defaultTheme }: Theme
         root.style.setProperty(`--font-size-${key}`, value)
       })
 
-      // Apply spacing
+      // Apply spacing - including systematic scale and layout-specific values
       Object.entries(currentTheme.spacing).forEach(([key, value]) => {
         root.style.setProperty(`--spacing-${key}`, value)
       })
+      
+      // Apply layout-specific CSS custom properties for responsive design
+      root.style.setProperty('--header-height', currentTheme.spacing.headerHeight)
+      root.style.setProperty('--bottom-nav-height', currentTheme.spacing.bottomNavHeight)
 
       // Apply effects
       Object.entries(currentTheme.effects).forEach(([key, value]) => {
